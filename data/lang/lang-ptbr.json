@@ -1,0 +1,360 @@
+{
+  "head": {
+    "title": "Meu Gestor de Entretenimento"
+  },
+  "header": {
+    "titles": {
+      "profileTitle": "Editar Perfil",
+      "settingsTitle": "Configurações"
+    },
+    "achievementsTooltip": {
+      "tooltipTitle": "Pontos de Conquista:",
+      "mediaLabels": {
+        "movies": "Filmes",
+        "series": "Séries",
+        "animations": "Animações",
+        "games": "Jogos",
+        "platinum": "Jogos",
+        "books": "Livros",
+        "mangas": "Mangás",
+        "comics": "Quadrinhos"
+      },
+      "moviesWatched": "filmes assistidos",
+      "seriesWatched": "séries assistidas",
+      "animationsWatched": "animações assistidas",
+      "gamesPlayed": "jogos zerados",
+      "gamesPlatinumed": "jogos platinados",
+      "booksRead": "livros lidos",
+      "mangasRead": "mangás lidos",
+      "comicsRead": "quadrinhos lidos",
+      "tooltipInfo": "ℹ️ Os pontos são concedidos apenas para inscrições concluídas. Cada marco alcançado concede +1000 pontos."
+    },
+    "mainTitle": "🍿 Meu Gestor de Entretenimento",
+    "mainNav": {
+      "viewAll": "📂 Ver Tudo",
+      "movies": "🎬 Filmes",
+      "series": "📺 Séries",
+      "animations": "✨ Animações",
+      "games": "🎮 Jogos",
+      "books": "📚 Livros",
+      "mangas": "📖 Mangás",
+      "comics": "💥 Quadrinhos"
+    },
+    "mobileControls": {
+      "sortMobile": {
+        "sortBy": "Ordenar Por...",
+        "nameAZ": "Nome A-Z",
+        "nameZA": "Nome Z-A",
+        "ratingAsc": "Nota 0-10",
+        "ratingDesc": "Nota 10-0",
+        "latest": "Mais Recente",
+        "oldest": "Mais Antigo"
+      },
+      "buttons": {
+        "advancedFilter": "Filtro Avançado",
+        "downloadData": "Baixar Dados",
+        "shareProfile": "Compartilhar Perfil"
+      }
+    }
+  },
+  "main": {
+    "controlsBar": {
+      "addMedia": "Adicionar Mídia",
+      "placeholder": "Burque por título ou tipo...",
+      "resultsInfo": {
+        "singular": "{count} mídia encontrada.",
+        "plural": "{count} mídias encontradas."
+      },
+      "buttons": {
+        "advancedFilter": "Filtro Avançado",
+        "dashboard": "Ver Dashboard",
+        "downloadData": "Baixar Dados",
+        "shareProfile": "Compartilhar Perfil"
+      }
+    },
+    "cards": {
+      "noResultFound": "Nenhum item encontrado para o filtro/pesquisa atual.",
+      "utilitiesLabels": {
+        "watchedOn": "Assistido em:",
+        "playedOn": "Jogado em:",
+        "readOn": "Lido em:",
+        "consumedOn": "Consumido em:"
+      },
+      "moviesAnimatedMovies": {
+        "duration": "Duração:"
+      },
+      "seriesAnimations": {
+        "seasonsWatched": "Temporadas assistidas:",
+        "episodesWatched": "Episódios assistidos:"
+      },
+      "games": {
+        "completed": "Zerado",
+        "notCompleted": "Não Zerado",
+        "onlineOrNA": "Online ou N/A",
+        "onlineNoCampaign": "Online/Sem Campanha",
+        "progress": "Progresso:",
+        "platinumTrophy": "Troféu de Platina"
+      },
+      "booksMangaComics": {
+        "pages": "páginas",
+        "volumes": "volumes",
+        "read": "Lido:"
+      },
+      "editTitle": "Editar Mídia"
+    },
+    "dashboard": {
+      "dashboardHeader": {
+        "title": "Meu Dashboard",
+        "saveLayout": "Salvar Layout",
+        "resetLayout": "Resetar Layout",
+        "goBack": "Voltar"
+      },
+      "mediaFilter": {
+        "title": "Filtro de Mídias",
+        "mediaTypes": {
+          "movies": "Filmes",
+          "series": "Séries",
+          "animations": "Animações",
+          "animated_movies": "Filmes Animados",
+          "games": "Jogos",
+          "books": "Livros",
+          "mangas": "Mangás",
+          "comics": "Quadrinhos"
+        }
+      },
+      "totalEntries": "Total de Registros",
+      "ratingsBreakdown": {
+        "title": "Distribuição de Notas",
+        "ratingsBreakdownTooltip": {
+          "title": "Agrupamento de Notas Decimais",
+          "subtitle": "As notas são agrupadas por números inteiros arredondados:",
+          "ratingsFrom": "Notas de",
+          "example1": "8.0 até 8.4",
+          "example2": "8.5 até 8.9",
+          "appearUnder": "aparecem sob o",
+          "lastSentence": "Essa abordagem simplifica o gráfico e melhora a legibilidade."
+        }
+      },
+      "timeSpentEstimate": {
+        "title": "Tempo Gasto Estimado",
+        "timeSpentEstimateTooltip": {
+          "title": "Guia de Estimativa de Tempo",
+          "movies": "Filmes:",
+          "moviesText": "Duração informada",
+          "series": "Séries:",
+          "seriesText": "45 min × episódio ou 10 ep/temporada",
+          "animations": "Animações:",
+          "animationsText": "20 min × episódio ou 12 ep/temporada",
+          "games": "Jogos:",
+          "gamesText": "Horas jogadas informado",
+          "books": "Livros:",
+          "booksText": "1h a cada 25 páginas",
+          "mangasAndComics": "Mangás/Quadrinhos:",
+          "mangasAndComicsText": "30 minutos por volume",
+          "total": "Total considera apenas mídias concluídas"
+        },
+        "convertToDays": "Converter para dias",
+        "convertToHours": "Converter para horas"
+      },
+      "mediaByType": {
+        "title": "Mídia por Tipo",
+        "buttonBarTitle": "Gráfico de Barras",
+        "buttonPieTitle": "Gráfico de Pizza",
+        "buttonDoughnutTitle": "Gráfico de Donut",
+        "buttonLineTitle": "Gráfico de Linhas",
+        "buttonBubbleTitle": "Gráfico de Bolhas"
+      },
+      "consumptionTimeline": "Linha do Tempo de Consumo",
+      "trophyStats": {
+        "title": "Troféus & Platinas",
+        "trophies": "Troféus",
+        "platinums": "Platinas"
+      },
+      "gameCompletionStatus": {
+        "title": "Progresso de Jogos",
+        "completed": "Zerado",
+        "notCompleted": "Não Zerado",
+        "onlineNoCampaign": "Online/Sem Campanha"
+      },
+      "favoriteMedia": {
+        "title": "Mídia Favorita",
+        "selectFavorite": "Selecionar Mídia Favorita",
+        "favoriteMediaNotFound": "Mídia Favorita não encontrada.",
+        "favoriteMediaNotSelected": "No favorite selected."
+      },
+      "amountRead": {
+        "title": "Total Lido",
+        "books": "Livros",
+        "mangas": "Mangás",
+        "comics": "Quadrinhos"
+      },
+      "mediaNotCompleted": {
+        "title": "Mídias Incompletas",
+        "seasons": "temps",
+        "episodes": "eps",
+        "pages": "págs",
+        "volumes": "vols",
+        "notCompleted": "Não Zerado",
+        "mediaNotCompletedWarning": "Nenhuma mídia incompleta encontrada."
+      }
+    },
+    "modals": {
+      "chooseFavoriteMedia": {
+        "title": "Selecione a Mídia Favorita",
+        "category": "Categoria",
+        "selectCategory": "Escolher...",
+        "media": "Mídia",
+        "selectMedia": "Selecionar mídia",
+        "noMedia": "Nenhuma mídia disponível",
+        "favorite": {
+          "notFound": "Mídia favorita não encontrada.",
+          "notSelected": "Nenhuma favorita selecionada"
+        }
+      },
+      "editProfile": {
+        "title": "Editar Perfil",
+        "name": "Nome",
+        "username": "Usuário",
+        "profilePicture": "Foto de Perfil"
+      },
+      "addEditMedia": {
+        "mediaTitle": "Título",
+        "rating": "Nota",
+        "consumedDate": "Data de Consumo",
+        "coverImage": "Imagem de Capa",
+        "recommendedSize": "(Recomendado: 300 × 200 pixels)",
+        "specificFields": {
+          "game": {
+            "hoursPlayed": "Horas Jogadas",
+            "online": "Online/Sem Campanha?",
+            "beaten": "Jogo Finalizado?",
+            "yes": "Sim",
+            "no": "Não",
+            "trophiesEarned": "Troféus Obtidos",
+            "totalTrophies": "Total de Troféus"
+          },
+          "book": {
+            "pagesRead": "Páginas Lidas",
+            "totalPages": "Total de Páginas"
+          },
+          "mangaComic": {
+            "volumesRead": "Volumes Lidos",
+            "totalVolumes": "Total de Volumes"
+          },
+          "seriesAnimation": {
+            "controlBy": "Controlar Por",
+            "controlSeasons": "Temporadas",
+            "controlEpisodes": "Episódios",
+            "seasonsWatched": "Temporadas Assistidas",
+            "totalSeasons": "Total de Temporadas",
+            "episodesWatched": "Episódios Assistidos",
+            "totalEpisodes": "Total de Episódios"
+          },
+          "movie": {
+            "durationType": "Tipo de Duração",
+            "durationMinutes": "Duração (minutos)",
+            "durationHours": "Duração (horas + minutos)",
+            "durationMinutesOnly": "Duração (minutos)",
+            "animatedCheckbox": "🎬✨ Este é um filme animado",
+            "durationHoursAndMinutes": "Duração (horas)"
+          },
+          "placeholders": {
+            "enterNumber": "Digite um número",
+            "enterHours": "Digite as horas",
+            "enterMinutes": "Digite minutos"
+          }
+        }
+      },
+      "addMedia": {
+        "title": "Adicionar Mídia",
+        "typeOfMedia": "Tipos de Mídia",
+        "selectMedia": {
+          "choose": "Escolher...",
+          "movie": "🎬 Filme",
+          "serie": "📺 Série",
+          "animation": "✨ Animação",
+          "game": "🎮 Jogo",
+          "book": "📚 Livro",
+          "manga": "📖 Mangá",
+          "comic": "💥 Quadrinho"
+        },
+        "specificFields": {}
+      },
+      "editMedia": {
+        "title": "Editar Mídia",
+        "specificFields": {}
+      },
+      "advancedFilter": {
+        "title": "Filtro Avançado",
+        "typeOfMedia": "Tipos de Mídia",
+        "all": "📂 Todos",
+        "movies": "🎬 Filmes",
+        "series": "📺 Séries",
+        "animations": "✨ Animações",
+        "games": "🎮 Jogos",
+        "books": "📚 Livros",
+        "mangas": "📖 Mangás",
+        "comics": "💥 Quadrinhos",
+        "consumedYearFrom": "Ano de Consumo (Início)",
+        "consumedYearTo": "Ano de Consumo (Fim)",
+        "ratingRangeMin": "Nota Mínima",
+        "ratingRangeMax": "Nota Máxima ",
+        "trophyCompletion": "% Troféus/Conclusão Mínima",
+        "orderBy": "Ordenar por",
+        "orderByOptions": {
+          "selectOrderBy": "Escolher...",
+          "name": "Nome",
+          "rating": "Nota",
+          "consumedDate": "Data de Consumo",
+          "completion": "% de Conclusão",
+          "hoursPlayed": "Horas Jogadas"
+        },
+        "orderDir": "Direção da ordenação",
+        "orderDirOptions": {
+          "selectOrderDirection": "Escolher...",
+          "orderDesc": "Descendente",
+          "orderAsc": "Ascendente"
+        }
+      },
+      "settings": {
+        "title": "Configurações",
+        "activeMediaTypes": "Tipos de Mídias Ativas",
+        "all": "📂 Todos",
+        "movies": "🎬 Filmes",
+        "series": "📺 Séries",
+        "animations": "✨ Animações",
+        "games": "🎮 Jogos",
+        "books": "📚 Livros",
+        "mangas": "📖 Mangás",
+        "comics": "💥 Quadrinhos",
+        "generalPreferences": "Preferências Gerais",
+        "selectLanguage": "Seleção de Idioma:",
+        "selectTheme": "Seleção de Tema:",
+        "lightMode": "Tema Claro",
+        "darkMode": "Tema Escuro",
+        "attentionZone": "Zona de Atenção",
+        "resetData": "Redefinir Dados",
+        "alertSelectOne": "⚠️ Por favor selecione ao menos um tipo de mídia.",
+        "resetConfirm": "Isso apagará TODOS os seus dados de perfil e mídia. Tem certeza?"
+      }
+    }
+  },
+  "footer": {
+    "portfolio": {
+      "createdBy": "Criado por"
+    }
+  },
+  "buttons": {
+    "delete": "Apagar",
+    "clear": "Limpar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "update": "Atualizar",
+    "apply": "Aplicar"
+  },
+  "shareTexts": {
+    "title": "Meu Gerenciador de Entretenimento - Perfil",
+    "subtitle": "Veja minha atividade no Gerenciador de Entretenimento!",
+    "unsupported": "O compartilhamento não é suportado neste navegador. Tente usar outro navegador."
+  }
+}

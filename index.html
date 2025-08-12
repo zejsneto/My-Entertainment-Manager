@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="head.title">My Entertainment Manager</title>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon/favicon.svg">
+
+    <!-- Optional: Set the browser UI theme color -->
+    <meta name="theme-color" content="#121212">
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <header>
+
+        <div class="profile-info">
+
+            <div class="profile-wrapper">
+                <!-- Profile image and username -->
+                <div id="edit-profile-trigger" role="button" tabindex="0" class="profile-img-text">
+                    <div class="profile-pic-wrapper" data-i18n-title="header.titles.profileTitle">
+                        <img src="assets/profile/profile.png" alt="Profile" class="profile-pic">
+                        <div class="edit-icon"><i class="fa-solid fa-pen"></i></div>
+                    </div>
+                    <div class="profile-text">
+                        <strong id="profile-name">Name</strong><br>
+                        <span id="profile-username">@username</span>
+                    </div>
+                </div>
+
+                <!-- Achievements Tooltip -->
+                <span class="tooltip-container-achievements">
+                    <i class="fas fa-circle-info tooltip-icon"></i>
+                    <span class="tooltip-content-achievements tooltip-top small-tooltip">
+                        <div class="tooltip-arrow-achievements"></div>
+
+                        <span class="tooltip-title"><strong>🏅
+                                <span data-i18n="header.achievementsTooltip.tooltipTitle">
+                                    Achievements Points:
+                                </span>
+                            </strong></span>
+                        <span id="achievements-points">0</span><br><br>
+
+                        <!-- Achievements Sections are dynamically rendered here -->
+                        <div id="dynamic-achievement-sections"></div>
+
+                        <hr class="tooltip-separator">
+                        <span class="points-info" data-i18n="header.achievementsTooltip.tooltipInfo">
+                            ℹ️ Points are awarded only for completed entries. Each milestone reached grants +1000
+                            points.
+                        </span>
+                    </span>
+                </span>
+
+            </div>
+
+            <!-- Header action buttons (top-right corner) -->
+            <div class="header-actions">
+
+                <button id="hamburger-toggle" class="hamburger" aria-label="Open menu"><i
+                        class="fas fa-bars"></i></button>
+
+                <button id="settings-btn" data-i18n-title="header.titles.settingsTitle">
+                    <span class="theme-icon"><i class="fas fa-cog"></i></span>
+                </button>
+
+            </div>
+        </div>
+
+        <h1 data-filter="all"><span data-i18n="header.mainTitle">🍿 My Entertainment Manager</span></h1>
+
+        <!-- Navigation filter buttons -->
+        <nav class="main-nav">
+            <button data-filter="all"><span data-i18n="header.mainNav.viewAll">📂 View All</span></button>
+            <button data-filter="movies"><span data-i18n="header.mainNav.movies">🎬 Movies</span></button>
+            <button data-filter="series"><span data-i18n="header.mainNav.series">📺 Series</span></button>
+            <button data-filter="animations"><span data-i18n="header.mainNav.animations">✨ Animations</span></button>
+            <button data-filter="games"><span data-i18n="header.mainNav.games">🎮 Games</span></button>
+            <button data-filter="books"><span data-i18n="header.mainNav.books">📚 Books</span></button>
+            <button data-filter="mangas"><span data-i18n="header.mainNav.mangas">📖 Manga</span></button>
+            <button data-filter="comics"><span data-i18n="header.mainNav.comics">💥 Comics</span></button>
+        </nav>
+
+        <!-- Navigation filter buttons for Tablets and PC -->
+        <div id="mobile-menu" class="mobile-menu hidden">
+
+            <!-- Top header of mobile menu -->
+            <div class="mobile-menu-header">
+                <p class="mobile-menu-title"><i class="fas fa-bars"></i> Menu</p>
+                <button id="close-menu" class="close-button" aria-label="Close menu">×</button>
+            </div>
+
+            <nav>
+                <button data-filter="all"><span data-i18n="header.mainNav.viewAll">📂 View All</span></button>
+                <button data-filter="movies"><span data-i18n="header.mainNav.movies">🎬 Movies</span></button>
+                <button data-filter="series"><span data-i18n="header.mainNav.series">📺 Series</span></button>
+                <button data-filter="animations"><span data-i18n="header.mainNav.animations">✨
+                        Animations</span></button>
+                <button data-filter="games"><span data-i18n="header.mainNav.games">🎮 Games</span></button>
+                <button data-filter="books"><span data-i18n="header.mainNav.books">📚 Books</span></button>
+                <button data-filter="mangas"><span data-i18n="header.mainNav.mangas">📖 Manga</span></button>
+                <button data-filter="comics"><span data-i18n="header.mainNav.comics">💥 Comics</span></button>
+            </nav>
+
+            <hr class="menu-divider" />
+
+            <div class="mobile-controls">
+                <div class="input-icon-wrapper mobile-sort-wrapper">
+                    <i class="fas fa-sort"></i>
+                    <select id="sort-mobile" class="mobile-sort">
+                        <option value=""><span data-i18n="header.mobileControls.sortMobile.sortBy">Sort by...</span>
+                        </option>
+                        <option value="title-asc">
+                            <span data-i18n="header.mobileControls.sortMobile.nameAZ">Name
+                                A–Z
+                            </span>
+                        </option>
+                        <option value="title-desc">
+                            <span data-i18n="header.mobileControls.sortMobile.nameZA">
+                                Name Z–A
+                            </span>
+                        </option>
+                        <option value="rating-asc">
+                            <span data-i18n="header.mobileControls.sortMobile.ratingAsc">Rating
+                                0–10
+                            </span>
+                        </option>
+                        <option value="rating-desc">
+                            <span data-i18n="header.mobileControls.sortMobile.ratingDesc">Rating
+                                10–0
+                            </span>
+                        </option>
+                        <option value="date-desc">
+                            <span data-i18n="header.mobileControls.sortMobile.latest">
+                                Latest
+                            </span>
+                        </option>
+                        <option value="date-asc">
+                            <span data-i18n="header.mobileControls.sortMobile.oldest">
+                                Oldest
+                            </span>
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Same controls of controls-bar -->
+                <button id="advanced-search-mobile" title="Advanced filters" class="control-button">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                    <p data-i18n="header.mobileControls.buttons.advancedFilter">Advanced Filter</p>
+                </button>
+
+                <!-- Dashboard only for PC -->
+                <!-- <button id="dashboard-mobile" class="control-button"><i class="fas fa-chart-bar"></i> Dashboard</button> -->
+
+                <button id="json-export-mobile" class="control-button"><i class="fas fa-download"></i>
+                    <p data-i18n="header.mobileControls.buttons.downloadData">Download Data</p>
+                </button>
+
+                <!-- <button id="print-mobile" class="control-button"><i class="fas fa-print"></i> Print Cards</button> -->
+
+                <button id="share-btn-mobile" class="control-button"><i class="fas fa-share-alt"></i>
+                    <p data-i18n="header.mobileControls.buttons.shareProfile">Share Profile</p>
+                </button>
+            </div>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <!-- Controls for searching, filtering, sorting, adding and viewing dashboard -->
+        <div class="controls-bar">
+
+            <!-- 1. Add media -->
+            <button id="add-media-button" class="control-button">
+                <i class="fas fa-plus"></i> <span data-i18n="main.controlsBar.addMedia">Add Media</span>
+            </button>
+
+            <!-- 2. Search input -->
+            <div class="input-icon-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" data-i18n-placeholder="main.controlsBar.placeholder"
+                    placeholder="Search for title or type...">
+            </div>
+
+            <!-- 3. Sorting options -->
+            <div class="input-icon-wrapper">
+                <i class="fas fa-sort"></i>
+                <select id="sort-select" class="pc-sort">
+                    <option value=""><span data-i18n="header.mobileControls.sortMobile.sortBy">Sort by...</span>
+                    </option>
+                    <option value="title-asc">
+                        <span data-i18n="header.mobileControls.sortMobile.nameAZ">Name
+                            A–Z
+                        </span>
+                    </option>
+                    <option value="title-desc">
+                        <span data-i18n="header.mobileControls.sortMobile.nameZA">
+                            Name Z–A
+                        </span>
+                    </option>
+                    <option value="rating-asc">
+                        <span data-i18n="header.mobileControls.sortMobile.ratingAsc">Rating
+                            0–10
+                        </span>
+                    </option>
+                    <option value="rating-desc">
+                        <span data-i18n="header.mobileControls.sortMobile.ratingDesc">Rating
+                            10–0
+                        </span>
+                    </option>
+                    <option value="date-desc">
+                        <span data-i18n="header.mobileControls.sortMobile.latest">
+                            Latest
+                        </span>
+                    </option>
+                    <option value="date-asc">
+                        <span data-i18n="header.mobileControls.sortMobile.oldest">
+                            Oldest
+                        </span>
+                    </option>
+                </select>
+            </div>
+
+            <!-- 4. Advanced filter -->
+            <button id="advanced-search-btn" title="Advanced filters" class="control-button"
+                data-i18n-title="main.controlsBar.buttons.advancedFilter">
+                <!-- SVG Funnel icon -->
+                <i class="fa fa-filter" aria-hidden="true"></i>
+            </button>
+
+            <!-- 5. Dashboard button -->
+            <button id="dashboard-btn" title="View dashboard" class="control-button" aria-label="View Dashboard"
+                data-i18n-title="main.controlsBar.buttons.dashboard">
+                <i class="fas fa-chart-bar"></i>
+            </button>
+
+            <!-- 6. Download Data as JSON -->
+            <button id="json-btn" title="Download Data" class="control-button"
+                data-i18n-title="main.controlsBar.buttons.downloadData">
+                <i class="fas fa-download"></i>
+            </button>
+
+            <!-- 7. Print Cards -->
+            <!-- <button id="print-btn" title="Print Cards" class="control-button">
+                <i class="fas fa-print"></i>
+            </button> -->
+
+            <!-- 7/8. Share Button -->
+            <button id="share-btn" title="Share Profile" class="control-button"
+                data-i18n-title="main.controlsBar.buttons.shareProfile">
+                <i class="fas fa-share-alt"></i>
+            </button>
+
+            <!-- 8/9. Result counter -->
+            <div id="results-info">0 medias found.</div>
+
+        </div>
+
+        <!-- Media cards dynamically rendered here -->
+        <div id="media-container"></div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard hidden">
+
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h2>📊
+                    <span data-i18n="main.dashboard.dashboardHeader.title">My Dashboard</span>
+                </h2>
+                <div class="dashboard-buttons">
+                    <button id="save-dashboard-layout-btn" class="control-button"><i class="fas fa-save"></i>
+                        <span data-i18n="main.dashboard.dashboardHeader.saveLayout">Save Layout</span>
+                    </button>
+                    <button id="reset-dashboard-layout-btn" class="control-button"><i class="fas fa-sync"></i>
+                        <span data-i18n="main.dashboard.dashboardHeader.resetLayout">Reset Layout</span>
+                    </button>
+                    <button id="back-to-cards-btn" class="control-button"><i class="fas fa-arrow-left"></i>
+                        <span data-i18n="main.dashboard.dashboardHeader.goBack">Go Back</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+
+                <!-- 
+                    Line 1
+                -->
+
+                <!-- Categories Filter (1x1) -->
+                <div class="dashboard-card" data-id="category-count" draggable="true">
+                    <h3>
+                        <i class="fa-solid fa-square-check"></i>
+                        <span data-i18n="main.dashboard.mediaFilter.title">
+                            Media Filter
+                        </span>
+                    </h3>
+                    <ul id="category-list"></ul>
+                </div>
+
+                <!-- Total Entries (1x1) -->
+                <div class="dashboard-card" data-id="total-items-card" draggable="true">
+                    <h3>
+                        <i class="fas fa-list"></i>
+                        <span data-i18n="main.dashboard.totalEntries">
+                            Total Entries
+                        </span>
+                    </h3>
+                    <span id="total-items" class="kpi-value-total-items">0</span>
+                </div>
+
+                <!-- Ratings Breakdown (1x1) -->
+                <div class="dashboard-card" data-id="rating-distribution" draggable="true">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span data-i18n="main.dashboard.ratingsBreakdown.title">
+                                Ratings Breakdown
+                            </span>
+                            <span class="tooltip-container">
+                                <i class="fas fa-circle-info tooltip-icon"></i>
+                                <span class="tooltip-content tooltip-top small-tooltip">
+                                    <div class="tooltip-arrow"></div>
+                                    <strong>📊
+                                        <span data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.title">
+                                            Decimal Rating Buckets
+                                        </span>
+                                    </strong><br><br>
+                                    <span data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.subtitle">
+                                        Ratings are grouped by rounded whole numbers:
+                                    </span><br>
+                                    <ul style="margin: 8px 0; padding-left: 18px;">
+                                        <li>
+                                            <span
+                                                data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.ratingsFrom">
+                                                Ratings from
+                                            </span>
+                                            <b>
+                                                <span
+                                                    data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.example1">
+                                                    8.0 to 8.4
+                                                </span>
+                                            </b>
+                                            <span
+                                                data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.appearUnder">
+                                                appear under
+                                            </span>
+                                            <b> 8 </b>
+                                        </li>
+                                        <li>
+                                            <span
+                                                data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.ratingsFrom">
+                                                Ratings from
+                                            </span>
+                                            <b>
+                                                <span
+                                                    data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.example2">
+                                                    8.5to 8.9
+                                                </span>
+                                            </b>
+                                            <span
+                                                data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.appearUnder">
+                                                appear under
+                                            </span>
+                                            <b> 9 </b>
+                                        </li>
+                                    </ul>
+                                    <span
+                                        data-i18n="main.dashboard.ratingsBreakdown.ratingsBreakdownTooltip.lastSentence">
+                                        This helps simplify the chart and improves readability.
+                                    </span>
+                                </span>
+                            </span>
+                        </h3>
+                    </div>
+                    <canvas id="chart-rating"></canvas>
+                </div>
+
+                <!-- Time Spent Estimate (1x1) -->
+                <div class="dashboard-card" data-id="time-estimate" draggable="true">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-clock"></i>
+                            <span data-i18n="main.dashboard.timeSpentEstimate.title">
+                                Time Spent Estimate
+                            </span>
+                            <span class="tooltip-container">
+                                <i class="fas fa-circle-info tooltip-icon"></i>
+                                <span class="tooltip-content tooltip-top small-tooltip">
+                                    <div class="tooltip-arrow"></div>
+                                    <strong>⏱
+                                        <span
+                                            data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.title">
+                                            Time Estimation Guide
+                                        </span>
+                                    </strong><br><br>
+                                    🎬 <b>
+                                        <span
+                                            data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.movies">
+                                            Movies:
+                                        </span>
+                                    </b>
+                                    <span
+                                        data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.moviesText">
+                                        Reported duration
+                                    </span><br>
+
+                                    📺 <b>
+                                        <span
+                                            data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.series">
+                                            Series:
+                                        </span>
+                                    </b>
+                                    <span
+                                        data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.seriesText">
+                                        45 min × episode or 10 ep/season
+                                    </span><br>
+
+                                    ✨ <b>
+                                        <span
+                                            data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.animations">
+                                            Animations:
+                                        </span>
+                                    </b>
+                                    <span
+                                        data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.animationsText">
+                                        20 min × episode or 12 ep/season
+                                    </span><br>
+
+                                    🎮 <b>
+                                        <span
+                                            data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.games">
+                                            Games:
+                                        </span>
+                                    </b>
+                                    <span
+                                        data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.gamesText">
+                                        Reported playtime
+                                    </span><br>
+
+                                    📚 <b>
+                                        <span
+                                            data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.books">
+                                            Books:
+                                        </span>
+                                    </b>
+                                    <span
+                                        data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.booksText">
+                                        1h per 25 pages
+                                    </span><br>
+
+                                    📖💥 <b>
+                                        <span
+                                            data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.mangasAndComics">
+                                            Manga/Comics:
+                                        </span>
+                                    </b>
+                                    <span
+                                        data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.mangasAndComicsText">
+                                        30min per volume
+                                    </span><br><br>
+                                    🔁
+                                    <span data-i18n="main.dashboard.timeSpentEstimate.timeSpentEstimateTooltip.total">
+                                        Total across all completed media
+                                    </span>
+                                </span>
+                            </span>
+                        </h3>
+                        <button id="convert-time-btn" class="small-button">
+                            Convert to Days
+                        </button>
+                    </div>
+
+                    <div class="kpi-box">
+                        <span class="kpi-label">⏱ Total</span>
+                    </div>
+                    <span id="time-spent" class="kpi-value">0h</span>
+
+                </div>
+
+                <!-- 
+                    Line 2-3
+                -->
+
+                <!-- Media by Type (2x2) -->
+                <div class="dashboard-card dashboard-span-3x2" data-id="chart-category" draggable="true">
+                    <h3><i class="fas fa-chart-bar"></i>
+                        <span data-i18n="main.dashboard.mediaByType.title">
+                            Media by Type
+                        </span>
+                    </h3>
+                    <div class="chart-toggle">
+                        <button class="chart-type-btn active" data-target="chart-category" data-type="bar"
+                            data-i18n-title="main.dashboard.mediaByType.buttonBarTitle">
+                            <i class="fas fa-chart-bar"></i>
+                        </button>
+                        <button class="chart-type-btn" data-target="chart-category" data-type="pie"
+                            data-i18n-title="main.dashboard.mediaByType.buttonPieTitle">
+                            <i class="fas fa-chart-pie"></i>
+                        </button>
+                        <button class="chart-type-btn" data-target="chart-category" data-type="doughnut"
+                            data-i18n-title="main.dashboard.mediaByType.buttonDoughnutTitle">
+                            <i class="fas fa-circle-notch"></i>
+                        </button>
+                        <button class="chart-type-btn" data-target="chart-category" data-type="line"
+                            data-i18n-title="main.dashboard.mediaByType.buttonLineTitle">
+                            <i class="fas fa-chart-line"></i>
+                        </button>
+                        <button class="chart-type-btn" data-target="chart-category" data-type="bubble"
+                            data-i18n-title="main.dashboard.mediaByType.buttonBubbleTitle">
+                            <i class="fas fa-bullseye"></i>
+                        </button>
+                    </div>
+                    <canvas id="chart-category"></canvas>
+                </div>
+
+                <!-- Consumption Timeline (2x1) -->
+                <div class="dashboard-card dashboard-span-1x2" data-id="chart-timeline" draggable="true">
+                    <h3><i class="fas fa-calendar-alt"></i>
+                        <span data-i18n="main.dashboard.consumptionTimeline">
+                            Consumption Timeline
+                        </span>
+                    </h3>
+
+                    <canvas id="chart-timeline"></canvas>
+                </div>
+
+                <!-- Trophy Stats (1x1) -->
+                <div class="dashboard-card" data-id="chart-trophies" draggable="true">
+                    <h3><i class="fas fa-trophy"></i>
+                        <span data-i18n="main.dashboard.trophyStats.title">
+                            Trophies & Platinum
+                        </span>
+                    </h3>
+                    <div class="trophy-stats">
+                        <div class="kpi-box">
+                            <span class="kpi-label">🥇
+                                <span data-i18n="main.dashboard.trophyStats.trophies">
+                                    Trophies
+                                </span>
+                            </span>
+                            <span id="trophy-total" class="kpi-value">0</span>
+                        </div>
+                        <div class="kpi-box">
+                            <span class="kpi-label">🏆 <span data-i18n="main.dashboard.trophyStats.platinums">
+                                    Platinums
+                                </span>
+                            </span>
+                            <span id="platinum-count" class="kpi-value">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Completion Status (1x1) -->
+                <div class="dashboard-card" data-id="chart-game-status" draggable="true">
+                    <h3><i class="fas fa-gamepad"></i>
+                        <span data-i18n="main.dashboard.gameCompletionStatus.title">
+                            Game Completion Status
+                        </span>
+                    </h3>
+                    <canvas id="chart-game-status"></canvas>
+                </div>
+
+                <!-- 
+                    Line 4
+                -->
+
+                <!-- Favorite Media (1x1) -->
+                <div class="dashboard-card" data-id="favorite-media" draggable="true">
+                    <div class="card-header">
+                        <h3><i class="fas fa-heart"></i>
+                            <span data-i18n="main.dashboard.favoriteMedia.title">
+                                Favorite Media
+                            </span>
+                        </h3>
+                        <button id="select-favorite-btn" class="small-button">
+                            <span data-i18n="main.dashboard.favoriteMedia.selectFavorite">
+                                Select Favorite Media
+                            </span>
+                        </button>
+                    </div>
+
+                    <div id="favorite-media-content" class="favorite-media">
+                        <p>No favorite selected </p>
+                    </div>
+                </div>
+
+                <!-- Amount Read (1x1) -->
+                <div class="dashboard-card" data-id="chart-pages" draggable="true">
+                    <h3><i class="fas fa-book-reader"></i>
+                        <span data-i18n="main.dashboard.amountRead.title">
+                            Amount Read
+                        </span>
+                    </h3>
+                    <canvas id="chart-pages"></canvas>
+                </div>
+
+                <!-- Media Not Completed (2x1) -->
+                <div class="dashboard-card dashboard-span-2x1" data-id="media-gaps" draggable="true">
+                    <h3><i class="fas fa-puzzle-piece"></i>
+                        <span data-i18n="main.dashboard.mediaNotCompleted.title">
+                            Media Not Completed
+                        </span>
+                    </h3>
+                    <div id="media-gaps-list" class="media-gaps-list"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Select Favorite Media Modal -->
+        <div id="favorite-modal" class="modal hidden" role="dialog" aria-modal="true"
+            aria-labelledby="favoriteMediaTitle" tabindex="-1">
+            <div class="modal-content">
+                <h2>
+                    <i class="fas fa-heart"></i>
+                    <span data-i18n="main.modals.chooseFavoriteMedia.title">
+                        Select Favorite Media
+                    </span>
+                </h2>
+
+                <!-- Select Category & Media -->
+                <div class="form-row">
+                    <label>
+                        <span data-i18n="main.modals.chooseFavoriteMedia.category">
+                            Category
+                        </span>
+                        <select id="favorite-category-select"></select>
+                    </label>
+
+                    <label>
+                        <span data-i18n="main.modals.chooseFavoriteMedia.media">
+                            Media
+                        </span>
+                        <select id="favorite-media-select" disabled></select>
+                    </label>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="modal-buttons">
+                    <button id="cancel-favorite-btn" class="secondary-button">
+                        <i class="fas fa-times"></i>
+                        <span data-i18n="buttons.cancel">Cancel</span>
+                    </button>
+                    <button id="save-favorite-btn" disabled>
+                        <i class="fas fa-save"></i>
+                        <span data-i18n="buttons.save">Save</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div id="edit-profile-modal" class="modal hidden" role="dialog" aria-modal="true"
+            aria-labelledby="editProfileTitle" tabindex="-1">
+            <div class="modal-content">
+                <h2>
+                    <i class="fas fa-tools"></i>
+                    <span data-i18n="main.modals.editProfile.title">Edit Profile</span>
+                </h2>
+                <div class="form-row">
+                    <label>
+                        <span data-i18n="main.modals.editProfile.name">Name</span>
+                        <input type="text" id="edit-name" required maxlength="16">
+                    </label>
+                    <label>
+                        <span data-i18n="main.modals.editProfile.username">Username</span>
+                        <input type="text" id="edit-username" required maxlength="16">
+                    </label>
+                </div>
+                <div class="form-picture">
+                    <label>
+                        <span data-i18n="main.modals.editProfile.profilePicture">Profile Picture</span>
+                        <input type="file" id="edit-photo-file" accept="image/*">
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button id="cancel-edit">
+                        <i class="fas fa-times"></i>
+                        <span data-i18n="buttons.cancel">Cancel</span>
+                    </button>
+                    <button id="save-profile">
+                        <i class="fas fa-save"></i>
+                        <span data-i18n="buttons.save">Save</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Media Modal -->
+        <div id="add-media-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="addMediaTitle"
+            tabindex="-1">
+            <div class="modal-content">
+                <h2>
+                    <i class="fas fa-plus"></i>
+                    <span data-i18n="main.modals.addMedia.title">Add Media</span>
+                </h2>
+                <form id="add-media-form">
+
+                    <!-- Media Type Select -->
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.addMedia.typeOfMedia">Type of Media</span>
+                            <select id="media-type" name="type" required>
+                                <option value="">
+                                    <span data-i18n="main.modals.addMedia.selectMedia.choose">Choose...</span>
+                                </option>
+                                <option value="movies"><span data-i18n="main.modals.addMedia.selectMedia.movie">🎬
+                                        Movie</span></option>
+                                <option value="series">📺 Series</option>
+                                <option value="animations">✨ Animation</option>
+                                <option value="games">🎮 Game</option>
+                                <option value="books">📚 Book</option>
+                                <option value="mangas">📖 Manga</option>
+                                <option value="comics">💥 Comics</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- Media Title -->
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.addEditMedia.mediaTitle">Title</span>
+                            <input type="text" name="title" required maxlength="48" />
+                        </label>
+                    </div>
+
+                    <!-- Rating and Consumed Date -->
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.addEditMedia.rating">Rating</span>
+                            <input type="number" name="rating" step="0.1" min="0" max="10" placeholder="7.0" />
+                        </label>
+                        <label>
+                            <span data-i18n="main.modals.addEditMedia.consumedDate">Consumed Date</span>
+                            <input type="date" name="consumed_date" />
+                        </label>
+                    </div>
+
+                    <!-- Cover preview -->
+                    <div class="form-picture">
+                        <label>
+                            <div>
+                                <span data-i18n="main.modals.addEditMedia.coverImage">
+                                    Cover Image
+                                </span>
+                                <small>
+                                    <span data-i18n="main.modals.addEditMedia.recommendedSize">
+                                        (Recommended size: 300 × 200 pixels)
+                                    </span>
+                                </small>
+                            </div>
+                            <input type="file" name="cover_img" accept="image/*" />
+                        </label>
+                    </div>
+
+                    <!-- Specif Fields from each Media Type -->
+                    <div id="media-specific-fields"></div>
+
+                    <div class="modal-buttons">
+                        <button type="button" id="cancel-add-media">
+                            <i class="fas fa-times"></i>
+                            <span data-i18n="buttons.cancel">Cancel</span>
+                        </button>
+                        <button type="submit">
+                            <i class="fas fa-save"></i>
+                            <span data-i18n="buttons.save">Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Media Modal -->
+        <div id="edit-media-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="addMediaTitle"
+            tabindex="-1">
+            <div class="modal-content">
+                <h2>
+                    <i class="fas fa-tools"></i>
+                    <span data-i18n="main.modals.editMedia.title">Edit Media</span>
+                </h2>
+                <form id="edit-media-form">
+                    <!-- Reused fields from Add Media -->
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.addEditMedia.mediaTitle">
+                                Title
+                            </span>
+                            <input type="text" name="title" id="edit-title" required maxlength="48" />
+                        </label>
+                    </div>
+
+                    <!-- Rating and Consumed Date -->
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.addEditMedia.rating">
+                                Rating
+                            </span>
+                            <input type="number" name="rating" id="edit-rating" step="0.1" min="0" max="10" />
+                        </label>
+                        <label>
+                            <span data-i18n="main.modals.addEditMedia.consumedDate">
+                                Consumed Date
+                            </span>
+                            <input type="date" name="consumed_date" id="edit-date" />
+                        </label>
+                    </div>
+
+                    <!-- Cover preview -->
+                    <div class="form-picture">
+                        <label>
+                            <div>
+                                <span data-i18n="main.modals.addEditMedia.coverImage">
+                                    Cover Image
+                                </span>
+                                <small>
+                                    <span data-i18n="main.modals.addEditMedia.recommendedSize">
+                                        (Recommended size: 300 × 200 pixels)
+                                    </span>
+                                </small>
+                            </div>
+                            <input type="file" name="cover_img" id="edit-cover" accept="image/*" />
+                        </label>
+                    </div>
+
+                    <!-- Specific Fields & Action Buttons -->
+                    <div id="edit-specific-fields"></div>
+
+                    <div class="modal-buttons">
+                        <button type="button" id="delete-media">
+                            <i class="fas fa-trash-alt"></i><br>
+                            <span data-i18n="buttons.delete">Delete</span>
+                        </button>
+                        <button type="button" id="cancel-edit-media">
+                            <i class="fas fa-times"></i><br>
+                            <span data-i18n="buttons.cancel">Cancel</span>
+                        </button>
+                        <button type="submit">
+                            <i class="fas fa-save"></i><br>
+                            <span data-i18n="buttons.update">Update</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Advanced Filters Modal -->
+        <div id="advanced-filters-modal" class="modal hidden" role="dialog" aria-modal="true"
+            aria-labelledby="addMediaTitle" tabindex="-1">
+            <div class="modal-content">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24"
+                        fill="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                    </svg>
+                    <span data-i18n="main.modals.advancedFilter.title">
+                        Advanced Filters
+                    </span>
+                </h2>
+                <form id="advanced-filters-form">
+
+                    <!-- Section: Media Types -->
+                    <div class="advanced-title">
+                        <span data-i18n="main.modals.advancedFilter.typeOfMedia">Media Type</span>
+                    </div>
+                    <div class="filter-container" id="filterContainer">
+                        <label class="filter-item">
+                            <input type="checkbox" name="filter" value="all" />
+                            <span data-i18n="main.modals.advancedFilter.all">📂 All</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" name="filter" value="movies" />
+                            <span data-i18n="main.modals.advancedFilter.movies">🎬 Movies</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" name="filter" value="series" />
+                            <span data-i18n="main.modals.advancedFilter.series">📺 Series</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" name="filter" value="animations" />
+                            <span data-i18n="main.modals.advancedFilter.animations">✨ Animations</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" name="filter" value="games" />
+                            <span data-i18n="main.modals.advancedFilter.games">🎮 Games</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" name="filter" value="books" />
+                            <span data-i18n="main.modals.advancedFilter.books">📚 Books</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" name="filter" value="mangas" />
+                            <span data-i18n="main.modals.advancedFilter.mangas">📖 Manga</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" name="filter" value="comics" />
+                            <span data-i18n="main.modals.advancedFilter.comics">💥 Comics</span>
+                        </label>
+                    </div>
+
+                    <!-- Section: Consumption Interval -->
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.advancedFilter.consumedYearFrom">
+                                Consumed Year (From)
+                            </span>
+                            <input type="number" name="year_from" min="1900" max="2100" placeholder="2015" />
+                        </label>
+                        <label>
+                            <span data-i18n="main.modals.advancedFilter.consumedYearTo">
+                                Consumed Year (To)
+                            </span>
+                            <input type="number" name="year_to" min="1900" max="2100" placeholder="2025" />
+                        </label>
+                    </div>
+
+                    <!-- Section: Rating and Trophy/Completion % -->
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.advancedFilter.ratingRangeMin">
+                                Rating Range (Min)
+                            </span>
+                            <input type="number" name="rating_min" placeholder="2.5" min="0" max="10" step="0.1" />
+                        </label>
+                        <label>
+                            <span data-i18n="main.modals.advancedFilter.ratingRangeMax">
+                                Rating Range (Max)
+                            </span>
+                            <input type="number" name="rating_max" placeholder="8.0" min="0" max="10" step="0.1" />
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.advancedFilter.trophyCompletion">
+                                Trophy/Completion % (Min)
+                            </span>
+                            <input type="number" name="completion_min" min="0" max="100" step="1" placeholder="50" />
+                        </label>
+                    </div>
+
+                    <!-- Section: Sort and Order -->
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.advancedFilter.orderBy">
+                                Order By
+                            </span>
+                            <select name="order_by" id="order-by-select">
+                                <option value="">🔽
+                                    <span data-i18n="main.modals.advancedFilter.orderByOptions.selectOrderBy">
+                                        Select...
+                                    </span>
+                                </option>
+                                <option value="title" data-types="">📖
+                                    <span data-i18n="main.modals.advancedFilter.orderByOptions.name">
+                                        Name
+                                    </span>
+                                </option>
+                                <option value="rating" data-types="">⭐
+                                    <span data-i18n="main.modals.advancedFilter.orderByOptions.rating">
+                                        Rating
+                                    </span>
+                                </option>
+                                <option value="consumed_date" data-types="">📅
+                                    <span data-i18n="main.modals.advancedFilter.orderByOptions.consumedDate">
+                                        Consumed Date
+                                    </span>
+                                </option>
+                                <option value="completion" data-types="games books mangas comics">🏆📊
+                                    <span data-i18n="main.modals.advancedFilter.orderByOptions.completion">
+                                        Completion %
+                                    </span>
+                                </option>
+                                <option value="hours_played" data-types="games">🎮
+                                    <span data-i18n="main.modals.advancedFilter.orderByOptions.hoursPlayed">
+                                        Hours Played
+                                    </span>
+                                </option>
+                            </select>
+                        </label>
+                        <label>
+                            <span data-i18n="main.modals.advancedFilter.orderDir">
+                                Order Dir
+                            </span>
+                            <select name="order_dir">
+                                <option value="">⬍
+                                    <span data-i18n="main.modals.advancedFilter.orderDirOptions.selectOrderDirection">
+                                        Select...
+                                    </span>
+                                </option>
+                                <option value="desc">🔽
+                                    <span data-i18n="main.modals.advancedFilter.orderDirOptions.orderDesc">
+                                        Descending
+                                    </span>
+                                </option>
+                                <option value="asc">🔼
+                                    <span data-i18n="main.modals.advancedFilter.orderDirOptions.orderAsc">
+                                        Ascending
+                                    </span>
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- Section: Action Buttons -->
+                    <div class="modal-buttons">
+                        <button type="button" class="modal-btn" onclick="clearFilters()">
+                            <i class="fas fa-broom"></i><br>
+                            <span data-i18n="buttons.clear">Clear</span>
+                        </button>
+                        <button type="button" class="modal-btn" id="cancel-advanced">
+                            <i class="fas fa-times"></i> <br>
+                            <span data-i18n="buttons.cancel">Cancel</span>
+                        </button>
+                        <button type="submit" class="modal-btn primary">
+                            <i class="fas fa-check"></i><br>
+                            <span data-i18n="buttons.apply"> Apply</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"
+            tabindex="-1">
+            <div class="modal-content">
+                <h2><i class="fas fa-cog"></i> <span data-i18n="main.modals.settings.title">Settings</span></h2>
+
+                <!-- Section: Media Types -->
+                <div class="settings-section">
+                    <h3>
+                        <i class="fa-solid fa-square-check"></i>
+                        <span data-i18n="main.modals.settings.activeMediaTypes">Active Media Types</span>
+                    </h3>
+                    <div class="checkbox-grid two-columns">
+                        <label><input type="checkbox" id="select-all-types" />
+                            <span data-i18n="main.modals.settings.all">📂 All</span>
+                        </label>
+                        <label><input type="checkbox" name="mediaTypes" value="movies" checked>
+                            <span data-i18n="main.modals.settings.movies">🎬 Movies</span>
+                        </label>
+                        <label><input type="checkbox" name="mediaTypes" value="series" checked>
+                            <span data-i18n="main.modals.settings.series">📺 Series</span>
+                        </label>
+                        <label><input type="checkbox" name="mediaTypes" value="animations" checked>
+                            <span data-i18n="main.modals.settings.animations">✨ Animations</span>
+                        </label>
+                        <label><input type="checkbox" name="mediaTypes" value="games" checked>
+                            <span data-i18n="main.modals.settings.games">🎮 Games</span>
+                        </label>
+                        <label><input type="checkbox" name="mediaTypes" value="books" checked>
+                            <span data-i18n="main.modals.settings.books">📚 Books</span>
+                        </label>
+                        <label><input type="checkbox" name="mediaTypes" value="mangas" checked>
+                            <span data-i18n="main.modals.settings.mangas">📖 Manga</span>
+                        </label>
+                        <label><input type="checkbox" name="mediaTypes" value="comics" checked>
+                            <span data-i18n="main.modals.settings.comics">💥 Comics</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Section: General Preferences -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-globe"></i> <span data-i18n="main.modals.settings.generalPreferences">General
+                            Preferences</span>
+                    </h3>
+                    <label>
+                        <span data-i18n="main.modals.settings.selectLanguage">Select Language</span>
+                        <select id="language-select">
+                            <option value="en">🇺🇸 English</option>
+                            <option value="pt">🇧🇷 Português</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span data-i18n="main.modals.settings.selectTheme">Select Theme</span>
+                        <select id="darkmode-select">
+                            <option value="light"><i class="fas fa-sun"></i> <span
+                                    data-i18n="main.modals.settings.lightMode">Light
+                                    Mode</span></option>
+                            <option value="dark"><i class="fas fa-moon"></i> <span
+                                    data-i18n="main.modals.settings.darkMode">Dark
+                                    Mode</span></option>
+                        </select>
+                    </label>
+                </div>
+
+                <!-- Section: Danger Zone -->
+                <div class="settings-section danger-zone">
+                    <h3><i class="fas fa-exclamation-triangle"></i> <span
+                            data-i18n="main.modals.settings.attentionZone">Attention
+                            Zone</span></h3>
+                    <button id="reset-data" class="reset-button"><i class="fas fa-sync-alt"></i> <span
+                            data-i18n="main.modals.settings.resetData">Reset All Data</span></button>
+                </div>
+
+                <!-- Section: Action Buttons -->
+                <div class="modal-buttons">
+                    <button id="cancel-settings"><i class="fas fa-times"></i> <span
+                            data-i18n="buttons.cancel">Cancel</span></button>
+                    <button id="save-settings"><i class="fas fa-save"></i> <span
+                            data-i18n="buttons.save">Save</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Firebase SDKs (compat - fácil de usar em projeto sem bundler) -->
+        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+        <script>
+            const firebaseConfig = {
+                apiKey: "AIzaSyBWp8jvNXURi-rpfVwTfv7LjGhI_D9Werk",
+                authDomain: "my-entertainment-manager.firebaseapp.com",
+                projectId: "my-entertainment-manager",
+                storageBucket: "my-entertainment-manager.firebasestorage.app",
+                messagingSenderId: "406501797296",
+                appId: "1:406501797296:web:f257ad1abe6ba2e45cfa75",
+                measurementId: "G-QBBHD36LZN"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            const DB = firebase.firestore();
+            const AUTH = firebase.auth();
+            const STORAGE = firebase.storage();
+
+            window._DB = DB;
+            window._AUTH = AUTH;
+            window._STORAGE = STORAGE;
+
+            // Fazer login anônimo automaticamente
+            window._AUTH.signInAnonymously()
+                .then(() => console.log("Authenticated anonymously on Firebase."))
+                .catch(err => console.error("Auth error:", err));
+        </script>
+
+        <!-- Sortable.js -->
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+        <!-- JavaScript -->
+        <script src="./assets/js/script.js"></script>
+
+    </main>
+
+    <!-- Professional Footer -->
+    <!-- <footer class="site-footer pro-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <p>© 2025 <strong>My Entertainment Manager</strong>. All rights reserved.</p>
+                <p><a href="#">Privacy Policy</a> · <a href="#">Terms of Use</a></p>
+            </div>
+            <div class="footer-right">
+                <p>Contact: <a href="mailto:support@entertainmentapp.com">support@entertainmentapp.com</a></p>
+                <p class="footer-version">App v1.0.0</p>
+            </div>
+        </div>
+    </footer> -->
+
+    <!-- Portfolio Footer -->
+    <footer class="site-footer portfolio-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <p>© 2025 <strong><span data-i18n="head.title">My Entertainment Manager</span></strong></p>
+                <p>
+                    <span data-i18n="footer.portfolio.createdBy">Created by</span>
+                    <a href="https://yourportfolio.com" target="_blank" rel="noopener noreferrer">
+                        @josejsneto
+                    </a>
+                </p>
+            </div>
+
+            <div class="footer-right social-links">
+                <a href="https://github.com/zejsneto" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <i class="fab fa-github fa-lg"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/josejsneto/" target="_blank" rel="noopener noreferrer"
+                    aria-label="LinkedIn">
+                    <i class="fab fa-linkedin fa-lg"></i>
+                </a>
+                <a href="https://github.com/zejsneto" target="_blank" rel="noopener noreferrer" aria-label="Portfolio">
+                    <i class="fas fa-user fa-lg"></i>
+                </a>
+                <a href="mailto:contato@josejsneto.com.br" aria-label="Email">
+                    <i class="fas fa-envelope fa-lg"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

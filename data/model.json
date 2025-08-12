@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "type": "movies-series-animations-animated_movie-games-books-mangas-comics", 
+    "title": "Title",
+    "rating": 8.5,
+    "commentaries": "Gostei bastante da ambientação e dos personagens.",
+    "cover_img": "./assets/images/series/image.jpg",
+    "launch_date": "2016-07-15",
+    "consumed_date": "2022-10-18",
+    "duration": "2h15min",
+    "seasons": "S1 - S5",
+    "hours_played": 12.5,
+    "online": false,
+    "beaten": true,
+    "trophie_amount": 52,
+    "trophie_obtained": 50,
+    "pages_read": 158,
+    "pages_total": 170,
+    "volume_amount": 12,
+    "volume_read": 15
+  }
+]

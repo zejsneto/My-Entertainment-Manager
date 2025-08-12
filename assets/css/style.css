@@ -1,0 +1,3014 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+/* ============================
+  Root Variables (Colors)
+============================ */
+:root {
+  /* Light Theme */
+  --bg-color: #ffffff;
+  --text-color: #1a1a1a;
+  --text-secondary: #555555;
+  --header-bg: #f5f5f5;
+  --card-bg: #fafafa;
+  --border-color: #dddddd;
+  --hover-bg: #e5e5e5;
+  --profile-border: #dddddd;
+  --select-arrow-color: #333333;
+  --accent-color: #8434ff;
+  --tooltip-bg: #2b2b2b;
+  --tooltip-color: #f1f1f1;
+  --tooltip-icon-color: #666666;
+  --progress-background: #e0e0e0;
+}
+
+body.dark-mode {
+  /* Dark Theme */
+  --bg-color: #121212;
+  --text-color: #ededed;
+  --text-secondary: #aaaaaa;
+  --header-bg: #1e1e1e;
+  --card-bg: #1a1a1a;
+  --border-color: #333333;
+  --hover-bg: #2a2a2a;
+  --profile-border: #333333;
+  --select-arrow-color: #ededed;
+  --accent-color: #8434ff;
+  --tooltip-bg: #f1f1f1;
+  --tooltip-color: #1a1a1a;
+  --tooltip-icon-color: #cccccc;
+  --progress-background: #b1b1b1;
+}
+
+/* ============================
+  General Body Styles
+============================ */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+/* ============================
+  Header
+============================ */
+header {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  padding: 1em;
+  text-align: center;
+}
+
+/* ============================
+  Navigation Buttons
+============================ */
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+
+nav button {
+  padding: 0.5em 1em;
+  border: none;
+  background: var(--accent);
+  color: var(--text-light);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+nav button:hover {
+  background: var(--accent-hover);
+}
+
+/* ============================
+  Media Container and Cards
+============================ */
+#media-container {
+  gap: 1.5em;
+  padding: 1em;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+
+  width: 300px;
+  max-width: 90%;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: scale(1.02);
+  }
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.card-content h3 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.card-content p {
+  margin: 0;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.card-content h3 {
+  margin: 0.3em 0;
+  font-size: 1.1em;
+  color: #222;
+}
+
+.card-content .row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 0.9em;
+  margin: 0.2em 0;
+  color: #444;
+}
+
+.card-content .duration-row {
+  justify-content: flex-start;
+}
+
+.card-content .row span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  /* margin-right: 10px; */
+}
+
+.card-content .comment {
+  margin-top: 0.6em;
+  font-style: italic;
+  color: #444;
+  font-size: 0.95em;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-image {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.card-image img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  /* altura fixa */
+  object-fit: cover;
+  /* corta as sobras e mantém o foco visual */
+}
+
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInCard 0.4s ease forwards;
+}
+
+@keyframes fadeInCard {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Badge (selo com emoji) fixo no topo esquerdo da imagem */
+.badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 0.3em 0.5em;
+  font-size: 1.1em;
+  border-bottom-right-radius: 16px;
+  z-index: 1;
+  font-weight: bold;
+}
+
+/* Cores por categoria (opcional, pode ajustar) */
+.badge-games {
+  background-color: #ffffff;
+}
+
+.badge-movies {
+  background-color: #ffffff;
+}
+
+.badge-series {
+  background-color: #ffffff;
+}
+
+.badge-books {
+  background-color: #ffffff;
+}
+
+.badge-mangas {
+  background-color: #ffffff;
+}
+
+.badge-comics {
+  background-color: #ffffff;
+}
+
+.badge-animations,
+.badge-animated_movies {
+  background-color: #ffffff;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 1em;
+  padding: 0 1em;
+}
+
+/* ============================
+  Profile Info Section
+============================ */
+.profile-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 0.8em;
+}
+
+.profile-pic {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--profile-border);
+}
+
+.profile-text span {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+}
+
+/* ============================
+  Controls Bar
+============================ */
+.controls {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+.controls select {
+  padding: 0.5em;
+  font-size: 1em;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.controls-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin: 1em auto;
+  padding: 0 1em;
+  max-width: 1000px;
+}
+
+#search-input {
+  flex: 1;
+  min-width: 220px;
+  max-width: 300px;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+}
+
+#sort-select {
+  padding: 0.5em 1.5em 0.5em 1.55em;
+  /* mais padding à direita para a seta */
+  border-radius: 6px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  line-height: 1.4;
+  /* ajuda no alinhamento vertical */
+  appearance: none;
+  /* remove o estilo padrão da seta para personalizar */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='7' viewBox='0 0 10 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8em center;
+  background-size: 10px 7px;
+  cursor: pointer;
+}
+
+.controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em;
+  /* padding: 1em; */
+  align-items: center;
+}
+
+.controls-bar input,
+.controls-bar select,
+.controls-bar .control-button {
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  font-size: 0.95em;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+}
+
+#search-input {
+  flex: 1 1 200px;
+  max-width: 230px;
+  border: 1px solid var(--border-color);
+}
+
+#search-input:hover {
+  border-color: #aaa;
+}
+
+#sort-select {
+  max-width: 170px;
+  appearance: none;
+  background-color: white;
+  background-image: url("data:image/svg+xml,%3Csvg fill='%23333' height='14' viewBox='0 0 24 24' width='14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7em center;
+  background-size: 1em;
+  padding-right: 2em;
+  cursor: pointer;
+}
+
+#sort-select {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+#sort-select:hover {
+  border-color: #aaa;
+}
+
+.control-button {
+  background-color: white;
+  color: #333;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.control-button:hover {
+  background-color: #f0f0f0;
+  border-color: #aaa;
+}
+
+.controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  justify-content: center;
+  margin: 1em auto;
+  max-width: 1000px;
+}
+
+.controls-bar input,
+.controls-bar select,
+.controls-bar button {
+  height: 40px;
+  padding: 0 12px;
+  font-size: 1em;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* Estilo da setinha no <select> */
+.controls-bar select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+/* Hover do botão */
+.controls-bar button:hover {
+  background-color: #f0f0f0;
+  border-color: #aaa;
+}
+
+
+/* ============================
+  Header Actions (buttons)
+============================ */
+.header-actions {
+  display: flex;
+  gap: 0.4em;
+  justify-self: end;
+}
+
+.header-actions button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: white;
+  font-size: 1.2em;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-actions button:hover {
+  background: #f0f0f0;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.4em;
+  flex-wrap: wrap;
+}
+
+.header-actions button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: white;
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1em 0 0 0;
+}
+
+.header-actions button:hover {
+  background: #f0f0f0;
+}
+
+.profile-info>div:nth-child(1) {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  text-align: left;
+}
+
+.profile-info>div:nth-child(1) {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+/* ============================
+  Dark Mode Styles
+============================ */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+header {
+  background-color: var(--header-bg);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+.card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+nav button,
+.controls-bar button,
+.header-actions button {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+nav button:hover,
+.controls-bar button:hover,
+.header-actions button:hover {
+  background: var(--hover-bg);
+  border-color: #aaa;
+}
+
+.controls-bar input,
+.controls-bar select {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+.card-content h3,
+.card-content p,
+.card-content .row,
+.card-content .comment {
+  color: var(--text-color);
+}
+
+body,
+.card,
+header,
+nav button,
+.controls-bar input,
+.controls-bar select,
+.controls-bar button,
+.header-actions button {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+@media (max-width: 500px) {
+  header h1 {
+    font-size: 1.2em;
+    text-align: center;
+  }
+}
+
+/* ============================
+  Media Counter Text
+============================ */
+#results-info {
+  white-space: nowrap;
+  font-style: italic;
+  font-size: 0.95em;
+  color: var(--text-secondary);
+}
+
+/* Responsiveness: when the screen is small, the counter goes down */
+@media (max-width: 600px) {
+  #results-info {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 0;
+    text-align: center;
+    margin-top: 0.5em;
+  }
+}
+
+/* ============================
+  Profile Picture Edit
+============================ */
+.profile-pic-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-pic-wrapper:hover {
+  cursor: pointer;
+}
+
+.edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--hover-bg);
+  border-radius: 50%;
+  padding: 0.2em;
+  font-size: 0.8em;
+  display: none;
+  pointer-events: none;
+}
+
+.edit-icon i {
+  color: var(--select-arrow-color);
+}
+
+@media (hover: hover) {
+  .profile-wrapper:hover .edit-icon {
+    display: block;
+  }
+}
+
+/* ============================
+  Modal Profile Picture Edit
+============================ */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 400px;
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-top: 0;
+  font-size: 1.5em;
+}
+
+.form-row {
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  margin-bottom: 1em;
+}
+
+.form-row label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+.form-picture label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5em;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="file"] {
+  margin-top: 0.3em;
+  padding: 0.6em;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.modal-content input[type="file"] {
+  padding: 0.3em;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 0.6em 1em;
+  font-size: 1em;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--hover-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: 1px solid var(--border-color);
+}
+
+.modal-buttons button:hover {
+  background-color: var(--border-color);
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .modal-content {
+    padding: 1.5em;
+    width: 95%;
+  }
+}
+
+/* ============================
+  Switch Theme Icon
+============================ */
+.theme-icon {
+  font-size: 1.2rem;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  display: inline-block;
+}
+
+body.dark-mode .theme-icon {
+  transform: rotate(360deg);
+  opacity: 0.8;
+}
+
+/* ============================
+  Switch Lang Toggle
+============================ */
+#lang-toggle {
+  width: 36px;
+  height: 36px;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+
+  padding: 0.3em 0.6em;
+
+  font-weight: bold;
+  line-height: 1;
+  font-size: 0.8em;
+}
+
+#lang-toggle:hover {
+  background-color: var(--border-color);
+}
+
+/* ============================
+  Add Media Modal Styles
+============================ */
+.form-row {
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  margin-bottom: 1em;
+}
+
+.form-row label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="file"],
+.modal-content input[type="date"],
+.modal-content input[type="number"],
+.modal-content select {
+  margin-top: 0.3em;
+  padding: 0.6em;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Invert Calendar Icon Color */
+body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* Responsive Cards */
+@media (max-width: 600px) {
+  #media-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1em;
+    padding: 0.5em;
+    margin-bottom: 1.5em;
+  }
+
+  .card {
+    width: 100%;
+    max-width: unset;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: auto;
+  }
+
+  .card img {
+    height: 120px;
+    object-fit: cover;
+  }
+
+  .card-content {
+    padding: 0.8em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+  }
+
+  .card-content h3 {
+    font-size: 0.85em;
+    margin: 0 0 0.2em 0;
+  }
+
+  .card-content p,
+  .card-content .comment {
+    font-size: 0.7em;
+    line-height: 1.2;
+  }
+
+  .card-content .row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.4em;
+    font-size: 0.6em;
+    line-height: 1.2;
+  }
+
+  .card-content .row span {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    white-space: nowrap;
+  }
+
+  .card-content .duration-row {
+    justify-content: start;
+    gap: 0.4em;
+  }
+}
+
+/* Edit/Delete Card Styles */
+.edit-icon-card {
+  display: none;
+  position: absolute;
+  top: 0.3em;
+  right: 0.3em;
+  cursor: pointer;
+  font-size: 1rem;
+  z-index: 2;
+  background: var(--hover-bg);
+  border-radius: 50%;
+  padding: 0.2em;
+  transition: opacity 0.2s ease;
+}
+
+.edit-icon-card i {
+  color: var(--select-arrow-color);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .edit-icon-card {
+    display: block;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .edit-icon-card {
+    display: block;
+  }
+}
+
+
+.card {
+  position: relative;
+  /* necessário para o botão ficar no topo */
+}
+
+/**/
+.control-button {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.5em 1em;
+  height: 40px;
+  font-size: 0.95em;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  line-height: 1;
+}
+
+.control-button:hover {
+  background-color: var(--hover-bg);
+  border-color: #aaa;
+}
+
+.control-button svg {
+  fill: currentColor;
+}
+
+.control-button span {
+  display: inline;
+}
+
+@media (max-width: 500px) {
+  .control-button span {
+    display: none;
+    /* mostra só os ícones em telas pequenas */
+  }
+}
+
+/**/
+/* === Botão Hamburger === */
+/* Botão hamburguer só aparece em mobile */
+.hamburger {
+  display: none !important;
+  font-size: 1.4em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+@media (max-width: 600px) {
+  .hamburger {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4em;
+  }
+
+  .main-nav {
+    display: none;
+    /* oculta nav principal no celular */
+  }
+}
+
+/* Em telas maiores, a nav principal fica visível */
+@media (min-width: 601px) {
+  .main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 0.5em;
+  }
+
+  .mobile-menu {
+    display: none;
+    /* oculta totalmente o menu lateral */
+  }
+}
+
+/* === Menu Lateral Mobile === */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 65%;
+  background: var(--card-bg);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  padding-top: 0.3em;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu.hidden {
+  transform: translateX(-100%);
+}
+
+/* Fechar botão */
+.close-button {
+  position: absolute;
+  top: 0.8em;
+  right: 0.8em;
+  font-size: 1.6em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+/* Botões dentro do menu */
+.mobile-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  padding: 1em;
+}
+
+.mobile-menu nav button {
+  padding: 0.5em 1em;
+  font-size: 0.95em;
+  border-radius: 6px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.mobile-menu nav button:hover {
+  background: var(--hover-bg);
+}
+
+/**/
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 400px;
+  /* ajusta conforme seu layout */
+}
+
+.filter-item {
+  flex: 1 1 45%;
+  /* ocupa quase metade do container */
+  display: flex;
+  align-items: center;
+  /* vertical alinhado checkbox e texto */
+  gap: 8px;
+  cursor: pointer;
+}
+
+.filter-item input[type="checkbox"] {
+  margin: 0;
+  /* remove margem default do checkbox */
+}
+
+.clear-button {
+  margin-top: 15px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+/* Para herdar a cor do modal */
+#advanced-filters-modal {
+  color: #333;
+
+  /* exemplo de cor, use a que estiver no seu modal */
+}
+
+.filter-container {
+  color: inherit;
+  /* garante que os labels herdem a cor do modal */
+}
+
+.filter-item {
+  color: inherit;
+  /* ... seu estilo flex */
+}
+
+/* Espaço abaixo do título do grupo */
+#advanced-filters-modal form> :first-child {
+  /* para dar espaço entre "Media Type:" e os checkboxes */
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+}
+
+/* Espaço entre os blocos de filtros */
+.filter-container {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+#advanced-filters-modal {
+  color: #333;
+  font-family: Arial, sans-serif;
+}
+
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 400px;
+  margin-bottom: 20px;
+  color: inherit;
+}
+
+.filter-item {
+  flex: 1 1 45%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  /* herda cor do modal */
+}
+
+.filter-item input[type="checkbox"] {
+  margin: 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Espaço após o texto "Media Type:" */
+#advanced-filters-form>text,
+#advanced-filters-form>div:first-child,
+#advanced-filters-form>.filter-container {
+  margin-top: 8px;
+}
+
+/*responsividade modal*/
+/* ===== Modal Responsiveness Improvements ===== */
+
+/* Garante que o modal fique mais compacto e com boa proporção */
+.modal-content {
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
+  /* Limita altura máxima */
+  overflow-y: auto;
+  /* Scroll interno se necessário */
+  box-sizing: border-box;
+}
+
+/* Melhoras adicionais para celulares */
+@media (max-width: 600px) {
+  .modal-content {
+    padding: 1em 1.2em;
+    /* Reduz padding em telas pequenas */
+    width: 95%;
+    max-height: 90vh;
+    /* Edit here */
+  }
+
+  .form-row {
+    flex-direction: column;
+    /* Empilha campos para melhor leitura */
+    gap: 0.8em;
+  }
+
+  /* .modal-buttons {
+    flex-direction: column;
+    gap: 0.6em;
+  } */
+
+  .modal-buttons button {
+    width: 100%;
+  }
+}
+
+/* Evita o conteúdo do modal "colar" na borda */
+.modal-content input,
+.modal-content select,
+.modal-content label {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.close-button {
+  z-index: 10;
+  background: none;
+  border: none;
+  font-size: 1.4em;
+  color: var(--text-color);
+  position: absolute;
+  top: 0.8em;
+  right: 0.8em;
+}
+
+/*print cards*/
+/* Print layout for media cards */
+@media print {}
+
+/* more card stuff */
+.card-image.no-image {
+  display: none;
+}
+
+/* Oculta algumas infos e ajusta fontes para celular */
+@media screen and (max-width: 768px) {
+  .card .row span {
+    font-size: 1em;
+    white-space: nowrap;
+  }
+
+  .card-content p.comment {
+    font-size: 0.85em;
+  }
+
+  .emoji-blink {
+    font-size: 1em;
+  }
+}
+
+/* === Menu Lateral Mobile Para Constrol Buttons === */
+.mobile-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 1em;
+}
+
+.mobile-controls .control-button,
+.mobile-controls select,
+.mobile-controls input {
+  font-size: 1em;
+  padding: 0.6em;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+@media (max-width: 600px) {
+
+  /* Esconder no mobile */
+  #sort-select,
+  #advanced-search-btn,
+  #dashboard-btn,
+  #json-btn,
+  #print-btn {
+    display: none !important;
+  }
+}
+
+/* Quando o menu mobile estiver ativo, impedir scroll no body */
+body.menu-open {
+  overflow: hidden;
+}
+
+.menu-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 0.4em 0;
+  opacity: 0.6;
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* 👈 Isso garante o alinhamento vertical */
+  padding: 1em;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobile-menu-title {
+  margin: 0;
+  /* 👈 Remove margem padrão do <p> */
+  padding: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--text-color);
+  line-height: 1;
+  /* 👈 Ajuda no alinhamento exato */
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  line-height: 1;
+  /* 👈 Alinha verticalmente melhor */
+  cursor: pointer;
+  color: var(--text-color);
+  padding: 0;
+  /* 👈 Garante alinhamento perfeito */
+}
+
+/*footer*/
+/* Sticky footer layout */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Footer styles */
+/* Layout base para manter footer no fundo */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Footer elegante e responsivo */
+.site-footer {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 2em 1em;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.footer-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  align-items: center;
+}
+
+/* Alinha os dois blocos lado a lado em telas grandes */
+/* === FOOTER === */
+.site-footer {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 2.5em 1em;
+  border-top: 1px solid var(--border-color);
+  font-size: 1em;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  align-items: center;
+  text-align: center;
+  padding: 0 1em;
+}
+
+/* Desktop refinement */
+@media (min-width: 768px) {
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left;
+    gap: 4em;
+  }
+
+  .footer-left,
+  .footer-right {
+    flex: 1;
+  }
+}
+
+.footer-left p,
+.footer-right p {
+  margin: 0.3em 0;
+  line-height: 1.6;
+  font-size: 0.85rem;
+}
+
+.footer-left strong {
+  font-weight: 600;
+  font-size: 1.05em;
+}
+
+.site-footer a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+  color: var(--accent-color, var(--text-color));
+  text-decoration: underline;
+}
+
+.footer-version {
+  font-size: 0.9em;
+  opacity: 0.6;
+  margin-top: 0.8em;
+}
+
+/*background*/
+:root {
+  --grid-color: rgba(0, 0, 0, 0.03);
+}
+
+body.dark-mode {
+  --grid-color: rgba(255, 255, 255, 0.05);
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+#mobile-menu {
+  overflow-y: auto;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+.mobile-sort {
+  padding-right: 2.5rem;
+  /* espaço para a seta */
+  padding-left: 0.5rem;
+  font-size: 1rem;
+  height: 2.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  appearance: none;
+  /* opcional: remove seta nativa */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1rem;
+  background-color: #fff;
+}
+
+select.mobile-sort {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2.5em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%231a1a1a' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4z'/%3E%3C/svg%3E") no-repeat right 0.75em center/1em auto;
+  color: var(--text-color);
+}
+
+body.dark-mode select.mobile-sort {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ededed' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4z'/%3E%3C/svg%3E") no-repeat right 0.75em center/1em auto;
+}
+
+/* Estilo base (tema claro) */
+select.pc-sort {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2.5em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%231a1a1a' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4z'/%3E%3C/svg%3E") no-repeat right 0.75em center/1em auto;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.5em 2.5em 0.5em 0.75em;
+}
+
+/* Tema escuro */
+body.dark-mode select.pc-sort {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ededed' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4z'/%3E%3C/svg%3E") no-repeat right 0.75em center/1em auto;
+}
+
+#sort-select {
+  max-width: 160px;
+  appearance: none;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding-right: 2em;
+  cursor: pointer;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23000' height='14' viewBox='0 0 24 24' width='14' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.7em center;
+  background-size: 1em;
+}
+
+body.dark-mode #sort-select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23ededed' height='14' viewBox='0 0 24 24' width='14' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+}
+
+
+/*settings*/
+.settings-section {
+  margin-bottom: 1rem;
+}
+
+.settings-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.5rem 1rem;
+}
+
+.checkbox-grid label,
+.settings-section label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+}
+
+.settings-section select {
+  margin-left: 0.5rem;
+  padding: 0.3rem;
+  font-size: 0.9rem;
+}
+
+/* Two columns layout for media type checkboxes */
+.checkbox-grid.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Reset button styling */
+.reset-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reset-button:hover {
+  background-color: #c0392b;
+}
+
+.settings-section.danger-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.settings-section.danger-zone h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Make all selects same width and consistent margin */
+.settings-section select {
+  min-width: 180px;
+  max-width: 220px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Optional: fix spacing in labels with selects */
+.settings-section label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+}
+
+/* Keep reset button style */
+.reset-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.reset-button:hover {
+  background-color: #c0392b;
+}
+
+.settings-section label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.settings-section select {
+  width: 160px;
+  margin-left: auto;
+  /* <== isso empurra o select para a direita */
+  padding: 0.4em 0.6em;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  box-sizing: border-box;
+}
+
+.no-results {
+  padding: 20px;
+  text-align: center;
+  font-size: 1em;
+  color: var(--text-secondary);
+}
+
+/**/
+.input-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.input-icon-wrapper i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+}
+
+.input-icon-wrapper input {
+  padding-left: 30px;
+  /* espaço para o ícone */
+}
+
+/**/
+/* === Ajuste da largura e estilo do sort-select mobile === */
+.mobile-sort-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.mobile-sort-wrapper select.mobile-sort {
+  width: 100%;
+  padding: 0.6em 2.5em 0.6em 2.2em;
+  /* esquerda para o ícone, direita para seta */
+  font-size: 1em;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  appearance: none;
+  box-sizing: border-box;
+
+  /* seta custom */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%231a1a1a' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75em center;
+  background-size: 1em;
+}
+
+body.dark-mode .mobile-sort-wrapper select.mobile-sort {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ededed' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+}
+
+/* Corrige cor de fundo dos <option> para navegadores que suportam */
+select.mobile-sort option {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.mobile-sort-wrapper i.fas.fa-sort {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+/**/
+/* ============================
+   DASHBOARD
+============================ */
+.dashboard {
+  padding: 1em;
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.dashboard.hidden {
+  display: none;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.dashboard-card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1em;
+  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); */
+  transition: box-shadow 0.2s ease;
+  cursor: grab;
+}
+
+.dashboard-card:active {
+  cursor: grabbing;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h3 {
+  margin-top: 0;
+  font-size: 1.1em;
+}
+
+#duration-slider {
+  width: 100%;
+  margin-top: 0.5em;
+}
+
+#duration-value {
+  display: block;
+  margin-top: 0.3em;
+  font-weight: bold;
+  color: var(--text-secondary);
+}
+
+/**/
+.chart-type-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 0.5em;
+  color: var(--text-color);
+}
+
+.chart-type-btn:hover {
+  color: var(--hover-bg);
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+/**/
+/* Dashboard cards with number only (e.g. total items) */
+.dashboard-card[data-id="total-items"],
+.dashboard-card[data-id="average-duration"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+/* Center content in cards with charts and lists */
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Category list styling */
+#category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  padding-top: 0.5em;
+}
+
+#category-list li {
+  margin: 0.25rem 0;
+  font-weight: 600;
+  color: var(--text-color);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#category-list input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+/* Smaller chart-category card */
+.dashboard-span-3x2 {
+  grid-column: span 2;
+  /* reduced from 3 */
+  grid-row: span 2;
+}
+
+/* Adjust chart canvases size */
+canvas {
+  max-width: 100%;
+  max-height: 180px;
+}
+
+/* Adjust timeline card for clarity */
+.dashboard-card[data-id="chart-timeline"] canvas {
+  max-height: 220px;
+}
+
+/* Hover states for buttons (chart toggle) */
+.chart-toggle button {
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  margin: 0 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.chart-toggle button.active,
+.chart-toggle button:hover {
+  background: var(--text-color);
+  color: var(--bg-color);
+}
+
+/* Fix background for dashboard cards in light/dark */
+body:not(.dark-mode) .dashboard-card {
+  background: var(--card-bg);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+  color: var(--text-color);
+}
+
+body.dark-mode .dashboard-card {
+  background: var(--card-bg);
+  /* box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); */
+  color: var(--text-color);
+}
+
+.dashboard-card[data-id="total-items"] p,
+.dashboard-card[data-id="average-duration"] p {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.dashboard-card[data-id="total-items"] h3,
+.dashboard-card[data-id="average-duration"] h3 {
+  font-size: 1.2rem;
+  /* keep titles normal */
+}
+
+/* Title smaller and fixed position */
+.dashboard-card[data-id="total-items"] h3,
+.dashboard-card[data-id="average-duration"] h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5em;
+}
+
+.dashboard-card[data-id="total-items-card"] h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5em;
+}
+
+/* Number styling */
+.dashboard-card[data-id="total-items"] p,
+.dashboard-card[data-id="average-duration"] p {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.dashboard-card[data-id="total-items-card"] p {
+  font-size: 5.5rem;
+  margin: 0;
+}
+
+/* Canvas sizes for charts */
+canvas {
+  max-width: 100%;
+  max-height: 160px;
+}
+
+.dashboard-card[data-id="chart-timeline"] canvas {
+  max-height: 220px;
+}
+
+/* Ensure toggle buttons contrast in both themes */
+.chart-toggle button {
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.chart-toggle button.active {
+  background: var(--text-color);
+  color: var(--bg-color);
+}
+
+.dashboard-span-1x2 {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.dashboard-card[data-id="total-items"] h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25em;
+}
+
+.dashboard-card[data-id="total-items-card"] h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25em;
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+}
+
+/* Remover o bloco que afeta a "average-duration" */
+.dashboard-card[data-id="average-duration"] {
+  display: none;
+}
+
+.dashboard-card canvas {
+  width: 100% !important;
+  height: 300px !important;
+}
+
+.dashboard-card[data-id="chart-timeline"] .chartjs-render-monitor {
+  filter: brightness(1.3);
+}
+
+/**/
+.dashboard-span-3x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.dashboard-card[data-id="chart-category"] canvas {
+  max-height: 280px;
+  /* mais alto para 100% visível */
+  width: 100% !important;
+}
+
+/**/
+.chart-type-btn {
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .chart-type-btn {
+  --text-color: #ededed;
+  --bg-color: #2a2a2a;
+  --border-color: #444;
+}
+
+body:not(.dark-mode) .chart-type-btn {
+  --text-color: #1a1a1a;
+  --bg-color: #ffffff;
+  --border-color: #ccc;
+}
+
+/**/
+
+
+.trophy-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+
+.kpi-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4em 0;
+  gap: 1em;
+}
+
+.kpi-label {
+  font-size: 0.9em;
+  color: var(--text-color, #333);
+  opacity: 0.9;
+}
+
+.kpi-value {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1.8em;
+  color: var(--text-color, #111);
+}
+
+.kpi-value-total-items {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 4.5rem;
+  color: var(--text-color, #111);
+}
+
+/**/
+/* Título do card */
+.dashboard-card[data-id="chart-category"] h3 {
+  color: var(--text-color);
+}
+
+/* Botões do tipo de gráfico */
+.chart-type-btn {
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.chart-type-btn.active,
+.chart-type-btn:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+/* Legendas (fallback para o Chart.js, se necessário) */
+.chart-legend {
+  color: var(--text-color);
+}
+
+/**/
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  /* Keep content centered vertically */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  /* just in case */
+  padding-top: 2.5em;
+  /* add some top padding to make room for h3 */
+}
+
+.dashboard-card h3 {
+  position: absolute;
+  /* top: 0.75em; */
+  top: 1.25em;
+  /* tweak vertical position */
+  left: 1em;
+  /* tweak horizontal position */
+  right: 1em;
+  /* optional, to constrain width */
+  margin: 0;
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/**/
+.chart-toggle {
+  margin-bottom: 10px;
+  /* moves it 10px closer to the chart */
+}
+
+/**/
+.dashboard-card.dashboard-span-2x1 {
+  grid-column: span 2;
+}
+
+.favorite-media {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.favorite-media img.favorite-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.media-gaps-list {
+  list-style: none;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.small-button {
+  margin-top: 5px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color, #f0f0f0);
+}
+
+.kpi-box span.kpi-value {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+/**/
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.dashboard-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/**/
+.dark-mode .small-button {
+  background-color: #444;
+  color: #ededed;
+  border-color: #666;
+}
+
+.light-mode .small-button {
+  background-color: #f0f0f0;
+  color: #1a1a1a;
+  border-color: #ccc;
+}
+
+/**/
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip-icon {
+  font-size: 1rem;
+  color: var(--tooltip-icon-color);
+  position: relative;
+  z-index: 10;
+}
+
+.tooltip-content {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  visibility: hidden;
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-color);
+  text-align: left;
+  border-radius: 8px;
+  padding: 12px 14px;
+  z-index: 100;
+  width: 270px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tooltip-container:hover .tooltip-content {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.tooltip-arrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--tooltip-bg);
+}
+
+/**/
+.media-gaps-columns {
+  display: flex;
+  gap: 20px;
+}
+
+.media-gaps-columns ul {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+}
+
+.media-gaps-columns li {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+/**/
+.media-gaps-columns li {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.media-item-text {
+  text-align: center;
+}
+
+.media-line-top {
+  font-weight: bold;
+}
+
+
+/**/
+.dashboard-card[data-id="media-gaps"] {
+  align-items: stretch;
+  text-align: center;
+}
+
+.media-gaps-columns ul {
+  flex: 1;
+  min-width: 0;
+  /* evita overflow */
+}
+
+.media-line-bottom {
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+  /* alinhamento natural */
+  flex-wrap: wrap;
+  gap: 10px;
+  /* espaço controlado entre data e progresso */
+}
+
+.media-line-bottom {
+  font-size: 0.8rem;
+}
+
+/**/
+.favorite-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.favorite-media {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: var(--bg-color, white);
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 300px;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+/**/
+.favorite-media-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.favorite-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.favorite-media-text {
+  font-size: 0.9em;
+  line-height: 1.2;
+}
+
+/*fianl test*/
+.favorite-media-text strong {
+  font-size: 1.8em;
+  /* bigger */
+}
+
+.favorite-media-text span,
+.favorite-media-text small {
+  font-size: 1.1em;
+  /* slightly bigger */
+}
+
+/* Assuming the button and h3 are siblings in the DOM */
+h3+#select-favorite-btn {
+  margin-top: 4px;
+  /* reduce space above button */
+}
+
+/* If you want to control spacing more precisely */
+#select-favorite-btn {
+  margin-top: 4px;
+  /* or smaller value if needed */
+}
+
+/**/
+/* Título normal (remover position absolute) para os módulos específicos */
+.dashboard-card[data-id="time-estimate"] h3,
+.dashboard-card[data-id="favorite-media"] h3 {
+  position: static;
+  margin-bottom: 0.5em;
+  text-align: center;
+}
+
+/* Container do topo com h3 + botão */
+.dashboard-card .card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1em;
+}
+
+/* Estilo dos botões, mantendo consistência visual */
+.dashboard-card .small-button {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.dashboard-card .small-button:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border-color: var(--text-color);
+}
+
+/* Centralizar o conteúdo restante */
+.dashboard-card[data-id="time-estimate"],
+.dashboard-card[data-id="favorite-media"] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  padding-top: 1.5em;
+}
+
+.dashboard-card .card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1em;
+}
+
+.dashboard-card[data-id="favorite-media"] h3 {
+  position: static;
+  margin-bottom: 0.5em;
+  text-align: center;
+}
+
+/**/
+.favorite-rating-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 1.1em;
+}
+
+/**/
+/* Esconde o ícone em telas menores (mobile/tablet) */
+@media (max-width: 600px) {
+  .input-icon-wrapper i.fas.fa-sort {
+    display: none;
+  }
+}
+
+/* Hide desktop sort icon on mobile (inside controls-bar) */
+/* Desktop icon styles */
+.controls-bar .input-icon-wrapper {
+  position: relative;
+  /* container for absolute icon */
+}
+
+.controls-bar .input-icon-wrapper i.fas.fa-sort {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+}
+
+/* Make select input have padding so text doesn't overlap icon */
+.controls-bar .input-icon-wrapper select {
+  padding-left: 2.5em;
+}
+
+/* Mobile icon styles */
+.mobile-controls .mobile-sort-wrapper {
+  position: relative;
+  /* container for absolute icon */
+}
+
+.mobile-controls .mobile-sort-wrapper i.fas.fa-sort {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  /* or var(--text-color) if you want */
+  pointer-events: none;
+}
+
+/* Mobile select padding */
+.mobile-controls .mobile-sort-wrapper select {
+  padding-left: 2.5em;
+}
+
+/* Responsive rules */
+@media (max-width: 600px) {
+
+  /* Hide desktop icon on mobile */
+  .controls-bar .input-icon-wrapper i.fas.fa-sort {
+    display: none;
+  }
+
+  /* Show mobile icon (it’s already positioned absolute, so no need for margin) */
+  .mobile-controls .mobile-sort-wrapper i.fas.fa-sort {
+    display: block;
+  }
+}
+
+
+
+/*save tooltip*/
+/* Tooltip custom para botão salvar layout */
+.save-tooltip {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--card-bg, #1e1e1e);
+  color: var(--text-color, #f1f1f1);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.save-tooltip.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.save-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--card-bg, #1e1e1e);
+}
+
+.control-button {
+  position: relative;
+}
+
+/**/
+.tooltip-content.small-tooltip {
+  font-size: 0.8rem;
+  line-height: 1.25;
+}
+
+/**/
+.inline-label {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5em;
+}
+
+/*pro footer*/
+.pro-footer {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 1.2em 1em;
+  /* menos padding vertical */
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9em;
+}
+
+.pro-footer .footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  /* permite quebrar linhas */
+  justify-content: space-between;
+  gap: 1em;
+  padding: 0 1em;
+}
+
+.pro-footer .footer-left,
+.pro-footer .footer-right {
+  flex: 1 1 100%;
+  /* ocupam 100% no mobile, ficam empilhados */
+  margin-bottom: 0.6em;
+  text-align: center;
+}
+
+.pro-footer .footer-left p,
+.pro-footer .footer-right p {
+  margin: 0.15em 0;
+  line-height: 1.3;
+  font-size: 0.85rem;
+}
+
+.pro-footer .footer-left strong {
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.pro-footer a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.pro-footer a:hover {
+  color: var(--accent-color, var(--text-color));
+  text-decoration: underline;
+}
+
+.pro-footer .footer-version {
+  font-size: 0.8em;
+  opacity: 0.6;
+  margin-top: 0.5em;
+}
+
+/* Media query para mobile */
+@media (max-width: 480px) {
+  .pro-footer {
+    padding: 0.8em 0.8em;
+    font-size: 0.8em;
+  }
+
+  .pro-footer .footer-container {
+    gap: 0.6em;
+    padding: 0 0.5em;
+  }
+
+  .pro-footer .footer-left,
+  .pro-footer .footer-right {
+    margin-bottom: 0.4em;
+  }
+
+  .pro-footer .footer-left p,
+  .pro-footer .footer-right p {
+    margin: 0.1em 0;
+    line-height: 1.2;
+  }
+
+  .pro-footer .footer-version {
+    margin-top: 0.3em;
+  }
+}
+
+/*portfolio footer*/
+.portfolio-footer {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 2em 1em;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.95rem;
+  border-top: 3px solid var(--accent-color);
+}
+
+.portfolio-footer .footer-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  text-align: center;
+}
+
+.portfolio-footer .footer-left p {
+  margin: 0.25em 0;
+  font-weight: 500;
+}
+
+.portfolio-footer .footer-left a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.portfolio-footer .footer-left a:hover {
+  color: var(--hover-bg);
+  text-decoration: underline;
+}
+
+.social-links a {
+  margin: 0 0.5em;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: var(--accent-color);
+}
+
+.social-links i {
+  vertical-align: middle;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .portfolio-footer .footer-container {
+    flex-direction: column;
+    gap: 1em;
+  }
+}
+
+.portfolio-footer a {
+  color: var(--text-color);
+  text-decoration: none;
+  /* tira sublinhado padrão */
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.portfolio-footer a:hover,
+.portfolio-footer a:focus {
+  color: #8434ff;
+  /* seu roxo preferido */
+  text-decoration: none;
+  /* garante que não tenha underline */
+  transform: scale(1.1);
+  /* leve zoom */
+}
+
+/* Se quiser remover só para ícones, pode fazer */
+.portfolio-footer a .fa {
+  pointer-events: none;
+  /* evita foco estranho nos ícones */
+}
+
+/**/
+/*setinhas do rating do add modal e edit modal*/
+/* Remover as setas padrão do input number */
+input[type="number"] {
+  -moz-appearance: textfield;
+  /* Para Firefox */
+  -webkit-appearance: none;
+  /* Para Chrome/Safari */
+  appearance: none;
+  background-color: transparent;
+  /* Para garantir fundo transparente */
+  color: inherit;
+  /* Mantém a cor do texto conforme o tema */
+  border: 1px solid #ccc;
+  padding-right: 25px;
+  /* Espaço para as setas customizadas */
+}
+
+/* Adicionando setas personalizadas */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]::before {
+  content: "↑↓";
+  /* Aqui você pode colocar qualquer símbolo ou imagem */
+  font-size: 12px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: #555;
+  /* Define a cor das setas */
+}
+
+.portfolio-footer .footer-left a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.portfolio-footer .footer-left a:hover {
+  color: #6a2c9c;
+  /* This is a new, darker purple shade */
+  text-decoration: underline;
+  transform: scale(1.05);
+  /* Slight zoom (reduced from 1.1) */
+}
+
+/**/
+/* Alinhar o perfil à esquerda e o tooltip à direita */
+.profile-wrapper {
+  display: flex;
+  justify-content: space-between;
+  /* Garantir que os elementos estejam separados */
+  align-items: center;
+}
+
+.profile-info-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.profile-pic-wrapper {
+  margin-right: 10px;
+}
+
+.profile-text {
+  font-size: 1.1rem;
+}
+
+/* Tooltip container para Achievements */
+.tooltip-container-achievements {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip-icon {
+  font-size: 0.9rem;
+  /* Ícone menor */
+  color: var(--tooltip-icon-color);
+  position: relative;
+  z-index: 10;
+}
+
+/* Estilo do conteúdo do Tooltip de Achievements */
+.tooltip-content-achievements {
+  position: absolute;
+  top: 125%;
+  /* Ajustado para que o tooltip fique mais para baixo */
+  left: 50%;
+  transform: translateX(-50%);
+  visibility: hidden;
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-color);
+  text-align: left;
+  border-radius: 8px;
+  padding: 12px 14px;
+  z-index: 100;
+  width: 270px;
+  /* Tamanho fixo do tooltip */
+  font-size: 0.85rem;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Exibição do tooltip quando hover */
+.tooltip-container-achievements:hover .tooltip-content-achievements {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Seta (arrow) do Tooltip de Achievements */
+.tooltip-arrow-achievements {
+  position: absolute;
+  bottom: 100%;
+  /* Seta agora fica na parte de cima do tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--tooltip-bg);
+  /* Mudando a seta para apontar para o topo */
+}
+
+/* Barra de Progresso */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--progress-background);
+  border-radius: 3px;
+  margin-top: 6px;
+}
+
+.progress {
+  height: 100%;
+  background-color: var(--accent-color);
+  border-radius: 3px;
+  width: 50%;
+  /* Exemplo de progresso, altere conforme necessário */
+}
+
+/* Tooltip pequeno (small-tooltip) */
+.tooltip-content-achievements.small-tooltip {
+  font-size: 0.8rem;
+  line-height: 1.25;
+}
+
+/*ajusar name e username*/
+.profile-img-text {
+  display: flex;
+  align-items: center;
+  /* <-- Isso alinha verticalmente */
+}
+
+.tooltip-separator {
+  margin: 0.5em 0;
+  border: none;
+  border-top: 1px solid var(--progress-background);
+}
+
+.points-info {
+  font-size: 0.85em;
+  color: var(--progress-color);
+  display: block;
+  margin-top: 4px;
+}
+
+.tooltip-title {
+  font-size: 0.85rem;
+}
+
+#achievements-points {
+  font-size: 1rem;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.tooltip-container-achievements:hover .tooltip-content-achievements {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/*tooltip achevement n aparecer em mobile/tablet*/
+@media (max-width: 600px) {
+  .tooltip-container-achievements {
+    display: none;
+  }
+}
+
+/**/
+/* Hide mobile share button on desktop */
+#share-btn-mobile {
+  display: none;
+}
+
+/* On mobile: hide desktop share button, show mobile one */
+@media (max-width: 768px) {
+  #share-btn {
+    display: none;
+  }
+
+  #share-btn-mobile {
+    display: flex;
+    /* Or 'block' depending on your layout */
+    align-items: center;
+    gap: 0.5em;
+    /* Optional: spacing between icon and label */
+  }
+}
+
+/**/
+header {
+  border-bottom: 3px solid var(--accent-color);
+}
+/**/
+#media-gaps-list .no-results {
+  font-style: italic;
+  text-align: center;
+  padding: 1em;
+  color: var(--text-secondary);
+}
