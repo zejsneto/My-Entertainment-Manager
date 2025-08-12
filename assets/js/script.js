@@ -68,107 +68,128 @@ let currentSort = ''; // Stores the current sort option (e.g., 'title-asc')
 // ============================
 // Firebase CRUD Functions
 // ============================
-// ADD
-async function createMediaFirestore(mediaObj, imageFile) {
-    const maxId = globalMedias.length > 0 ? Math.max(...globalMedias.map(m => Number(m.id) || 0)) : 0;
-    mediaObj.id = maxId + 1;
-
-    const template = {
-        //global
+const template = {
+        // Global
         id: null,
         type: null,
         title: null,
         rating: null,
         cover_img: null,
         consumed_date: null,
-        //series and animations
+        // Series and Animations
         seasons_watched: null,
         seasons_total: null,
         use_episodes: null,
         episodes_watched: null,
         episodes_total: null,
-        //games
+        // Games
         hours_played: null,
-        online: null,
-        beaten: null,
+        online: null, //if one is true
+        beaten: null, //the other must be false
         trophies_total: null,
         trophies_obtained: null,
-        //books
+        // Books
         pages_read: null,
         pages_total: null,
-        //movies
+        // Movies
         duration_only_minutes: null,
         use_hours: null,
         duration_hours: null,
         duration_minutes: null,
-        //manga and comics
+        // Manga and Comics
         volume_amount: null,
         volume_read: null
     };
+    // Função para fazer upload da imagem no Firebase Storage e retornar a URL
+async function uploadImageToStorage(imageFile) {
+  if (!imageFile) return null;
 
-    mediaObj = { ...template, ...mediaObj };
+  const timestamp = Date.now();
+  const storageRef = window._STORAGE.ref(`covers/${timestamp}_${imageFile.name}`);
 
-    try {
-        // Upload imagem se tiver
-        if (imageFile) {
-            const storageRef = window._STORAGE.ref(`covers/${Date.now()}_${imageFile.name}`);
-            await storageRef.put(imageFile);
-            const downloadURL = await storageRef.getDownloadURL();
-            mediaObj.cover_img = downloadURL;
-        }
+  // Upload do arquivo
+  await storageRef.put(imageFile);
 
-        const docRef = await window._DB.collection('media').add(mediaObj);
-        mediaObj._docId = docRef.id; // salvar id do Firestore
-        globalMedias.push(mediaObj);
-        renderFilteredAndSorted();
-
-        console.log('Mídia adicionada com ID:', docRef.id);
-    } catch (err) {
-        console.error('Erro ao adicionar mídia:', err);
-        alert('Erro ao adicionar mídia (veja console).');
-    }
+  // Retorna URL pública para a imagem
+  const downloadURL = await storageRef.getDownloadURL();
+  return downloadURL;
 }
 
-// EDIT
+// Função para adicionar nova mídia
+async function createMediaFirestore(mediaObj, imageFile) {
+  try {
+    // Garante o template completo, sobrescreve com dados da mídia recebida
+    const newMedia = { ...mediaTemplate, ...mediaObj };
+
+    // Define id incremental baseado na maior id local (pode adaptar se quiser outro esquema)
+    const maxId = globalMedias.length > 0 ? Math.max(...globalMedias.map(m => Number(m.id) || 0)) : 0;
+    newMedia.id = maxId + 1;
+
+    // Faz upload da imagem e salva a URL no objeto
+    if (imageFile) {
+      const imageURL = await uploadImageToStorage(imageFile);
+      newMedia.cover_img = imageURL;
+    }
+
+    // Salva no Firestore
+    const docRef = await window._DB.collection('media').add(newMedia);
+
+    // Salva id do documento Firestore localmente para futuras atualizações
+    newMedia._docId = docRef.id;
+
+    // Atualiza lista local e renderiza
+    globalMedias.push(newMedia);
+    renderFilteredAndSorted();
+
+    console.log('Mídia adicionada com ID:', docRef.id);
+  } catch (error) {
+    console.error('Erro ao adicionar mídia:', error);
+    alert('Erro ao adicionar mídia (veja console).');
+  }
+}
+
+// Função para editar mídia existente
 async function updateMediaFirestore(docId, updatedData, imageFile) {
-    try {
-        if (imageFile) {
-            const storageRef = window._STORAGE.ref(`covers/${Date.now()}_${imageFile.name}`);
-            await storageRef.put(imageFile);
-            updatedData.cover_img = await storageRef.getDownloadURL();
-        }
+  try {
+    const updatePayload = { ...updatedData };
 
-        // Atualiza direto no Firestore usando docId
-        await window._DB.collection('media').doc(docId).update(updatedData);
-
-        // Atualiza na lista local
-        const idx = globalMedias.findIndex(m => m._docId === docId);
-        if (idx > -1) {
-            globalMedias[idx] = { ...globalMedias[idx], ...updatedData };
-            renderFilteredAndSorted();
-        }
-
-        console.log('Mídia atualizada:', docId);
-    } catch (err) {
-        console.error('Erro ao atualizar mídia:', err);
-        alert('Erro ao atualizar mídia (veja console).');
+    // Se imagem nova for enviada, faz upload e atualiza URL
+    if (imageFile) {
+      const imageURL = await uploadImageToStorage(imageFile);
+      updatePayload.cover_img = imageURL;
     }
+
+    // Atualiza documento no Firestore
+    await window._DB.collection('media').doc(docId).update(updatePayload);
+
+    // Atualiza localmente
+    const idx = globalMedias.findIndex(m => m._docId === docId);
+    if (idx !== -1) {
+      globalMedias[idx] = { ...globalMedias[idx], ...updatePayload };
+      renderFilteredAndSorted();
+    }
+
+    console.log('Mídia atualizada:', docId);
+  } catch (error) {
+    console.error('Erro ao atualizar mídia:', error);
+    alert('Erro ao atualizar mídia (veja console).');
+  }
 }
 
-// DELETE
+// Função para deletar mídia
 async function deleteMediaFirestore(docId) {
-    try {
-        await window._DB.collection('media').doc(docId).delete();
+  try {
+    await window._DB.collection('media').doc(docId).delete();
 
-        // Remove do array local
-        globalMedias = globalMedias.filter(m => m._docId !== docId);
-        renderFilteredAndSorted();
+    // Remove da lista local
+    globalMedias = globalMedias.filter(m => m._docId !== docId);
+    renderFilteredAndSorted();
 
-        console.log('Mídia deletada:', docId);
-    } catch (err) {
-        console.error('Erro ao deletar mídia:', err);
-        alert('Erro ao deletar mídia (veja console).');
-    }
+    console.log('Mídia deletada:', docId);
+  } catch (error) {
+    console.error('Erro ao deletar mídia:', error);
+    alert('Erro ao deletar mídia (veja console).');
+  }
 }
 
 loadMediaFromFirestore();
