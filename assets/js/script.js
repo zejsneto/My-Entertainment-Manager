@@ -114,6 +114,8 @@ async function uploadImageToStorage(imageFile) {
   const downloadURL = await storageRef.getDownloadURL();
   return downloadURL;
 }
+console.log("Criando mídia com:", mediaObj, imageFile);
+await createMediaFirestore(mediaObj, imageFile);
 
 // Função para adicionar nova mídia
 async function createMediaFirestore(mediaObj, imageFile) {
