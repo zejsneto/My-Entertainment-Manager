@@ -68,7 +68,12 @@ let currentSort = ''; // Stores the current sort option (e.g., 'title-asc')
 // ============================
 // Firebase CRUD Functions
 // ============================
-const mediaTemplate  = {
+// ADD
+async function createMediaFirestore(mediaObj, imageFile) {
+    const maxId = globalMedias.length > 0 ? Math.max(...globalMedias.map(m => Number(m.id) || 0)) : 0;
+    mediaObj.id = maxId + 1;
+
+    const template = {
         // Global
         id: null,
         type: null,
@@ -100,94 +105,70 @@ const mediaTemplate  = {
         volume_amount: null,
         volume_read: null
     };
-    // Função para fazer upload da imagem no Firebase Storage e retornar a URL
-async function uploadImageToStorage(imageFile) {
-  if (!imageFile) return null;
 
-  const timestamp = Date.now();
-  const storageRef = window._STORAGE.ref(`covers/${timestamp}_${imageFile.name}`);
+    mediaObj = { ...template, ...mediaObj };
 
-  // Upload do arquivo
-  await storageRef.put(imageFile);
+    try {
+        // Upload imagem se tiver
+        if (imageFile) {
+            const storageRef = window._STORAGE.ref(`covers/${Date.now()}_${imageFile.name}`);
+            await storageRef.put(imageFile);
+            const downloadURL = await storageRef.getDownloadURL();
+            mediaObj.cover_img = downloadURL;
+        }
 
-  // Retorna URL pública para a imagem
-  const downloadURL = await storageRef.getDownloadURL();
-  return downloadURL;
-}
-console.log("Criando mídia com:", mediaObj, imageFile);
-await createMediaFirestore(mediaObj, imageFile);
+        const docRef = await window._DB.collection('media').add(mediaObj);
+        mediaObj._docId = docRef.id; // salvar id do Firestore
+        globalMedias.push(mediaObj);
+        renderFilteredAndSorted();
 
-// Função para adicionar nova mídia
-async function createMediaFirestore(mediaObj, imageFile) {
-  try {
-    // Use o nome correto do template
-    const newMedia = { ...mediaTemplate, ...mediaObj };
-
-    const maxId = globalMedias.length > 0 ? Math.max(...globalMedias.map(m => Number(m.id) || 0)) : 0;
-    newMedia.id = maxId + 1;
-
-    if (imageFile) {
-      const imageURL = await uploadImageToStorage(imageFile);
-      newMedia.cover_img = imageURL;
-    } else {
-      newMedia.cover_img = null; // garantir que não fica undefined
+        console.log('Mídia adicionada com ID:', docRef.id);
+    } catch (err) {
+        console.error('Erro ao adicionar mídia:', err);
+        alert('Erro ao adicionar mídia (veja console).');
     }
-
-    const docRef = await window._DB.collection('media').add(newMedia);
-    newMedia._docId = docRef.id;
-    globalMedias.push(newMedia);
-    renderFilteredAndSorted();
-
-    console.log('Mídia adicionada com ID:', docRef.id);
-  } catch (error) {
-    console.error('Erro ao adicionar mídia:', error);
-    alert('Erro ao adicionar mídia (veja console).');
-  }
 }
 
-
-// Função para editar mídia existente
+// EDIT
 async function updateMediaFirestore(docId, updatedData, imageFile) {
-  try {
-    const updatePayload = { ...updatedData };
+    try {
+        if (imageFile) {
+            const storageRef = window._STORAGE.ref(`covers/${Date.now()}_${imageFile.name}`);
+            await storageRef.put(imageFile);
+            updatedData.cover_img = await storageRef.getDownloadURL();
+        }
 
-    // Se imagem nova for enviada, faz upload e atualiza URL
-    if (imageFile) {
-      const imageURL = await uploadImageToStorage(imageFile);
-      updatePayload.cover_img = imageURL;
+        // Atualiza direto no Firestore usando docId
+        await window._DB.collection('media').doc(docId).update(updatedData);
+
+        // Atualiza na lista local
+        const idx = globalMedias.findIndex(m => m._docId === docId);
+        if (idx > -1) {
+            globalMedias[idx] = { ...globalMedias[idx], ...updatedData };
+            renderFilteredAndSorted();
+        }
+
+        console.log('Mídia atualizada:', docId);
+    } catch (err) {
+        console.error('Erro ao atualizar mídia:', err);
+        alert('Erro ao atualizar mídia (veja console).');
     }
-
-    // Atualiza documento no Firestore
-    await window._DB.collection('media').doc(docId).update(updatePayload);
-
-    // Atualiza localmente
-    const idx = globalMedias.findIndex(m => m._docId === docId);
-    if (idx !== -1) {
-      globalMedias[idx] = { ...globalMedias[idx], ...updatePayload };
-      renderFilteredAndSorted();
-    }
-
-    console.log('Mídia atualizada:', docId);
-  } catch (error) {
-    console.error('Erro ao atualizar mídia:', error);
-    alert('Erro ao atualizar mídia (veja console).');
-  }
 }
 
-// Função para deletar mídia
+// DELETE
 async function deleteMediaFirestore(docId) {
-  try {
-    await window._DB.collection('media').doc(docId).delete();
+    try {
+        await window._DB.collection('media').doc(docId).delete();
 
-    // Remove da lista local
-    globalMedias = globalMedias.filter(m => m._docId !== docId);
-    renderFilteredAndSorted();
+        // Remove do array local
+        globalMedias = globalMedias.filter(m => m._docId !== docId);
+        renderFilteredAndSorted();
 
-    console.log('Mídia deletada:', docId);
-  } catch (error) {
-    console.error('Erro ao deletar mídia:', error);
-    alert('Erro ao deletar mídia (veja console).');
-  }
+        console.log('Mídia deletada:', docId);
+    } catch (err) {
+        console.error('Erro ao deletar mídia:', err);
+        alert('Erro ao deletar mídia (veja console).');
+    }
 }
 
 loadMediaFromFirestore();
