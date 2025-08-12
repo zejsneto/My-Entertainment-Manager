@@ -68,7 +68,7 @@ let currentSort = ''; // Stores the current sort option (e.g., 'title-asc')
 // ============================
 // Firebase CRUD Functions
 // ============================
-const template = {
+const mediaTemplate  = {
         // Global
         id: null,
         type: null,
@@ -118,26 +118,21 @@ async function uploadImageToStorage(imageFile) {
 // Função para adicionar nova mídia
 async function createMediaFirestore(mediaObj, imageFile) {
   try {
-    // Garante o template completo, sobrescreve com dados da mídia recebida
+    // Use o nome correto do template
     const newMedia = { ...mediaTemplate, ...mediaObj };
 
-    // Define id incremental baseado na maior id local (pode adaptar se quiser outro esquema)
     const maxId = globalMedias.length > 0 ? Math.max(...globalMedias.map(m => Number(m.id) || 0)) : 0;
     newMedia.id = maxId + 1;
 
-    // Faz upload da imagem e salva a URL no objeto
     if (imageFile) {
       const imageURL = await uploadImageToStorage(imageFile);
       newMedia.cover_img = imageURL;
+    } else {
+      newMedia.cover_img = null; // garantir que não fica undefined
     }
 
-    // Salva no Firestore
     const docRef = await window._DB.collection('media').add(newMedia);
-
-    // Salva id do documento Firestore localmente para futuras atualizações
     newMedia._docId = docRef.id;
-
-    // Atualiza lista local e renderiza
     globalMedias.push(newMedia);
     renderFilteredAndSorted();
 
@@ -147,6 +142,7 @@ async function createMediaFirestore(mediaObj, imageFile) {
     alert('Erro ao adicionar mídia (veja console).');
   }
 }
+
 
 // Função para editar mídia existente
 async function updateMediaFirestore(docId, updatedData, imageFile) {
