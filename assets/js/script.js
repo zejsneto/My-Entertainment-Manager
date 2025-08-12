@@ -142,6 +142,45 @@ async function addMedia(mediaRawData) {
     throw error;
   }
 }
+async function uploadCoverImage(file) {
+  if (!file) return null;
+
+  const storageRef = window._STORAGE.ref();
+  const fileRef = storageRef.child(`covers/${Date.now()}_${file.name}`);
+
+  try {
+    const snapshot = await fileRef.put(file);
+    const url = await snapshot.ref.getDownloadURL();
+    return url;
+  } catch (err) {
+    console.error("Erro upload cover image:", err);
+    return null;
+  }
+}
+
+async function createMediaFirestore(mediaRawData, fileInput) {
+  // Se tem arquivo, primeiro faz upload e pega URL
+  let coverImgUrl = null;
+  if (fileInput && fileInput.files && fileInput.files[0]) {
+    coverImgUrl = await uploadCoverImage(fileInput.files[0]);
+  }
+
+  // Agora monta objeto final, trocando cover_img para a url (string)
+  const mediaToSave = {
+    ...mediaRawData,
+    cover_img: coverImgUrl || "",
+  };
+
+  try {
+    const docRef = await window._DB.collection('media').add(mediaToSave);
+    console.log("Media adicionada com ID:", docRef.id);
+    return docRef.id;
+  } catch (error) {
+    console.error("Falha ao adicionar media:", error);
+    throw error;
+  }
+}
+
 
 async function loadMediaFromFirestore() {
   try {
@@ -1654,29 +1693,38 @@ document.getElementById('add-media-form').querySelector('[name="rating"]').addEv
 const form = document.getElementById('add-media-form');
 
 form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const type = document.getElementById('media-type').value;
-    const isAnimated = document.getElementById('animated-checkbox')?.checked;
+  const type = document.getElementById('media-type').value;
+  const isAnimated = document.getElementById('animated-checkbox')?.checked;
 
-    const finalType = (type === 'movies' && isAnimated) ? 'animated_movies' : type;
+  const finalType = (type === 'movies' && isAnimated) ? 'animated_movies' : type;
 
-    const newMedia = {
-        title: form.title.value,
-        rating: form.rating.value,
-        consumed_date: form.consumed_date.value,
-        type: finalType,
-        duration: form.duration?.value || '',
-    };
+  // Aqui pegue todos os campos, incluindo os dinâmicos se quiser
 
-    //alert(`(Simulation) Adding new media: ${JSON.stringify(newMedia, null, 2)}`);
-    await createMediaFirestore(newMedia);
-    document.getElementById('add-media-modal').classList.add('hidden');
+  const newMedia = {
+    title: form.title.value,
+    rating: parseFloat(form.rating.value) || null,
+    consumed_date: form.consumed_date.value,
+    type: finalType,
+    // Exemplo para campos opcionais, preencha conforme seu formulário
+    // duration: form.duration?.value || '',
+    // Outros campos dinâmicos que você tenha preenchido
+  };
 
+  // Pega o input de arquivo da capa, por exemplo
+  const coverImgInput = form.querySelector('input[type="file"][name="cover_img"]');
+
+  try {
+    await createMediaFirestore(newMedia, coverImgInput);
     addMediaModal.classList.add('hidden');
     form.reset();
     specificFieldsContainer.innerHTML = '';
+  } catch (error) {
+    alert("Erro ao adicionar mídia. Veja o console para detalhes.");
+  }
 });
+
 
 // ============================
 // Edit / Delete Media Modal Handling
