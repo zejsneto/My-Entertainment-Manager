@@ -66,218 +66,112 @@ let currentSort = ''; // Stores the current sort option (e.g., 'title-asc')
 //     });
 
 // ============================
-// Firebase 
+// Firebase CRUD Functions
 // ============================
+// ADD
+async function createMediaFirestore(mediaObj, imageFile) {
+    const maxId = globalMedias.length > 0 ? Math.max(...globalMedias.map(m => Number(m.id) || 0)) : 0;
+    mediaObj.id = maxId + 1;
+
+    const template = {
+        // Global
+        id: null,
+        type: null,
+        title: null,
+        rating: null,
+        cover_img: null,
+        consumed_date: null,
+        // Series and Animations
+        seasons_watched: null,
+        seasons_total: null,
+        use_episodes: null,
+        episodes_watched: null,
+        episodes_total: null,
+        // Games
+        hours_played: null,
+        online: null, //if one is true
+        beaten: null, //the other must be false
+        trophies_total: null,
+        trophies_obtained: null,
+        // Books
+        pages_read: null,
+        pages_total: null,
+        // Movies
+        duration_only_minutes: null,
+        use_hours: null,
+        duration_hours: null,
+        duration_minutes: null,
+        // Manga and Comics
+        volume_amount: null,
+        volume_read: null
+    };
+
+    mediaObj = { ...template, ...mediaObj };
+
+    try {
+        // Upload imagem se tiver
+        if (imageFile) {
+            const storageRef = window._STORAGE.ref(`covers/${Date.now()}_${imageFile.name}`);
+            await storageRef.put(imageFile);
+            const downloadURL = await storageRef.getDownloadURL();
+            mediaObj.cover_img = downloadURL;
+        }
+
+        const docRef = await window._DB.collection('media').add(mediaObj);
+        mediaObj._docId = docRef.id; // salvar id do Firestore
+        globalMedias.push(mediaObj);
+        renderFilteredAndSorted();
+
+        console.log('Mídia adicionada com ID:', docRef.id);
+    } catch (err) {
+        console.error('Erro ao adicionar mídia:', err);
+        alert('Erro ao adicionar mídia (veja console).');
+    }
+}
+
+// EDIT
+async function updateMediaFirestore(docId, updatedData, imageFile) {
+    try {
+        if (imageFile) {
+            const storageRef = window._STORAGE.ref(`covers/${Date.now()}_${imageFile.name}`);
+            await storageRef.put(imageFile);
+            updatedData.cover_img = await storageRef.getDownloadURL();
+        }
+
+        // Atualiza direto no Firestore usando docId
+        await window._DB.collection('media').doc(docId).update(updatedData);
+
+        // Atualiza na lista local
+        const idx = globalMedias.findIndex(m => m._docId === docId);
+        if (idx > -1) {
+            globalMedias[idx] = { ...globalMedias[idx], ...updatedData };
+            renderFilteredAndSorted();
+        }
+
+        console.log('Mídia atualizada:', docId);
+    } catch (err) {
+        console.error('Erro ao atualizar mídia:', err);
+        alert('Erro ao atualizar mídia (veja console).');
+    }
+}
+
+// DELETE
+async function deleteMediaFirestore(docId) {
+    try {
+        await window._DB.collection('media').doc(docId).delete();
+
+        // Remove do array local
+        globalMedias = globalMedias.filter(m => m._docId !== docId);
+        renderFilteredAndSorted();
+
+        console.log('Mídia deletada:', docId);
+    } catch (err) {
+        console.error('Erro ao deletar mídia:', err);
+        alert('Erro ao deletar mídia (veja console).');
+    }
+}
 
 loadMediaFromFirestore();
-
-// This will be your single source of truth for media object fields & default values
-
-const defaultMediaTemplate = {
-  // Core
-  type: "",
-  title: "",
-  rating: null,
-  cover_img: "",
-  consumed_date: "",
-
-  // Series/Animations
-  seasons_watched: null,
-  seasons_total: null,
-  use_episodes: false,
-  episodes_watched: null,
-  episodes_total: null,
-
-  // Games
-  hours_played: null,
-  online: false,
-  beaten: false,
-  trophies_total: null,
-  trophies_obtained: null,
-
-  // Books
-  pages_read: null,
-  pages_total: null,
-
-  // Movies
-  duration_only_minutes: null,
-  use_hours: false,
-  duration_hours: null,
-  duration_minutes: null,
-
-  // Manga and Comics
-  volume_amount: null,
-  volume_read: null
-};
-
-
-function sanitizeMediaData(rawData) {
-  const media = { ...defaultMediaTemplate };
-
-  for (const key in defaultMediaTemplate) {
-    if (rawData.hasOwnProperty(key)) {
-      // Optional: You can add type coercion here if needed
-      media[key] = rawData[key];
-    }
-  }
-
-  // Example: Force boolean fields to boolean type
-  media.use_episodes = Boolean(media.use_episodes);
-  media.online = Boolean(media.online);
-  media.beaten = Boolean(media.beaten);
-  media.use_hours = Boolean(media.use_hours);
-
-  return media;
-}
-
-async function addMedia(mediaRawData) {
-  const media = sanitizeMediaData(mediaRawData);
-
-  try {
-    const docRef = await window._DB.collection('media').add(media);
-    console.log('Added media with ID:', docRef.id);
-    return docRef.id;
-  } catch (error) {
-    console.error('Failed to add media:', error);
-    throw error;
-  }
-}
-async function uploadCoverImage(file) {
-  if (!file) return null;
-
-  const storageRef = window._STORAGE.ref();
-  const fileRef = storageRef.child(`covers/${Date.now()}_${file.name}`);
-
-  try {
-    const snapshot = await fileRef.put(file);
-    const url = await snapshot.ref.getDownloadURL();
-    return url;
-  } catch (err) {
-    console.error("Erro upload cover image:", err);
-    return null;
-  }
-}
-
-async function createMediaFirestore(mediaRawData, fileInput) {
-  // Se tem arquivo, primeiro faz upload e pega URL
-  let coverImgUrl = null;
-  if (fileInput && fileInput.files && fileInput.files[0]) {
-    coverImgUrl = await uploadCoverImage(fileInput.files[0]);
-  }
-
-  // Agora monta objeto final, trocando cover_img para a url (string)
-  const mediaToSave = {
-    ...mediaRawData,
-    cover_img: coverImgUrl || "",
-  };
-
-  try {
-    const docRef = await window._DB.collection('media').add(mediaToSave);
-    console.log("Media adicionada com ID:", docRef.id);
-    return docRef.id;
-  } catch (error) {
-    console.error("Falha ao adicionar media:", error);
-    throw error;
-  }
-}
-
-
-async function loadMediaFromFirestore() {
-  try {
-    const snapshot = await window._DB.collection('media').get();
-
-    if (snapshot.empty) {
-      console.warn("Firestore: no media found.");
-      globalMedias = [];
-      return;
-    }
-
-    globalMedias = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-
-    // Now your globalMedias array matches old JSON structure, including the `id` field
-    renderMedias(globalMedias); // your existing function to render list
-  } catch (error) {
-    console.error("Failed to load media from Firestore:", error);
-    globalMedias = [];
-  }
-}
-
-async function updateMedia(id, updatedRawData) {
-  if (!id) throw new Error("No media ID provided for update");
-
-  const media = sanitizeMediaData(updatedRawData);
-
-  try {
-    await window._DB.collection('media').doc(id).set(media, { merge: true });
-    console.log("Media updated:", id);
-  } catch (error) {
-    console.error("Failed to update media:", error);
-    throw error;
-  }
-}
-async function deleteMedia(id) {
-  if (!id) throw new Error("No media ID provided for delete");
-
-  try {
-    await window._DB.collection('media').doc(id).delete();
-    console.log("Media deleted:", id);
-  } catch (error) {
-    console.error("Failed to delete media:", error);
-    throw error;
-  }
-}
-
-document.getElementById("add-media-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-
-  // Extract all needed fields from formData
-  const mediaRawData = {
-    type: formData.get("media-type"),
-    title: formData.get("title"),
-    rating: Number(formData.get("rating")) || null,
-    consumed_date: formData.get("consumed_date"),
-    cover_img: formData.get("cover_img"),
-    // And all your other possible fields...
-    // Remember to parse numbers and booleans appropriately
-  };
-
-  try {
-    const newId = await addMedia(mediaRawData);
-    // Optionally reload data or update UI here
-  } catch (error) {
-    alert("Failed to add media.");
-  }
-});
-
-document.getElementById("edit-media-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const id = e.target.dataset.id;
-  if (!id) return alert("No media ID found");
-
-  const formData = new FormData(e.target);
-  const mediaRawData = {
-    type: formData.get("media-type"),
-    title: formData.get("title"),
-    rating: Number(formData.get("rating")) || null,
-    consumed_date: formData.get("consumed_date"),
-    cover_img: formData.get("cover_img"),
-    // other fields...
-  };
-
-  try {
-    await updateMedia(id, mediaRawData);
-    // Optionally reload or update UI
-  } catch (error) {
-    alert("Failed to update media.");
-  }
-});
-
 
 // ============================
 // Load Media Data from Firestore
@@ -1693,38 +1587,29 @@ document.getElementById('add-media-form').querySelector('[name="rating"]').addEv
 const form = document.getElementById('add-media-form');
 
 form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const type = document.getElementById('media-type').value;
-  const isAnimated = document.getElementById('animated-checkbox')?.checked;
+    const type = document.getElementById('media-type').value;
+    const isAnimated = document.getElementById('animated-checkbox')?.checked;
 
-  const finalType = (type === 'movies' && isAnimated) ? 'animated_movies' : type;
+    const finalType = (type === 'movies' && isAnimated) ? 'animated_movies' : type;
 
-  // Aqui pegue todos os campos, incluindo os dinâmicos se quiser
+    const newMedia = {
+        title: form.title.value,
+        rating: form.rating.value,
+        consumed_date: form.consumed_date.value,
+        type: finalType,
+        duration: form.duration?.value || '',
+    };
 
-  const newMedia = {
-    title: form.title.value,
-    rating: parseFloat(form.rating.value) || null,
-    consumed_date: form.consumed_date.value,
-    type: finalType,
-    // Exemplo para campos opcionais, preencha conforme seu formulário
-    // duration: form.duration?.value || '',
-    // Outros campos dinâmicos que você tenha preenchido
-  };
+    //alert(`(Simulation) Adding new media: ${JSON.stringify(newMedia, null, 2)}`);
+    await createMediaFirestore(newMedia);
+    document.getElementById('add-media-modal').classList.add('hidden');
 
-  // Pega o input de arquivo da capa, por exemplo
-  const coverImgInput = form.querySelector('input[type="file"][name="cover_img"]');
-
-  try {
-    await createMediaFirestore(newMedia, coverImgInput);
     addMediaModal.classList.add('hidden');
     form.reset();
     specificFieldsContainer.innerHTML = '';
-  } catch (error) {
-    alert("Erro ao adicionar mídia. Veja o console para detalhes.");
-  }
 });
-
 
 // ============================
 // Edit / Delete Media Modal Handling
