@@ -1644,15 +1644,15 @@ form.addEventListener('submit', async (e) => {
 
     const newMedia = {
         title: form.title.value,
-        rating: form.rating.value,
+        rating: parseFloat(form.rating.value) || null,
         consumed_date: form.consumed_date.value,
         type: finalType,
-        duration: form.duration?.value || '',
+        // adicione outros campos específicos do tipo conforme necessário
     };
 
-    //alert(`(Simulation) Adding new media: ${JSON.stringify(newMedia, null, 2)}`);
-    await createMediaFirestore(newMedia);
-    document.getElementById('add-media-modal').classList.add('hidden');
+    const imageFile = form.cover_img?.files[0] || null;
+
+    await addMedia(newMedia, imageFile);
 
     addMediaModal.classList.add('hidden');
     form.reset();
