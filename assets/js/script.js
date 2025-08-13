@@ -2006,6 +2006,24 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     }
 });
 
+// Delete Media
+document.getElementById('delete-media').addEventListener('click', async () => {
+    const form = document.getElementById('edit-media-form');
+    const mediaId = form.dataset.id;
+
+    if (!mediaId) return alert("ID da mídia não encontrado");
+
+    if (!confirm("Tem certeza que deseja deletar esta mídia?")) return;
+
+    try {
+        await deleteMediaFirestore(mediaId);
+        document.getElementById('edit-media-modal').classList.add('hidden');
+        alert("Mídia deletada com sucesso!");
+    } catch (err) {
+        console.error("Erro ao deletar mídia:", err);
+        alert("Erro ao deletar mídia.");
+    }
+});
 
 // ============================
 // Export JSON Button Logic
