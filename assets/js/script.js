@@ -74,34 +74,28 @@ async function createMediaFirestore(mediaObj, imageFile) {
     mediaObj.id = maxId + 1;
 
     const template = {
-        // Global
         id: null,
         type: null,
         title: null,
         rating: null,
-        cover_img: null,
+        cover_img: null, // Base64 vai aqui
         consumed_date: null,
-        // Series and Animations
         seasons_watched: null,
         seasons_total: null,
         use_episodes: null,
         episodes_watched: null,
         episodes_total: null,
-        // Games
         hours_played: null,
-        online: null, //if one is true
-        beaten: null, //the other must be false
+        online: null,
+        beaten: null,
         trophies_total: null,
         trophies_obtained: null,
-        // Books
         pages_read: null,
         pages_total: null,
-        // Movies
         duration_only_minutes: null,
         use_hours: null,
         duration_hours: null,
         duration_minutes: null,
-        // Manga and Comics
         volume_amount: null,
         volume_read: null
     };
@@ -109,16 +103,12 @@ async function createMediaFirestore(mediaObj, imageFile) {
     mediaObj = { ...template, ...mediaObj };
 
     try {
-        // Upload imagem se tiver
         if (imageFile) {
-            const storageRef = window._STORAGE.ref(`covers/${Date.now()}_${imageFile.name}`);
-            await storageRef.put(imageFile);
-            const downloadURL = await storageRef.getDownloadURL();
-            mediaObj.cover_img = downloadURL;
+            mediaObj.cover_img = await fileToBase64(imageFile);
         }
 
         const docRef = await window._DB.collection('media').add(mediaObj);
-        mediaObj._docId = docRef.id; // salvar id do Firestore
+        mediaObj._docId = docRef.id;
         globalMedias.push(mediaObj);
         renderFilteredAndSorted();
 
@@ -133,15 +123,11 @@ async function createMediaFirestore(mediaObj, imageFile) {
 async function updateMediaFirestore(docId, updatedData, imageFile) {
     try {
         if (imageFile) {
-            const storageRef = window._STORAGE.ref(`covers/${Date.now()}_${imageFile.name}`);
-            await storageRef.put(imageFile);
-            updatedData.cover_img = await storageRef.getDownloadURL();
+            updatedData.cover_img = await fileToBase64(imageFile);
         }
 
-        // Atualiza direto no Firestore usando docId
         await window._DB.collection('media').doc(docId).update(updatedData);
 
-        // Atualiza na lista local
         const idx = globalMedias.findIndex(m => m._docId === docId);
         if (idx > -1) {
             globalMedias[idx] = { ...globalMedias[idx], ...updatedData };
@@ -170,6 +156,16 @@ async function deleteMediaFirestore(docId) {
         alert('Erro ao deletar mídia (veja console).');
     }
 }
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
 
 loadMediaFromFirestore();
 
