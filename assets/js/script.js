@@ -682,7 +682,7 @@ function renderMedias(medias) {
 
         // Construct the card HTML
         let html = `
-        <div class="edit-icon-card" data-id="${media.id}" id="edit-media-trigger" data-i18n-title="main.cards.editTitle"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div class="edit-icon-card" data-id="${media._docId}" id="edit-media-trigger" data-i18n-title="main.cards.editTitle"><i class="fa-solid fa-pen-to-square"></i></div>
         <div class="card-image">
             <img src="${media.cover_img}" alt="${media.title}"> 
             <div class="badge badge-${media.type}">${emojiHtml}</div>
@@ -810,6 +810,8 @@ function startEmojiBlinking() {
 //         renderMedias(currentMedias);
 //     }, 200); // 200ms Debounce
 // });
+
+let resizeTimeout;
 
 let lastIsMobile = window.matchMedia('(max-width: 768px)').matches;
 
@@ -1583,81 +1585,81 @@ document.getElementById('add-media-form').querySelector('[name="rating"]').addEv
 const form = document.getElementById('add-media-form');
 
 function getSpecificFields(type, form) {
-  let specificData = {};
+    let specificData = {};
 
-  if (type === 'games') {
-    specificData.hours_played = form.hours_played?.value || null;
-    specificData.online = form.online?.value === 'true' ? true : false;
-    specificData.beaten = form.beaten?.value === 'true' ? true : false;
-    specificData.trophies_obtained = form.trophies_obtained?.value || null;
-    specificData.trophies_total = form.trophies_total?.value || null;
-  }
-  else if (type === 'movies' || type === 'animated_movies') {
-    if (form['duration_hours'] && form['duration_minutes']) {
-      specificData.duration_hours = form.duration_hours.value || null;
-      specificData.duration_minutes = form.duration_minutes.value || null;
-      specificData.use_hours = true;
-    } else if (form.duration_minutes) {
-      specificData.duration_only_minutes = form.duration_minutes.value || null;
-      specificData.use_hours = false;
+    if (type === 'games') {
+        specificData.hours_played = form.hours_played?.value || null;
+        specificData.online = form.online?.value === 'true' ? true : false;
+        specificData.beaten = form.beaten?.value === 'true' ? true : false;
+        specificData.trophies_obtained = form.trophies_obtained?.value || null;
+        specificData.trophies_total = form.trophies_total?.value || null;
     }
-  }
-  else if (type === 'books') {
-    specificData.pages_read = form.pages_read?.value || null;
-    specificData.pages_total = form.pages_total?.value || null;
-  }
-  else if (type === 'series' || type === 'animations') {
-    specificData.use_episodes = form.use_episodes?.value === 'true' ? true : false;
-    if (specificData.use_episodes) {
-      specificData.episodes_watched = form.episodes_watched?.value || null;
-      specificData.episodes_total = form.episodes_total?.value || null;
-    } else {
-      specificData.seasons_watched = form.seasons_watched?.value || null;
-      specificData.seasons_total = form.seasons_total?.value || null;
+    else if (type === 'movies' || type === 'animated_movies') {
+        if (form['duration_hours'] && form['duration_minutes']) {
+            specificData.duration_hours = form.duration_hours.value || null;
+            specificData.duration_minutes = form.duration_minutes.value || null;
+            specificData.use_hours = true;
+        } else if (form.duration_minutes) {
+            specificData.duration_only_minutes = form.duration_minutes.value || null;
+            specificData.use_hours = false;
+        }
     }
-  }
-  else if (type === 'mangas' || type === 'comics') {
-    specificData.volume_read = form.volume_read?.value || null;
-    specificData.volume_amount = form.volume_amount?.value || null;
-  }
+    else if (type === 'books') {
+        specificData.pages_read = form.pages_read?.value || null;
+        specificData.pages_total = form.pages_total?.value || null;
+    }
+    else if (type === 'series' || type === 'animations') {
+        specificData.use_episodes = form.use_episodes?.value === 'true' ? true : false;
+        if (specificData.use_episodes) {
+            specificData.episodes_watched = form.episodes_watched?.value || null;
+            specificData.episodes_total = form.episodes_total?.value || null;
+        } else {
+            specificData.seasons_watched = form.seasons_watched?.value || null;
+            specificData.seasons_total = form.seasons_total?.value || null;
+        }
+    }
+    else if (type === 'mangas' || type === 'comics') {
+        specificData.volume_read = form.volume_read?.value || null;
+        specificData.volume_amount = form.volume_amount?.value || null;
+    }
 
-  return specificData;
+    return specificData;
 }
 
 form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const type = document.getElementById('media-type').value;
-  const isAnimated = document.getElementById('animated-checkbox')?.checked;
+    const type = document.getElementById('media-type').value;
+    const isAnimated = document.getElementById('animated-checkbox')?.checked;
 
-  const finalType = (type === 'movies' && isAnimated) ? 'animated_movies' : type;
+    const finalType = (type === 'movies' && isAnimated) ? 'animated_movies' : type;
 
-  // Campos fixos
-  const baseData = {
-    title: form.title.value.trim(),
-    rating: form.rating.value.trim(),
-    consumed_date: form.consumed_date.value.trim(),
-    type: finalType,
-    duration: form.duration?.value || '',
-  };
+    // Campos fixos
+    const baseData = {
+        title: form.title.value.trim(),
+        rating: form.rating.value.trim(),
+        consumed_date: form.consumed_date.value.trim(),
+        type: finalType,
+        duration: form.duration?.value || '',
+    };
 
-  // Campos dinâmicos específicos do tipo
-  const specificData = getSpecificFields(finalType, form);
+    // Campos dinâmicos específicos do tipo
+    const specificData = getSpecificFields(finalType, form);
 
-  // Mesclar
-  const newMedia = {
-    ...baseData,
-    ...specificData,
-  };
+    // Mesclar
+    const newMedia = {
+        ...baseData,
+        ...specificData,
+    };
 
-  // Pega o arquivo do input de imagem (supondo que tem um input com name 'cover_img' e type='file')
-  const imageFile = form.cover_img?.files ? form.cover_img.files[0] : null;
+    // Pega o arquivo do input de imagem (supondo que tem um input com name 'cover_img' e type='file')
+    const imageFile = form.cover_img?.files ? form.cover_img.files[0] : null;
 
-  await createMediaFirestore(newMedia, imageFile);
+    await createMediaFirestore(newMedia, imageFile);
 
-  addMediaModal.classList.add('hidden');
-  form.reset();
-  specificFieldsContainer.innerHTML = '';
+    addMediaModal.classList.add('hidden');
+    form.reset();
+    specificFieldsContainer.innerHTML = '';
 });
 
 
@@ -1674,7 +1676,8 @@ document.addEventListener('click', (e) => {
     if (!editIcon) return;
 
     const mediaId = editIcon.dataset.id;
-    const media = globalMedias.find(m => m.id == mediaId);
+    const media = globalMedias.find(m => m._docId === mediaId);
+
     if (!media) return;
 
     openEditMediaModal(media);
@@ -1688,7 +1691,7 @@ function openEditMediaModal(media) {
     document.getElementById('edit-cover').value = '';
 
     // Store the media ID in the form dataset
-    document.getElementById('edit-media-form').dataset.id = media.id;
+    document.getElementById('edit-media-form').dataset.id = media._docId;
 
     // Fill specific fields based on media type
     const container = document.getElementById('edit-specific-fields');
@@ -1968,11 +1971,11 @@ editMediaModal.addEventListener('click', (e) => {
     }
 });
 
-document.getElementById('edit-media-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = e.target.dataset.id;
-    await updateMediaFirestore(mediaId, updatedMedia); // <-- mediaId não existe aqui
-});
+// document.getElementById('edit-media-form').addEventListener('submit', async (e) => {
+//     e.preventDefault();
+//     const id = e.target.dataset.id;
+//     await updateMediaFirestore(mediaId, updatedMedia); // <-- mediaId não existe aqui
+// });
 
 // Editar (submit)
 document.getElementById('edit-media-form').addEventListener('submit', async (e) => {
