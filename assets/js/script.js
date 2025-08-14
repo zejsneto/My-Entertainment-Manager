@@ -697,11 +697,14 @@ function renderMedias(medias) {
 
         // Optional: gameplay hours and beaten flag
         const row2 = [];
-        if (media.hours_played) row2.push(`🎮 ${media.hours_played}h`);
-        if (media.online) {
-            row2.push(`🌐 ${isMobile ? '<span data-i18n="main.cards.games.onlineOrNA">Online or N/A</span>' : '<span data-i18n="main.cards.games.onlineNoCampaign">Online/No Campaign</span>'}`);
+        if (media.type === 'games') {  // <--- só entra se for game
+            if (media.hours_played) row2.push(`🎮 ${media.hours_played}h`);
+            if (media.online) {
+                row2.push(`🌐 ${isMobile ? '<span data-i18n="main.cards.games.onlineOrNA">Online or N/A</span>' : '<span data-i18n="main.cards.games.onlineNoCampaign">Online/No Campaign</span>'}`);
+            } else if (media.beaten !== undefined && media.beaten !== null) {
+                row2.push(`${media.beaten ? '✔️ <span data-i18n="main.cards.games.completed">Completed</span>' : '✖️ <span data-i18n="main.cards.games.notCompleted">Not Completed</span>'}`);
+            }
         }
-        else if (media.beaten !== undefined) row2.push(` ${media.beaten ? '✔️ <span data-i18n="main.cards.games.completed">Completed</span>' : '✖️ <span data-i18n="main.cards.games.notCompleted">Not Completed</span>'}`);
         if (row2.length) html += `<div class="row">${row2.map(i => `<span>${i}</span>`).join('')}</div>`;
 
         // Optional: trophies info for games
@@ -1661,7 +1664,6 @@ form.addEventListener('submit', async (e) => {
     form.reset();
     specificFieldsContainer.innerHTML = '';
 });
-
 
 // ============================
 // Edit / Delete Media Modal Handling
