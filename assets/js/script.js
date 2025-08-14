@@ -777,7 +777,7 @@ function renderMedias(medias) {
         document.querySelectorAll('.edit-media-trigger').forEach(btn => {
             btn.addEventListener('click', e => {
                 const mediaId = e.currentTarget.dataset.id;
-                openEditModal(mediaId);
+                openEditMediaModal(mediaId);
             });
         });
 
