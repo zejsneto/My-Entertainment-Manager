@@ -1720,16 +1720,22 @@ form.addEventListener('submit', async (e) => {
     Edit/Delete Card
 */
 // Open Edit/Delete Model when Icon is clicked
-document.addEventListener('click', (e) => {
+document.addEventListener('click', async (e) => {
     const editIcon = e.target.closest('.edit-icon-card');
     if (!editIcon) return;
 
     const mediaId = editIcon.dataset.id;
-    const media = globalMedias.find(m => m._docId === mediaId);
 
-    if (!media) return;
+    try {
+        const doc = await window._DB.collection('media').doc(mediaId).get();
+        if (!doc.exists) return alert("Mídia não encontrada");
 
-    openEditMediaModal(media);
+        const media = { _docId: doc.id, ...doc.data() };
+        openEditMediaModal(media);
+    } catch (err) {
+        console.error("Erro ao buscar mídia:", err);
+        alert("Erro ao carregar mídia.");
+    }
 });
 
 function openEditMediaModal(media) {
