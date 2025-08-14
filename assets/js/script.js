@@ -1251,6 +1251,26 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ============================
+// Rezise Image (For Add and Edit/Delete Media)
+// ============================
+
+function resizeImageToCard(file, targetWidth = 300, targetHeight = 200) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.8);
+        };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+    });
+}
+
+// ============================
 // Add Media Modal Handling
 // ============================
 
@@ -1630,22 +1650,6 @@ function getSpecificFields(type, form) {
     return specificData;
 }
 
-function resizeImageToCard(file, targetWidth = 300, targetHeight = 200) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.8);
-        };
-        img.onerror = reject;
-        img.src = URL.createObjectURL(file);
-    });
-}
-
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -2008,7 +2012,6 @@ editMediaModal.addEventListener('click', (e) => {
 // });
 
 // Editar (submit)
-// Editar (submit)
 document.getElementById('edit-media-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -2079,8 +2082,20 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
         ...specificFields
     };
 
+     // Pega o arquivo de imagem do input
+    const imageFileInput = document.getElementById('edit-cover');
+    let imageFile = imageFileInput?.files[0] || null;
+
     try {
-        await updateMediaFirestore(id, updatedMedia);
+        // Se o usuário escolheu uma nova imagem, redimensiona
+        if (imageFile) {
+            imageFile = await resizeImageToCard(imageFile, 300, 200); // função que cria blob redimensionado
+        } else {
+            // Se não enviou nova imagem, mantém a anterior
+            updatedMedia.cover_img = media.cover_img;
+        }
+
+        await updateMediaFirestore(id, updatedMedia, imageFile); // <- envia o blob/redimensionado
         document.getElementById('edit-media-modal').classList.add('hidden');
         alert("Mídia atualizada com sucesso!");
     } catch (error) {
@@ -2088,7 +2103,6 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
         alert("Erro ao atualizar mídia");
     }
 });
-
 
 // Delete Media
 document.getElementById('delete-media').addEventListener('click', async () => {
