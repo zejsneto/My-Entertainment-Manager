@@ -1650,19 +1650,33 @@ form.addEventListener('submit', async (e) => {
     const specificData = getSpecificFields(finalType, form);
 
     // Mesclar
-    const newMedia = {
-        ...baseData,
-        ...specificData,
-    };
+    const newMedia = { ...baseData, ...specificData };
 
-    // Pega o arquivo do input de imagem (supondo que tem um input com name 'cover_img' e type='file')
-    const imageFile = form.cover_img?.files ? form.cover_img.files[0] : null;
+    // Pega o arquivo do input de imagem
+    const imageInput = form.cover_img;
+    let imageFile = null;
 
-    await createMediaFirestore(newMedia, imageFile);
+    if (imageInput?.files?.length) {
+        try {
+            imageFile = await fileToBase64(imageInput.files[0]);
+        } catch (err) {
+            console.error('Erro ao processar a imagem:', err);
+            alert('Erro ao processar a imagem. Tente outro formato ou outro dispositivo.');
+            imageFile = null; // fallback
+        }
+    }
 
-    addMediaModal.classList.add('hidden');
-    form.reset();
-    specificFieldsContainer.innerHTML = '';
+    try {
+        await createMediaFirestore(newMedia, imageFile);
+    } catch (err) {
+        console.error('Erro ao adicionar mídia:', err);
+        alert('Erro ao adicionar mídia (veja console).');
+    } finally {
+        // Garantir que o modal e o formulário sempre sejam resetados
+        addMediaModal.classList.add('hidden');
+        form.reset();
+        specificFieldsContainer.innerHTML = '';
+    }
 });
 
 // ============================
