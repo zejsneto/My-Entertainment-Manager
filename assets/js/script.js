@@ -1629,6 +1629,20 @@ function getSpecificFields(type, form) {
     return specificData;
 }
 
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        if (!file || !(file instanceof Blob)) {
+            reject(new Error("Parâmetro não é um arquivo válido."));
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+    });
+}
+
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -1654,15 +1668,15 @@ form.addEventListener('submit', async (e) => {
 
     // Pega o arquivo do input de imagem
     const imageInput = form.cover_img;
-    let imageFile = null;
 
-    if (imageInput?.files?.length) {
+    let imageFile = null;
+    if (imageInput?.files?.length && imageInput.files[0] instanceof File) {
         try {
             imageFile = await fileToBase64(imageInput.files[0]);
         } catch (err) {
             console.error('Erro ao processar a imagem:', err);
             alert('Erro ao processar a imagem. Tente outro formato ou outro dispositivo.');
-            imageFile = null; // fallback
+            imageFile = null;
         }
     }
 
