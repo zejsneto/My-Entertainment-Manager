@@ -1661,6 +1661,18 @@ function getSpecificFields(type, form) {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // Campos obrigatórios
+    const title = form.title.value.trim();
+    const rating = form.rating.value.trim();
+    const consumedDate = form.consumed_date.value.trim();
+    const coverImgFile = form.cover_img?.files?.[0];
+
+    if (!title) return alert("O título é obrigatório!");
+    if (!rating) return alert("A nota é obrigatória!");
+    if (isNaN(rating) || rating < 0 || rating > 10) return alert("A nota deve ser um número entre 0 e 10!");
+    if (!consumedDate) return alert("A data de consumo é obrigatória!");
+    if (!coverImgFile) return alert("A imagem da capa é obrigatória!");
+
     const type = document.getElementById('media-type').value;
     const isAnimated = document.getElementById('animated-checkbox')?.checked;
 
@@ -1668,9 +1680,9 @@ form.addEventListener('submit', async (e) => {
 
     // Campos fixos
     const baseData = {
-        title: form.title.value.trim(),
-        rating: form.rating.value.trim(),
-        consumed_date: form.consumed_date.value.trim(),
+        title,
+        rating: parseFloat(rating),
+        consumed_date: consumedDate,
         type: finalType,
         duration: form.duration?.value || '',
     };
@@ -1684,21 +1696,16 @@ form.addEventListener('submit', async (e) => {
         ...specificData,
     };
 
-    // Pega o arquivo do input de imagem (supondo que tem um input com name 'cover_img' e type='file')
-    let imageFile = form.cover_img?.files ? form.cover_img.files[0] : null;
-
-    if (imageFile) {
-        try {
-            imageFile = await resizeImageToCard(imageFile, 300, 200);
-        } catch (err) {
-            console.error('Erro ao redimensionar a imagem:', err);
-            alert('Erro ao processar a imagem. Tente outro arquivo.');
-            imageFile = null;
-        }
+    let imageFile = coverImgFile;
+    try {
+        imageFile = await resizeImageToCard(imageFile, 300, 200);
+    } catch (err) {
+        console.error('Erro ao redimensionar a imagem:', err);
+        alert('Erro ao processar a imagem. Tente outro arquivo.');
+        return; // interrompe o envio
     }
 
     await createMediaFirestore(newMedia, imageFile);
-
 
     addMediaModal.classList.add('hidden');
     form.reset();
@@ -2030,6 +2037,18 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     const media = globalMedias.find(m => m._docId == id);
     if (!media) return alert("Mídia não encontrada");
 
+    // Validações obrigatórias
+    const title = form['edit-title'].value.trim();
+    const rating = form['edit-rating'].value.trim();
+    const consumedDate = form['edit-date'].value.trim();
+    const coverImgFile = form.querySelector('#edit-cover')?.files?.[0];
+
+    if (!title) return alert("O título é obrigatório!");
+    if (!rating) return alert("A nota é obrigatória!");
+    if (isNaN(rating) || rating < 0 || rating > 10) return alert("A nota deve ser um número entre 0 e 10!");
+    if (!consumedDate) return alert("A data de consumo é obrigatória!");
+    if (!coverImgFile && !media.cover_img) return alert("A imagem da capa é obrigatória!");
+
     const type = media.type; // mantém o tipo original
     let specificFields = {};
 
@@ -2080,9 +2099,9 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
 
     const updatedMedia = {
         id,
-        title: form['edit-title'].value,
-        rating: form['edit-rating'].value,
-        consumed_date: form['edit-date'].value,
+        title,
+        rating: parseFloat(rating),
+        consumed_date: consumedDate,
         type,
         ...specificFields
     };
