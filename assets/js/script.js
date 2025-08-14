@@ -682,9 +682,9 @@ function renderMedias(medias) {
 
         // Construct the card HTML
         let html = `
-        <div class="edit-icon-card" data-id="${media._docId}" id="edit-media-trigger" data-i18n-title="main.cards.editTitle"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div class="edit-media-trigger edit-icon-card" data-id="${media._docId}" data-i18n-title="main.cards.editTitle"><i class="fa-solid fa-pen-to-square"></i></div>
         <div class="card-image">
-            <img src="${media.cover_img}" alt="${media.title}"> 
+            <img src="${media.cover_img || 'default-cover.png'}" alt="${media.title}">
             <div class="badge badge-${media.type}">${emojiHtml}</div>
         </div>
         <div class="card-content">
@@ -772,6 +772,14 @@ function renderMedias(medias) {
         // if (media.commentaries && media.commentaries.trim() !== '') {
         //     html += `<p class="comment">"${media.commentaries}"</p>`;
         // }
+
+        // <<< Adiciona os listeners de editar apenas depois de renderizar tudo >>>
+        document.querySelectorAll('.edit-media-trigger').forEach(btn => {
+            btn.addEventListener('click', e => {
+                const mediaId = e.currentTarget.dataset.id;
+                openEditModal(mediaId);
+            });
+        });
 
         html += `</div>`; // Close card content
         card.innerHTML = html;
