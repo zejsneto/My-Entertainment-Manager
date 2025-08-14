@@ -1630,6 +1630,22 @@ function getSpecificFields(type, form) {
     return specificData;
 }
 
+function resizeImageToCard(file, targetWidth = 300, targetHeight = 200) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.8);
+        };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+    });
+}
+
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -1657,9 +1673,20 @@ form.addEventListener('submit', async (e) => {
     };
 
     // Pega o arquivo do input de imagem (supondo que tem um input com name 'cover_img' e type='file')
-    const imageFile = form.cover_img?.files ? form.cover_img.files[0] : null;
+    let imageFile = form.cover_img?.files ? form.cover_img.files[0] : null;
+
+    if (imageFile) {
+        try {
+            imageFile = await resizeImageToCard(imageFile, 300, 200);
+        } catch (err) {
+            console.error('Erro ao redimensionar a imagem:', err);
+            alert('Erro ao processar a imagem. Tente outro arquivo.');
+            imageFile = null;
+        }
+    }
 
     await createMediaFirestore(newMedia, imageFile);
+
 
     addMediaModal.classList.add('hidden');
     form.reset();
