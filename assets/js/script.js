@@ -1978,33 +1978,87 @@ editMediaModal.addEventListener('click', (e) => {
 // });
 
 // Editar (submit)
+// Editar (submit)
 document.getElementById('edit-media-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const id = e.target.dataset.id;
+    const form = e.target;
+    const id = form.dataset.id;
     if (!id) return alert("ID da mídia não encontrado");
 
-    // Monta updatedMedia com os campos atualizados
-    const isAnimated = document.getElementById('edit-animated-checkbox')?.checked;
-    const type = isAnimated ? 'animated_movies' : 'movies';
+    // Encontra a mídia original
+    const media = globalMedias.find(m => m._docId == id);
+    if (!media) return alert("Mídia não encontrada");
 
+    const type = media.type; // mantém o tipo original
+    let specificFields = {};
+
+    // Coleta campos específicos de acordo com o tipo
+    switch (type) {
+        case 'games':
+            specificFields = {
+                hours_played: parseInt(document.querySelector('[name="hours_played"]')?.value) || 0,
+                online: document.querySelector('[name="online"]')?.value === 'true',
+                beaten: document.querySelector('[name="beaten"]')?.value === 'true',
+                trophies_obtained: parseInt(document.querySelector('[name="trophies_obtained"]')?.value) || 0,
+                trophies_total: parseInt(document.querySelector('[name="trophies_total"]')?.value) || 0,
+            };
+            break;
+        case 'movies':
+        case 'animated_movies':
+            const durationType = document.querySelector('[name="duration_type"]')?.value;
+            if (durationType === 'minutes') {
+                specificFields.duration_only_minutes = parseInt(document.querySelector('[name="duration_minutes"]')?.value) || 0;
+                specificFields.duration_hours = null;
+                specificFields.duration_minutes = null;
+            } else {
+                specificFields.duration_hours = parseInt(document.querySelector('[name="duration_hours"]')?.value) || 0;
+                specificFields.duration_minutes = parseInt(document.querySelector('[name="duration_minutes"]')?.value) || 0;
+                specificFields.duration_only_minutes = null;
+            }
+            break;
+        case 'series':
+        case 'animations':
+            const useEpisodes = document.querySelector('[name="use_episodes"]')?.value === 'true';
+            if (useEpisodes) {
+                specificFields.episodes_watched = parseInt(document.querySelector('[name="episodes_watched"]')?.value) || 0;
+                specificFields.episodes_total = parseInt(document.querySelector('[name="episodes_total"]')?.value) || 0;
+            } else {
+                specificFields.seasons_watched = parseInt(document.querySelector('[name="seasons_watched"]')?.value) || 0;
+                specificFields.seasons_total = parseInt(document.querySelector('[name="seasons_total"]')?.value) || 0;
+            }
+            break;
+        case 'books':
+            specificFields.pages_read = parseInt(document.querySelector('[name="pages_read"]')?.value) || 0;
+            specificFields.pages_total = parseInt(document.querySelector('[name="pages_total"]')?.value) || 0;
+            break;
+        case 'mangas':
+        case 'comics':
+            specificFields.volume_read = parseInt(document.querySelector('[name="volume_read"]')?.value) || 0;
+            specificFields.volume_amount = parseInt(document.querySelector('[name="volume_amount"]')?.value) || 0;
+            break;
+    }
+
+    // Monta objeto atualizado
     const updatedMedia = {
         id,
         title: document.getElementById('edit-title').value,
         rating: document.getElementById('edit-rating').value,
         consumed_date: document.getElementById('edit-date').value,
-        type,
-        duration: document.querySelector('[name="duration"]')?.value || '',
-        // Aqui você deve coletar os campos específicos conforme o tipo
+        type, // tipo original preservado
+        cover_img: document.getElementById('edit-cover').files[0] || media.cover_img, // mantém capa se não enviou nova
+        ...specificFields
     };
 
     try {
-        await updateMediaFirestore(id, updatedMedia);  // usa id e não mediaId
+        await updateMediaFirestore(id, updatedMedia);
         document.getElementById('edit-media-modal').classList.add('hidden');
+        alert("Mídia atualizada com sucesso!");
     } catch (error) {
         console.error("Erro ao atualizar mídia:", error);
         alert("Erro ao atualizar mídia");
     }
 });
+
 
 // Delete Media
 document.getElementById('delete-media').addEventListener('click', async () => {
