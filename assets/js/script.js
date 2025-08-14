@@ -2074,32 +2074,32 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     // Monta objeto atualizado
     const updatedMedia = {
         id,
-        title: document.getElementById('edit-title').value,
-        rating: document.getElementById('edit-rating').value,
-        consumed_date: document.getElementById('edit-date').value,
-        type, // tipo original preservado
-        cover_img: document.getElementById('edit-cover').files[0] || media.cover_img, // mantém capa se não enviou nova
+        title: form['edit-title'].value,
+        rating: form['edit-rating'].value,
+        consumed_date: form['edit-date'].value,
+        type,
         ...specificFields
     };
 
-     // Pega o arquivo de imagem do input
+    // Pega o arquivo de imagem do input
     const imageFileInput = document.getElementById('edit-cover');
-    let imageFile = imageFileInput?.files[0] || null;
+    const newFile = imageFileInput?.files[0] || null;
 
     try {
-        // Se o usuário escolheu uma nova imagem, redimensiona
-        if (imageFile) {
-            imageFile = await resizeImageToCard(imageFile, 300, 200); // função que cria blob redimensionado
+        if (newFile) {
+            // Redimensiona e converte para base64
+            const resizedBlob = await resizeImageToCard(newFile, 300, 200);
+            updatedMedia.cover_img = await fileToBase64(resizedBlob);
         } else {
-            // Se não enviou nova imagem, mantém a anterior
+            // Mantém base64 antiga
             updatedMedia.cover_img = media.cover_img;
         }
 
-        await updateMediaFirestore(id, updatedMedia, imageFile); // <- envia o blob/redimensionado
+        await updateMediaFirestore(id, updatedMedia);
         document.getElementById('edit-media-modal').classList.add('hidden');
         alert("Mídia atualizada com sucesso!");
-    } catch (error) {
-        console.error("Erro ao atualizar mídia:", error);
+    } catch (err) {
+        console.error("Erro ao atualizar mídia:", err);
         alert("Erro ao atualizar mídia");
     }
 });
