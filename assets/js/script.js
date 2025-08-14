@@ -2040,8 +2040,9 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     if (!id) return alert("ID da mídia não encontrado");
 
     // Encontra a mídia original
-    const media = globalMedias.find(m => m._docId == id);
-    if (!media) return alert("Mídia não encontrada");
+    const doc = await window._DB.collection('media').doc(id).get();
+    if (!doc.exists) return alert("Mídia não encontrada");
+    const media = { _docId: doc.id, ...doc.data() };
 
     // Validações obrigatórias
     const title = form['edit-title'].value.trim();
@@ -2117,20 +2118,27 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     const newFile = imageFileInput?.files[0] || null;
 
     try {
-        if (newFile) {
-            const resizedBlob = await resizeImageToCard(newFile, 300, 200);
-            updatedMedia.cover_img = await fileToBase64(resizedBlob);
-        } else {
-            updatedMedia.cover_img = media.cover_img ?? null;
+        await updateMediaFirestore(id, updatedMedia); // Atualiza Firestore
+
+        // Recarrega o item atualizado do Firestore
+        const doc = await window._DB.collection('media').doc(id).get();
+        const updatedDocData = { _docId: doc.id, ...doc.data() };
+
+        // Atualiza o item no globalMedias
+        const idx = globalMedias.findIndex(m => m._docId === id);
+        if (idx > -1) {
+            globalMedias[idx] = updatedDocData;
         }
 
-        await updateMediaFirestore(id, updatedMedia);
+        renderFilteredAndSorted(); // Agora renderiza com dados 100% atualizados
         document.getElementById('edit-media-modal').classList.add('hidden');
-        alert("Mídia atualizada com sucesso!");
+        //alert("Mídia atualizada com sucesso!");
+        window.location.reload();
     } catch (err) {
         console.error("Erro ao atualizar mídia:", err);
         alert("Erro ao atualizar mídia");
     }
+
 });
 
 
@@ -2147,6 +2155,7 @@ document.getElementById('delete-media').addEventListener('click', async () => {
         await deleteMediaFirestore(mediaId);
         document.getElementById('edit-media-modal').classList.add('hidden');
         alert("Mídia deletada com sucesso!");
+        window.location.reload();
     } catch (err) {
         console.error("Erro ao deletar mídia:", err);
         alert("Erro ao deletar mídia.");
