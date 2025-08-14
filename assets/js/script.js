@@ -2033,53 +2033,51 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     const type = media.type; // mantém o tipo original
     let specificFields = {};
 
-    // Coleta campos específicos de acordo com o tipo
     switch (type) {
         case 'games':
             specificFields = {
-                hours_played: parseInt(document.querySelector('[name="hours_played"]')?.value) || 0,
-                online: document.querySelector('[name="online"]')?.value === 'true',
-                beaten: document.querySelector('[name="beaten"]')?.value === 'true',
-                trophies_obtained: parseInt(document.querySelector('[name="trophies_obtained"]')?.value) || 0,
-                trophies_total: parseInt(document.querySelector('[name="trophies_total"]')?.value) || 0,
+                hours_played: parseInt(form.querySelector('[name="hours_played"]')?.value) || 0,
+                online: form.querySelector('[name="online"]')?.value === 'true',
+                beaten: form.querySelector('[name="beaten"]')?.value === 'true',
+                trophies_obtained: parseInt(form.querySelector('[name="trophies_obtained"]')?.value) || 0,
+                trophies_total: parseInt(form.querySelector('[name="trophies_total"]')?.value) || 0,
             };
             break;
         case 'movies':
         case 'animated_movies':
-            const durationType = document.querySelector('[name="duration_type"]')?.value;
+            const durationType = form.querySelector('[name="duration_type"]')?.value;
             if (durationType === 'minutes') {
-                specificFields.duration_only_minutes = parseInt(document.querySelector('[name="duration_minutes"]')?.value) || 0;
+                specificFields.duration_only_minutes = parseInt(form.querySelector('[name="duration_minutes"]')?.value) || 0;
                 specificFields.duration_hours = null;
                 specificFields.duration_minutes = null;
             } else {
-                specificFields.duration_hours = parseInt(document.querySelector('[name="duration_hours"]')?.value) || 0;
-                specificFields.duration_minutes = parseInt(document.querySelector('[name="duration_minutes"]')?.value) || 0;
+                specificFields.duration_hours = parseInt(form.querySelector('[name="duration_hours"]')?.value) || 0;
+                specificFields.duration_minutes = parseInt(form.querySelector('[name="duration_minutes"]')?.value) || 0;
                 specificFields.duration_only_minutes = null;
             }
             break;
         case 'series':
         case 'animations':
-            const useEpisodes = document.querySelector('[name="use_episodes"]')?.value === 'true';
+            const useEpisodes = form.querySelector('[name="use_episodes"]')?.value === 'true';
             if (useEpisodes) {
-                specificFields.episodes_watched = parseInt(document.querySelector('[name="episodes_watched"]')?.value) || 0;
-                specificFields.episodes_total = parseInt(document.querySelector('[name="episodes_total"]')?.value) || 0;
+                specificFields.episodes_watched = parseInt(form.querySelector('[name="episodes_watched"]')?.value) || 0;
+                specificFields.episodes_total = parseInt(form.querySelector('[name="episodes_total"]')?.value) || 0;
             } else {
-                specificFields.seasons_watched = parseInt(document.querySelector('[name="seasons_watched"]')?.value) || 0;
-                specificFields.seasons_total = parseInt(document.querySelector('[name="seasons_total"]')?.value) || 0;
+                specificFields.seasons_watched = parseInt(form.querySelector('[name="seasons_watched"]')?.value) || 0;
+                specificFields.seasons_total = parseInt(form.querySelector('[name="seasons_total"]')?.value) || 0;
             }
             break;
         case 'books':
-            specificFields.pages_read = parseInt(document.querySelector('[name="pages_read"]')?.value) || 0;
-            specificFields.pages_total = parseInt(document.querySelector('[name="pages_total"]')?.value) || 0;
+            specificFields.pages_read = parseInt(form.querySelector('[name="pages_read"]')?.value) || 0;
+            specificFields.pages_total = parseInt(form.querySelector('[name="pages_total"]')?.value) || 0;
             break;
         case 'mangas':
         case 'comics':
-            specificFields.volume_read = parseInt(document.querySelector('[name="volume_read"]')?.value) || 0;
-            specificFields.volume_amount = parseInt(document.querySelector('[name="volume_amount"]')?.value) || 0;
+            specificFields.volume_read = parseInt(form.querySelector('[name="volume_read"]')?.value) || 0;
+            specificFields.volume_amount = parseInt(form.querySelector('[name="volume_amount"]')?.value) || 0;
             break;
     }
 
-    // Monta objeto atualizado
     const updatedMedia = {
         id,
         title: form['edit-title'].value,
@@ -2089,18 +2087,16 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
         ...specificFields
     };
 
-    // Pega o arquivo de imagem do input
-    const imageFileInput = document.getElementById('edit-cover');
+    // Imagem
+    const imageFileInput = form.querySelector('#edit-cover');
     const newFile = imageFileInput?.files[0] || null;
 
     try {
         if (newFile) {
-            // Redimensiona e converte para base64
             const resizedBlob = await resizeImageToCard(newFile, 300, 200);
             updatedMedia.cover_img = await fileToBase64(resizedBlob);
         } else {
-            // Mantém base64 antiga
-            updatedMedia.cover_img = media.cover_img;
+            updatedMedia.cover_img = media.cover_img ?? null;
         }
 
         await updateMediaFirestore(id, updatedMedia);
@@ -2111,6 +2107,7 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
         alert("Erro ao atualizar mídia");
     }
 });
+
 
 // Delete Media
 document.getElementById('delete-media').addEventListener('click', async () => {
