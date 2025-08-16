@@ -3045,6 +3045,6 @@ header {
 }
 
 .modal-content {
-  max-height: calc(90vh - env(safe-area-inset-bottom));
+  max-height: calc(70vh - env(safe-area-inset-bottom));
   overflow-y: auto;
 }
