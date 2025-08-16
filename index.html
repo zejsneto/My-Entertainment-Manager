@@ -735,7 +735,7 @@
                     <div class="form-row">
                         <label>
                             <span data-i18n="main.modals.addEditMedia.mediaTitle">Title</span>
-                            <input type="text" name="title" required maxlength="48" />
+                            <input type="text" name="title" required maxlength="48" required />
                         </label>
                     </div>
 
@@ -743,11 +743,11 @@
                     <div class="form-row">
                         <label>
                             <span data-i18n="main.modals.addEditMedia.rating">Rating</span>
-                            <input type="number" name="rating" step="0.1" min="0" max="10" placeholder="7.0" />
+                            <input type="number" name="rating" step="0.1" min="0" max="10" placeholder="7.0" required />
                         </label>
                         <label>
                             <span data-i18n="main.modals.addEditMedia.consumedDate">Consumed Date</span>
-                            <input type="date" name="consumed_date" />
+                            <input type="date" name="consumed_date" required />
                         </label>
                     </div>
 
@@ -765,7 +765,8 @@
                                 </small>
                             </div>
                             <!-- <input type="file" name="cover_img" accept="image/*" /> -->
-                            <input type="file" name="cover_img" id="cover_img" accept="image/png, image/jpeg">
+                            <input type="file" name="cover_img" id="cover_img" accept="image/png, image/jpeg"
+                                required />
                         </label>
                     </div>
 
@@ -1187,7 +1188,7 @@
                 <p>© 2025 <strong><span data-i18n="head.title">My Entertainment Manager</span></strong></p>
                 <p>
                     <span data-i18n="footer.portfolio.createdBy">Created by</span>
-                    <a href="https://yourportfolio.com" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.linkedin.com/in/josejsneto/" target="_blank" rel="noopener noreferrer">
                         @josejsneto
                     </a>
                 </p>
@@ -1201,7 +1202,7 @@
                     aria-label="LinkedIn">
                     <i class="fab fa-linkedin fa-lg"></i>
                 </a>
-                <a href="https://github.com/zejsneto" target="_blank" rel="noopener noreferrer" aria-label="Portfolio">
+                <a href="https://github.com/zejsneto?tab=repositories" target="_blank" rel="noopener noreferrer" aria-label="Portfolio">
                     <i class="fas fa-user fa-lg"></i>
                 </a>
                 <a href="mailto:contato@josejsneto.com.br" aria-label="Email">

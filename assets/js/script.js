@@ -1171,12 +1171,9 @@ filterCheckboxes.forEach(cb => cb.addEventListener("change", updateOrderByOption
 updateOrderByOptions();
 
 // ============================
-// Profile Modal Handling
+// Profile Modal Handling (Firebase)
 // ============================
 
-/**
- * Profile modal logic: load/save user profile to/from localStorage
- */
 document.addEventListener("DOMContentLoaded", () => {
     const profilePic = document.querySelector(".profile-pic");
     const nameDisplay = document.querySelector(".profile-text strong");
@@ -1190,14 +1187,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveBtn = document.getElementById("save-profile");
     const cancelBtn = document.getElementById("cancel-edit");
 
-    // Load stored profile data
-    const savedName = localStorage.getItem("profileName");
-    const savedUsername = localStorage.getItem("profileUsername");
-    const savedPhoto = localStorage.getItem("profilePhoto");
-
-    if (savedName) nameDisplay.textContent = savedName;
-    if (savedUsername) usernameDisplay.textContent = '@' + savedUsername;
-    if (savedPhoto) profilePic.src = savedPhoto;
+    // --- Load profile from Firebase if username exists in localStorage ---
+    const storedUsername = localStorage.getItem("profileUsername");
+    if (storedUsername) {
+        loadProfileFromFirebase(storedUsername);
+    }
 
     // Open edit modal
     profilePic.addEventListener("click", () => {
@@ -1212,16 +1206,16 @@ document.addEventListener("DOMContentLoaded", () => {
         fileInput.value = "";
     });
 
-    // Close profile modal when clicking outside of it
-    document.getElementById("edit-profile-modal").addEventListener("click", (e) => {
-        if (e.target === e.currentTarget) {
-            e.currentTarget.classList.add("hidden");
-            document.getElementById("edit-photo-file").value = "";
+    // Close profile modal when clicking outside
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.classList.add("hidden");
+            fileInput.value = "";
         }
     });
 
     // Save profile changes
-    saveBtn.addEventListener("click", () => {
+    saveBtn.addEventListener("click", async () => {
         const newName = nameField.value.trim();
         const newUsername = usernameField.value.trim();
         const file = fileInput.files[0];
@@ -1234,27 +1228,60 @@ document.addEventListener("DOMContentLoaded", () => {
         nameDisplay.textContent = newName;
         usernameDisplay.textContent = "@" + newUsername;
 
-        if (file) {
+        const photoURL = await saveProfileToFirebase(newName, newUsername, file);
+
+        if (photoURL) profilePic.src = photoURL;
+        else if (file) {
             const reader = new FileReader();
-            reader.onload = function (e) {
-                const base64Image = e.target.result;
-                profilePic.src = base64Image;
-                saveToLocal(newName, newUsername, base64Image);
-            };
+            reader.onload = (e) => profilePic.src = e.target.result;
             reader.readAsDataURL(file);
-        } else {
-            saveToLocal(newName, newUsername, profilePic.src);
         }
+
+        // Save username locally for next page load
+        localStorage.setItem("profileUsername", newUsername);
 
         modal.classList.add("hidden");
         fileInput.value = "";
     });
 
-    // Save profile data to localStorage
-    function saveToLocal(name, username, photo) {
-        localStorage.setItem("profileName", name);
-        localStorage.setItem("profileUsername", username);
-        localStorage.setItem("profilePhoto", photo);
+    // --- Firebase functions ---
+    async function saveProfileToFirebase(name, username, file) {
+        try {
+            let photoURL = null;
+
+            if (file) {
+                const storageRef = firebase.storage().ref();
+                const profileRef = storageRef.child(`profile_pictures/${username}_${Date.now()}`);
+                const snapshot = await profileRef.put(file);
+                photoURL = await snapshot.ref.getDownloadURL();
+            }
+
+            await firebase.firestore().collection("profiles").doc(username).set({
+                name,
+                username,
+                photo: photoURL
+            });
+
+            console.log("Profile salvo no Firebase!");
+            return photoURL;
+        } catch (err) {
+            console.error("Erro ao salvar profile:", err);
+            return null;
+        }
+    }
+
+    async function loadProfileFromFirebase(username) {
+        try {
+            const doc = await firebase.firestore().collection("profiles").doc(username).get();
+            if (doc.exists) {
+                const data = doc.data();
+                nameDisplay.textContent = data.name || username;
+                usernameDisplay.textContent = '@' + data.username;
+                profilePic.src = data.photo || 'assets/profile/profile.png';
+            }
+        } catch (err) {
+            console.error("Erro ao carregar profile:", err);
+        }
     }
 });
 
@@ -1365,7 +1392,7 @@ mediaTypeSelect.addEventListener('change', () => {
         <div class="form-row">
             <label>
                 ${t('main.modals.addEditMedia.specificFields.game.hoursPlayed')}
-                <input type="number" name="hours_played" placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterHours')}" />
+                <input type="number" name="hours_played" placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterHours')}" required />
             </label>
         </div>
 
@@ -1389,11 +1416,11 @@ mediaTypeSelect.addEventListener('change', () => {
         <div class="form-row">
             <label>
                 ${t('main.modals.addEditMedia.specificFields.game.trophiesEarned')}
-                <input type="number" name="trophies_obtained" placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterNumber')}" />
+                <input type="number" name="trophies_obtained" placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterNumber')}"  />
             </label>
             <label>
                 ${t('main.modals.addEditMedia.specificFields.game.totalTrophies')}
-                <input type="number" name="trophies_total" placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterNumber')}" />
+                <input type="number" name="trophies_total" placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterNumber')}"  />
             </label>
         </div>
         `;
@@ -1567,7 +1594,7 @@ mediaTypeSelect.addEventListener('change', () => {
                 durationFieldsContainer.innerHTML = `
                     <label>
                     ${t('main.modals.addEditMedia.specificFields.movie.durationMinutes')}
-                        <input type="number" name="duration_minutes" value="${currentMinutes}" 
+                        <input required type="number" name="duration_minutes" value="${currentMinutes} " 
                         placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterMinutes')}" />
                     </label>
                 `;
@@ -1577,12 +1604,12 @@ mediaTypeSelect.addEventListener('change', () => {
                 durationFieldsContainer.innerHTML = `
                     <label>
                         ${t('main.modals.addEditMedia.specificFields.movie.durationHoursAndMinutes')}
-                        <input type="number" name="duration_hours" value="${hours}" 
+                        <input required type="number" name="duration_hours" value="${hours} " 
                         placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterHours')}" />
                     </label>
                     <label>
                         ${t('main.modals.addEditMedia.specificFields.movie.durationMinutes')}
-                        <input type="number" name="duration_minutes" value="${minutes}" 
+                        <input required type="number" name="duration_minutes" value="${minutes} " 
                         placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterMinutes')}" />
                     </label>
                 `;
@@ -1658,6 +1685,61 @@ function getSpecificFields(type, form) {
     return specificData;
 }
 
+// ============================
+// Validação customizada para "total >= parcial"
+// ============================
+function validateTotals(type, form) {
+    let isValid = true;
+    let message = "";
+
+    if (type === 'games') {
+        const trophiesObtained = parseInt(form.trophies_obtained?.value || 0, 10);
+        const trophiesTotal = parseInt(form.trophies_total?.value || 0, 10);
+        if (trophiesTotal && trophiesObtained > trophiesTotal) {
+            isValid = false;
+            message = "Troféus obtidos não podem ser maiores que o total.";
+        }
+    }
+    else if (type === 'books') {
+        const pagesRead = parseInt(form.pages_read?.value || 0, 10);
+        const pagesTotal = parseInt(form.pages_total?.value || 0, 10);
+        if (pagesTotal && pagesRead > pagesTotal) {
+            isValid = false;
+            message = "Páginas lidas não podem ser maiores que o total.";
+        }
+    }
+    else if (type === 'series' || type === 'animations') {
+        if (form.use_episodes?.value === 'true') {
+            const epWatched = parseInt(form.episodes_watched?.value || 0, 10);
+            const epTotal = parseInt(form.episodes_total?.value || 0, 10);
+            if (epTotal && epWatched > epTotal) {
+                isValid = false;
+                message = "Episódios assistidos não podem ser maiores que o total.";
+            }
+        } else {
+            const seasonsWatched = parseInt(form.seasons_watched?.value || 0, 10);
+            const seasonsTotal = parseInt(form.seasons_total?.value || 0, 10);
+            if (seasonsTotal && seasonsWatched > seasonsTotal) {
+                isValid = false;
+                message = "Temporadas assistidas não podem ser maiores que o total.";
+            }
+        }
+    }
+    else if (type === 'mangas' || type === 'comics') {
+        const volRead = parseInt(form.volume_read?.value || 0, 10);
+        const volTotal = parseInt(form.volume_amount?.value || 0, 10);
+        if (volTotal && volRead > volTotal) {
+            isValid = false;
+            message = "Volumes lidos não podem ser maiores que o total.";
+        }
+    }
+
+    if (!isValid) {
+        alert(message);
+    }
+    return isValid;
+}
+
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -1667,16 +1749,15 @@ form.addEventListener('submit', async (e) => {
     const consumedDate = form.consumed_date.value.trim();
     const coverImgFile = form.cover_img?.files?.[0];
 
-    if (!title) return alert("O título é obrigatório!");
-    if (!rating) return alert("A nota é obrigatória!");
-    if (isNaN(rating) || rating < 0 || rating > 10) return alert("A nota deve ser um número entre 0 e 10!");
-    if (!consumedDate) return alert("A data de consumo é obrigatória!");
-    if (!coverImgFile) return alert("A imagem da capa é obrigatória!");
-
     const type = document.getElementById('media-type').value;
     const isAnimated = document.getElementById('animated-checkbox')?.checked;
 
     const finalType = (type === 'movies' && isAnimated) ? 'animated_movies' : type;
+
+    // 🔒 Rodar validação ANTES de salvar
+    if (!validateTotals(finalType, form)) {
+        return; // não envia
+    }
 
     // Campos fixos
     const baseData = {
@@ -1757,7 +1838,7 @@ function openEditMediaModal(media) {
             <div class="form-row">
                 <label>
                     ${t('main.modals.addEditMedia.specificFields.game.hoursPlayed')}
-                    <input type="number" name="hours_played" value="${media.hours_played ?? ''}" />
+                    <input type="number" name="hours_played" value="${media.hours_played ?? ''}" required/>
                 </label>
             </div>  
             <div class="form-row">  
@@ -1860,12 +1941,14 @@ function openEditMediaModal(media) {
         <div class="form-row" id="edit-duration-fields">
             <!-- Campos de duração serão inseridos aqui -->
         </div>
+        <!--
         <div class="form-row">
             <label class="inline-label">
                 <input type="checkbox" id="edit-animated-checkbox" ${isAnimated ? 'checked' : ''} />
                 ${t('main.modals.addEditMedia.specificFields.movie.animatedCheckbox')}
             </label>
         </div>
+        -->
     `;
 
         const editDurationSelect = document.getElementById('edit-duration-type-select');
@@ -1879,7 +1962,7 @@ function openEditMediaModal(media) {
                 editDurationFieldsContainer.innerHTML = ` 
                 <label>
                     ${t('main.modals.addEditMedia.specificFields.movie.durationMinutes')}
-                    <input type="number" name="duration_minutes" value="${totalMinutes ?? ''}" 
+                    <input required type="number" name="duration_minutes" value="${totalMinutes ?? ''}" 
                     placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterMinutes')}" />
                 </label>
             `;
@@ -1888,12 +1971,12 @@ function openEditMediaModal(media) {
                 editDurationFieldsContainer.innerHTML = `
                 <label>
                     ${t('main.modals.addEditMedia.specificFields.movie.durationHoursAndMinutes')}
-                    <input type="number" name="duration_hours" value="${hours ?? ''}" 
+                    <input required type="number" name="duration_hours" value="${hours ?? ''}" 
                     placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterHours')}" />
                 </label>
                 <label>
                     ${t('main.modals.addEditMedia.specificFields.movie.durationMinutes')}
-                    <input type="number" name="duration_minutes" value="${minutes ?? ''}" 
+                    <input required type="number" name="duration_minutes" value="${minutes ?? ''}" 
                     placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterMinutes')}" />
                 </label>
             `;
@@ -2026,15 +2109,67 @@ editMediaModal.addEventListener('click', (e) => {
     }
 });
 
-// document.getElementById('edit-media-form').addEventListener('submit', async (e) => {
-//     e.preventDefault();
-//     const id = e.target.dataset.id;
-//     await updateMediaFirestore(mediaId, updatedMedia); // <-- mediaId não existe aqui
-// });
+// ============================
+// Validação simples no Edit Media (corrigida)
+// ============================
+function validateEditMediaForm() {
+    const form = document.getElementById('edit-media-form');
+
+    // Troféus
+    const trophiesObtained = parseInt(form.querySelector('[name="trophies_obtained"]')?.value) || 0;
+    const trophiesTotal = parseInt(form.querySelector('[name="trophies_total"]')?.value) || 0;
+    if (trophiesObtained > trophiesTotal) {
+        alert("O número de troféus obtidos não pode ser maior que o total.");
+        return false;
+    }
+
+    // Temporadas / Episódios
+    const seasonsWatched = parseInt(form.querySelector('[name="seasons_watched"]')?.value) || 0;
+    const seasonsTotal = parseInt(form.querySelector('[name="seasons_total"]')?.value) || 0;
+    const episodesWatched = parseInt(form.querySelector('[name="episodes_watched"]')?.value) || 0;
+    const episodesTotal = parseInt(form.querySelector('[name="episodes_total"]')?.value) || 0;
+
+    if (seasonsWatched > seasonsTotal) {
+        alert("O número de temporadas assistidas não pode ser maior que o total.");
+        return false;
+    }
+    if (episodesWatched > episodesTotal) {
+        alert("O número de episódios assistidos não pode ser maior que o total.");
+        return false;
+    }
+
+    // Volumes
+    const volumesRead = parseInt(form.querySelector('[name="volume_read"]')?.value) || 0;
+    const volumesTotal = parseInt(form.querySelector('[name="volume_amount"]')?.value) || 0;
+    if (volumesRead > volumesTotal) {
+        alert("O número de volumes lidos não pode ser maior que o total.");
+        return false;
+    }
+
+    // Páginas
+    const pagesRead = parseInt(form.querySelector('[name="pages_read"]')?.value) || 0;
+    const pagesTotal = parseInt(form.querySelector('[name="pages_total"]')?.value) || 0;
+    if (pagesRead > pagesTotal) {
+        alert("O número de páginas lidas não pode ser maior que o total.");
+        return false;
+    }
+
+    // Jogos: horas jogadas não negativas
+    const hoursPlayed = parseInt(form.querySelector('[name="hours_played"]')?.value) || 0;
+    if (hoursPlayed < 0) {
+        alert("Horas jogadas não podem ser negativas.");
+        return false;
+    }
+
+    return true;
+}
 
 // Editar (submit)
 document.getElementById('edit-media-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    if (!validateEditMediaForm()) return; // <- só deixa salvar se passar na validação
+
     const form = e.target;
     const id = form.dataset.id;
     if (!id) return alert("ID da mídia não encontrado");
@@ -2049,12 +2184,6 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     const rating = form['edit-rating'].value.trim();
     const consumedDate = form['edit-date'].value.trim();
     const coverImgFile = form.querySelector('#edit-cover')?.files?.[0];
-
-    if (!title) return alert("O título é obrigatório!");
-    if (!rating) return alert("A nota é obrigatória!");
-    if (isNaN(rating) || rating < 0 || rating > 10) return alert("A nota deve ser um número entre 0 e 10!");
-    if (!consumedDate) return alert("A data de consumo é obrigatória!");
-    if (!coverImgFile && !media.cover_img) return alert("A imagem da capa é obrigatória!");
 
     const type = media.type; // mantém o tipo original
     let specificFields = {};
@@ -2141,7 +2270,6 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
 
 });
 
-
 // Delete Media
 document.getElementById('delete-media').addEventListener('click', async () => {
     const form = document.getElementById('edit-media-form');
@@ -2167,19 +2295,34 @@ document.getElementById('delete-media').addEventListener('click', async () => {
 // ============================
 
 document.getElementById('json-btn').addEventListener('click', () => {
-    // Button's style is none when media length = 0 (Irrelevant code since Download Data button is unavailable when there is no data)
-    if (!globalMedias || globalMedias.length === 0) {
+    if (!currentMedias || currentMedias.length === 0) {
         alert("No data available for export.");
         return;
     }
 
-    // Generates human-readable timestamp YYYY-MM-DD_HH-MM-SS format
     const now = new Date();
     const timestamp = now.toISOString().replace(/[:]/g, '-').split('.')[0];
-
     const fileName = `media_export_${timestamp}.json`;
 
-    const jsonData = JSON.stringify(currentMedias, null, 2);
+    // Função para filtrar campos null e encurtar imagens
+    function cleanMedia(media) {
+        const result = {};
+        for (let key in media) {
+            if (media[key] === null || media[key] === undefined) continue;
+
+            // Se for cover_img e começar com "data:image/", encurtar
+            if (key === 'cover_img' && typeof media[key] === 'string' && media[key].startsWith('data:image/')) {
+                result[key] = '[BASE64 IMAGE]'; // placeholder
+            } else {
+                result[key] = media[key];
+            }
+        }
+        return result;
+    }
+
+    const cleanedData = currentMedias.map(cleanMedia);
+
+    const jsonData = JSON.stringify(cleanedData, null, 2);
     const blob = new Blob([jsonData], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
