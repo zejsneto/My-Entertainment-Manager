@@ -1189,9 +1189,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Load profile from Firebase if username exists in localStorage ---
     const storedUsername = localStorage.getItem("profileUsername");
-    if (storedUsername) {
-        loadProfileFromFirebase(storedUsername);
-    }
+    if (storedUsername) loadProfileFromFirebase(storedUsername);
 
     // Open edit modal
     profilePic.addEventListener("click", () => {
@@ -1206,7 +1204,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fileInput.value = "";
     });
 
-    // Close profile modal when clicking outside
+    // Close modal when clicking outside
     modal.addEventListener("click", (e) => {
         if (e.target === modal) {
             modal.classList.add("hidden");
@@ -1237,9 +1235,7 @@ document.addEventListener("DOMContentLoaded", () => {
             reader.readAsDataURL(file);
         }
 
-        // Save username locally for next page load
         localStorage.setItem("profileUsername", newUsername);
-
         modal.classList.add("hidden");
         fileInput.value = "";
     });
@@ -1284,6 +1280,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
 
 // ============================
 // Rezise Image (For Add and Edit/Delete Media)
