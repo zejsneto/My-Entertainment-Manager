@@ -1187,26 +1187,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveBtn = document.getElementById("save-profile");
     const cancelBtn = document.getElementById("cancel-edit");
 
-    // --- Load profile from Firebase if username exists in localStorage ---
     const storedUsername = localStorage.getItem("profileUsername");
-    if (storedUsername) {
-        loadProfileFromFirebase(storedUsername);
-    }
+    if (storedUsername) loadProfileFromFirebase(storedUsername);
 
-    // Open edit modal
     profilePic.addEventListener("click", () => {
         nameField.value = nameDisplay.textContent;
         usernameField.value = usernameDisplay.textContent.replace('@', '');
         modal.classList.remove("hidden");
     });
 
-    // Cancel edit
     cancelBtn.addEventListener("click", () => {
         modal.classList.add("hidden");
         fileInput.value = "";
     });
 
-    // Close profile modal when clicking outside
     modal.addEventListener("click", (e) => {
         if (e.target === modal) {
             modal.classList.add("hidden");
@@ -1214,7 +1208,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Save profile changes
     saveBtn.addEventListener("click", async () => {
         const newName = nameField.value.trim();
         const newUsername = usernameField.value.trim();
@@ -1225,40 +1218,33 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        nameDisplay.textContent = newName;
-        usernameDisplay.textContent = "@" + newUsername;
+        let photoBase64 = profilePic.src; // fallback
 
-        let photoBase64 = profilePic.src; // fallback para caso não tenha arquivo novo
-
-        if (file && file.type.match(/^image\/(jpeg|png|jpg)$/)) {
-            // Apenas os tipos aceitos como cover_img
+        if (file && file.type.match(/^image\/(jpeg|jpg|png)$/)) {
             photoBase64 = await fileToBase64(file);
             profilePic.src = photoBase64;
         }
 
-        await saveProfileToFirebase(newName, newUsername, photoBase64);
-
-        // Salva username localmente
-        localStorage.setItem("profileUsername", newUsername);
-
-        modal.classList.add("hidden");
-        fileInput.value = "";
-    });
-
-    // --- Firebase functions ---
-    async function saveProfileToFirebase(name, username, photoBase64) {
         try {
-            await window._DB.collection("profiles").doc(username).set({
-                name,
-                username,
+            // Cria ou atualiza documento na coleção 'profiles'
+            await window._DB.collection("profiles").doc(newUsername).set({
+                name: newName,
+                username: newUsername,
                 photo: photoBase64
             });
+
+            nameDisplay.textContent = newName;
+            usernameDisplay.textContent = '@' + newUsername;
+            localStorage.setItem("profileUsername", newUsername);
+            modal.classList.add("hidden");
+            fileInput.value = "";
+
             console.log("Profile salvo no Firebase!");
         } catch (err) {
             console.error("Erro ao salvar profile:", err);
             alert("Erro ao salvar profile no Firebase");
         }
-    }
+    });
 
     async function loadProfileFromFirebase(username) {
         try {
@@ -1274,7 +1260,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- Reuse existing fileToBase64 function ---
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = err => reject(err);
+            reader.readAsDataURL(file);
+        });
+    }
 });
 
 // ============================
