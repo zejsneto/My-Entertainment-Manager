@@ -657,6 +657,10 @@ nav button,
 /* ============================
   Modal Profile Picture Edit
 ============================ */
+.login-title {
+  padding-top: 1.2rem;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -716,6 +720,8 @@ nav button,
 }
 
 .modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"],
 .modal-content input[type="file"] {
   margin-top: 0.3em;
   padding: 0.6em;
@@ -753,6 +759,31 @@ nav button,
 .modal-buttons button:hover {
   background-color: var(--border-color);
 }
+
+/* Estilo específico para os labels dentro do form de login */
+#login-form .form-row label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+/* Botão de login */
+#login-form .modal-buttons button {
+  background-color: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 0.6em 1em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#login-form .modal-buttons button:hover {
+  background-color: var(--border-color);
+}
+
 
 @media (max-width: 480px) {
   .form-row {

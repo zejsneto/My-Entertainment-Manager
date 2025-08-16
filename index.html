@@ -664,7 +664,7 @@
             </div>
         </div>
 
-        <!-- Edit Profile Modal -->
+        <!-- Edit Profile / Login Modal -->
         <div id="edit-profile-modal" class="modal hidden" role="dialog" aria-modal="true"
             aria-labelledby="editProfileTitle" tabindex="-1">
             <div class="modal-content">
@@ -698,6 +698,35 @@
                         <span data-i18n="buttons.save">Save</span>
                     </button>
                 </div>
+
+                <!-- Login Section -->
+                <h2 class="login-title">
+                    <i class="fas fa-user"></i>
+                    <span data-i18n="main.modals.editProfile.authTitle">Edit Profile</span>
+                </h2>
+                <form id="login-form">
+                    <div class="form-row">
+                        <label>
+                            <span data-i18n="main.modals.editProfile.email">E-mail</span>
+                            <input type="email" id="login-email" required maxlength="50" autocomplete="current-email">
+                        </label>
+                        <label>
+                            <span data-i18n="main.modals.editProfile.password">Password</span>
+                            <input type="password" id="login-password" required maxlength="50"
+                                autocomplete="current-password">
+                        </label>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="logout-btn">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span data-i18n="buttons.logout">Logout</span>
+                        </button>
+                        <button id="login-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-i18n="buttons.login">Login</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -1150,9 +1179,9 @@
             window._STORAGE = STORAGE;
 
             // Fazer login anônimo automaticamente
-            window._AUTH.signInAnonymously()
-                .then(() => console.log("Authenticated anonymously on Firebase."))
-                .catch(err => console.error("Auth error:", err));
+            // window._AUTH.signInAnonymously()
+            //     .then(() => console.log("Authenticated anonymously on Firebase."))
+            //     .catch(err => console.error("Auth error:", err));
         </script>
 
         <!-- Sortable.js -->
@@ -1202,7 +1231,8 @@
                     aria-label="LinkedIn">
                     <i class="fab fa-linkedin fa-lg"></i>
                 </a>
-                <a href="https://github.com/zejsneto?tab=repositories" target="_blank" rel="noopener noreferrer" aria-label="Portfolio">
+                <a href="https://github.com/zejsneto?tab=repositories" target="_blank" rel="noopener noreferrer"
+                    aria-label="Portfolio">
                     <i class="fas fa-user fa-lg"></i>
                 </a>
                 <a href="mailto:contato@josejsneto.com.br" aria-label="Email">

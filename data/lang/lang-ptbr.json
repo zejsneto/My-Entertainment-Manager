@@ -215,7 +215,10 @@
         "title": "Editar Perfil",
         "name": "Nome",
         "username": "Usuário",
-        "profilePicture": "Foto de Perfil"
+        "profilePicture": "Foto de Perfil",
+        "authTitle": "Autenticação",
+        "email": "E-mail",
+        "password": "Senha"
       },
       "addEditMedia": {
         "mediaTitle": "Título",
@@ -350,7 +353,9 @@
     "cancel": "Cancelar",
     "save": "Salvar",
     "update": "Atualizar",
-    "apply": "Aplicar"
+    "apply": "Aplicar",
+    "logout": "Sair",
+    "login": "Entrar"
   },
   "shareTexts": {
     "title": "Meu Gerenciador de Entretenimento - Perfil",

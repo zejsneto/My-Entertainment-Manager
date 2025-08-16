@@ -216,7 +216,10 @@
                 "title": "Edit Profile",
                 "name": "Name",
                 "username": "Username",
-                "profilePicture": "Profile Picture"
+                "profilePicture": "Profile Picture",
+                "authTitle": "Authentication",
+                "email": "E-mail",
+                "password": "Password"
             },
             "addEditMedia": {
                 "mediaTitle": "Title",
@@ -351,7 +354,9 @@
         "cancel": "Cancel",
         "save": "Save",
         "update": "Update",
-        "apply": "Apply"
+        "apply": "Apply",
+        "logout": "Logout",
+        "login": "Login"
     },
     "shareTexts": {
         "title": "My Entertainment Manager - Profile",

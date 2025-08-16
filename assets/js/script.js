@@ -66,6 +66,96 @@ let currentSort = ''; // Stores the current sort option (e.g., 'title-asc')
 //     });
 
 // ============================
+// Firebase Auth (Email/Password)
+// ============================
+
+window.AUTH = window.AUTH || window._AUTH;
+
+document.getElementById("login-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+    login(email, password);
+});
+
+// Configura persistência do login
+AUTH.setPersistence(firebase.auth.Auth.Persistence.LOCAL) // LOCAL = mantém após fechar página
+    .then(() => {
+        console.log("Persistência configurada: LOCAL (permanece após reload).");
+    })
+    .catch(err => {
+        console.error("Erro ao configurar persistência:", err);
+    });
+
+// Logar usuário
+async function login(email, password) {
+    try {
+        await AUTH.signInWithEmailAndPassword(email, password);
+        console.log("Login bem-sucedido!");
+        checkUserPermissions();
+
+        // Fecha modal automaticamente após login
+        const modal = document.getElementById("edit-profile-modal");
+        modal.classList.add("hidden");
+
+        // Atualiza profile na tela
+        loadProfileFromFirebase();
+
+    } catch (err) {
+        console.error("Erro ao logar:", err);
+        alert("Email ou senha inválidos.");
+    }
+}
+
+// Checar se usuário logado é você
+function checkUserPermissions() {
+    const user = AUTH.currentUser;
+    if (user && user.uid === "5z1Csjq7NlNFU1F744kqBkX6WRB3") {
+        console.log("Você pode editar/criar/deletar.");
+        window.canEdit = true;
+    } else {
+        console.log("Usuário não autorizado para CUD.");
+        window.canEdit = false;
+    }
+}
+
+// Deslogar
+document.getElementById("logout-btn").addEventListener("click", (e) => {
+    e.preventDefault(); // evita submit do form
+    logout();
+});
+
+
+function logout() {
+    AUTH.signOut().then(() => {
+        console.log("Deslogado.");
+        window.canEdit = false;
+    });
+}
+
+// Monitorar estado de login (persistência)
+AUTH.onAuthStateChanged(user => {
+    if (user) {
+        checkUserPermissions();
+
+        // Fecha modal caso esteja aberto
+        const modal = document.getElementById("edit-profile-modal");
+        modal.classList.add("hidden");
+
+        // Atualiza profile visível
+        loadProfileFromFirebase();
+    } else {
+        window.canEdit = false;
+    }
+});
+
+document.getElementById("login-btn").addEventListener("click", () => {
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+    login(email, password);
+});
+
+// ============================
 // Firebase CRUD Functions
 // ============================
 // ADD
@@ -211,6 +301,114 @@ async function loadMediaFromFirestore() {
         document.getElementById('json-btn').style.display = "none";
     }
 }
+
+// ============================
+// Profile Functions (GLOBAL)
+// ============================
+async function loadProfileFromFirebase() {
+    const profilePic = document.querySelector(".profile-pic");
+    const nameDisplay = document.querySelector(".profile-text strong");
+    const usernameDisplay = document.querySelector(".profile-text span");
+
+    try {
+        const doc = await window._DB.collection("profile").doc("mainProfile").get();
+        if (doc.exists) {
+            const data = doc.data();
+            nameDisplay.textContent = data.name || "Sem nome";
+            usernameDisplay.textContent = '@' + (data.username || "user");
+            if (data.photo) profilePic.src = data.photo;
+        }
+    } catch (err) {
+        console.error("Erro ao carregar profile:", err);
+    }
+}
+
+// ============================
+// Profile Modal Handling (Firebase / Base64)
+// ============================
+
+document.addEventListener("DOMContentLoaded", () => {
+    const profilePic = document.querySelector(".profile-pic");
+    const modal = document.getElementById("edit-profile-modal");
+    const nameField = document.getElementById("edit-name");
+    const usernameField = document.getElementById("edit-username");
+    const fileInput = document.getElementById("edit-photo-file");
+    const saveBtn = document.getElementById("save-profile");
+    const cancelBtn = document.getElementById("cancel-edit");
+
+    profilePic.addEventListener("click", () => {
+        const nameDisplay = document.querySelector(".profile-text strong");
+        const usernameDisplay = document.querySelector(".profile-text span");
+
+        nameField.value = nameDisplay.textContent;
+        usernameField.value = usernameDisplay.textContent.replace('@', '');
+        modal.classList.remove("hidden");
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        fileInput.value = "";
+    });
+
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.classList.add("hidden");
+            fileInput.value = "";
+        }
+    });
+
+    saveBtn.addEventListener("click", async () => {
+        const newName = nameField.value.trim();
+        const newUsername = usernameField.value.trim();
+        const file = fileInput.files[0];
+        const profilePic = document.querySelector(".profile-pic");
+        const nameDisplay = document.querySelector(".profile-text strong");
+        const usernameDisplay = document.querySelector(".profile-text span");
+
+        if (!newName || !newUsername) {
+            alert("Name and username are required.");
+            return;
+        }
+
+        let photoBase64 = profilePic.src; // fallback
+
+        if (file && file.type.match(/^image\/(jpeg|jpg|png)$/)) {
+            photoBase64 = await fileToBase64(file);
+        }
+
+        try {
+            await window._DB.collection("profile").doc("mainProfile").set({
+                name: newName,
+                username: newUsername,
+                photo: photoBase64
+            });
+
+            nameDisplay.textContent = newName;
+            usernameDisplay.textContent = '@' + newUsername;
+            profilePic.src = photoBase64;
+
+            modal.classList.add("hidden");
+            fileInput.value = "";
+
+            console.log("Profile salvo no Firebase!");
+        } catch (err) {
+            console.error("Erro ao salvar profile:", err);
+            alert("Erro ao salvar profile no Firebase");
+        }
+    });
+
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = err => reject(err);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Carrega profile assim que DOM estiver pronto
+    loadProfileFromFirebase();
+});
 
 // ============================
 // Tooltip Achievements
@@ -1169,100 +1367,6 @@ filterCheckboxes.forEach(cb => cb.addEventListener("change", updateOrderByOption
 
 // Call when loading too
 updateOrderByOptions();
-
-// ============================
-// Profile Modal Handling (Firebase / Base64)
-// ============================
-
-document.addEventListener("DOMContentLoaded", () => {
-    const profilePic = document.querySelector(".profile-pic");
-    const nameDisplay = document.querySelector(".profile-text strong");
-    const usernameDisplay = document.querySelector(".profile-text span");
-
-    const modal = document.getElementById("edit-profile-modal");
-    const nameField = document.getElementById("edit-name");
-    const usernameField = document.getElementById("edit-username");
-    const fileInput = document.getElementById("edit-photo-file");
-
-    const saveBtn = document.getElementById("save-profile");
-    const cancelBtn = document.getElementById("cancel-edit");
-
-    // 🔹 Sempre busca o mesmo documento "mainProfile"
-    loadProfileFromFirebase();
-
-    profilePic.addEventListener("click", () => {
-        nameField.value = nameDisplay.textContent;
-        usernameField.value = usernameDisplay.textContent.replace('@', '');
-        modal.classList.remove("hidden");
-    });
-
-    cancelBtn.addEventListener("click", () => {
-        modal.classList.add("hidden");
-        fileInput.value = "";
-    });
-
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.classList.add("hidden");
-            fileInput.value = "";
-        }
-    });
-
-    saveBtn.addEventListener("click", async () => {
-        const newName = nameField.value.trim();
-        const newUsername = usernameField.value.trim();
-        const file = fileInput.files[0];
-
-        if (!newName || !newUsername) {
-            alert("Name and username are required.");
-            return;
-        }
-
-        let photoBase64 = profilePic.src; // fallback
-
-        if (file && file.type.match(/^image\/(jpeg|jpg|png)$/)) {
-            photoBase64 = await fileToBase64(file);
-            profilePic.src = photoBase64;
-        }
-
-        try {
-            // 🔹 Salva SEMPRE no docId fixo "mainProfile" dentro da coleção "profile"
-            await window._DB.collection("profile").doc("mainProfile").set({
-                name: newName,
-                username: newUsername,
-                photo: photoBase64
-            });
-
-            console.log("Profile salvo no Firebase!");
-        } catch (err) {
-            console.error("Erro ao salvar profile:", err);
-            alert("Erro ao salvar profile no Firebase");
-        }
-    });
-
-    async function loadProfileFromFirebase() {
-        try {
-            const doc = await window._DB.collection("profile").doc("mainProfile").get();
-            if (doc.exists) {
-                const data = doc.data();
-                nameDisplay.textContent = data.name || "Sem nome";
-                usernameDisplay.textContent = '@' + (data.username || "user");
-                if (data.photo) profilePic.src = data.photo;
-            }
-        } catch (err) {
-            console.error("Erro ao carregar profile:", err);
-        }
-    }
-
-    function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = err => reject(err);
-            reader.readAsDataURL(file);
-        });
-    }
-});
 
 // ============================
 // Rezise Image (For Add and Edit/Delete Media)
