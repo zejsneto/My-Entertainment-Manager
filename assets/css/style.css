@@ -3043,3 +3043,8 @@ header {
   padding: 1em;
   color: var(--text-secondary);
 }
+
+.modal-content {
+  max-height: calc(90vh - env(safe-area-inset-bottom));
+  overflow-y: auto;
+}

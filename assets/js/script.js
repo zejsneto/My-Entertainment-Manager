@@ -1675,27 +1675,27 @@ mediaTypeSelect.addEventListener('change', () => {
         function updateDurationFields(durationType) {
             if (durationType === 'minutes') {
                 durationFieldsContainer.innerHTML = `
-                    <label>
-                    ${t('main.modals.addEditMedia.specificFields.movie.durationMinutes')}
-                        <input required type="number" name="duration_minutes" value="${currentMinutes} " 
-                        placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterMinutes')}" />
-                    </label>
-                `;
+            <label>
+            ${t('main.modals.addEditMedia.specificFields.movie.durationMinutes')}
+                <input required type="number" name="duration_minutes" value="${currentMinutes}" 
+                placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterMinutes')}" />
+            </label>
+        `;
             }
             else if (durationType === 'hours_minutes') {
                 const { hours, minutes } = convertMinutesToHoursAndMinutes(currentMinutes);
                 durationFieldsContainer.innerHTML = `
-                    <label>
-                        ${t('main.modals.addEditMedia.specificFields.movie.durationHoursAndMinutes')}
-                        <input required type="number" name="duration_hours" value="${hours} " 
-                        placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterHours')}" />
-                    </label>
-                    <label>
-                        ${t('main.modals.addEditMedia.specificFields.movie.durationMinutes')}
-                        <input required type="number" name="duration_minutes" value="${minutes} " 
-                        placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterMinutes')}" />
-                    </label>
-                `;
+            <label>
+                ${t('main.modals.addEditMedia.specificFields.movie.durationHoursAndMinutes')}
+                <input required type="number" name="duration_hours" value="${hours}" 
+                placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterHours')}" />
+            </label>
+            <label>
+                ${t('main.modals.addEditMedia.specificFields.movie.durationMinutes')}
+                <input required type="number" name="duration_minutes" value="${minutes}" 
+                placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterMinutes')}" />
+            </label>
+        `;
             }
         }
 
@@ -2901,18 +2901,51 @@ function updateAdvancedFilterOptions() {
     });
 }
 
-// === Reset Data (Factory Reset) ===
-document.getElementById("reset-data").addEventListener("click", () => {
+// === Reset Data (Factory Reset) + Firebase ===
+document.getElementById("reset-data").addEventListener("click", async () => {
     const confirmReset = confirm(
         translations?.main?.modals?.settings?.resetConfirm ||
         "This will erase ALL your profile and media data. Are you sure?"
     );
 
-    if (confirmReset) {
+    if (!confirmReset) return;
+
+    const user = AUTH.currentUser;
+    if (!user) {
+        alert("You must be logged in to reset your data.");
+        return;
+    }
+
+    try {
+        // === Apaga profile ===
+        const profileDoc = await DB.collection("profile").doc("mainProfile").get();
+        if (profileDoc.exists) {
+            await DB.collection("profile").doc("mainProfile").delete();
+            console.log("Profile deletado.");
+        }
+
+        // === Apaga todas as mídias ===
+        const mediaSnapshot = await DB.collection("media").get();
+        if (!mediaSnapshot.empty) {
+            const deletePromises = [];
+            mediaSnapshot.forEach(docSnap => {
+                deletePromises.push(DB.collection("media").doc(docSnap.id).delete());
+            });
+            await Promise.all(deletePromises);
+            console.log("Todas as mídias deletadas.");
+        }
+
+        // Limpar localStorage e recarregar
         localStorage.clear();
+        alert("All your data has been deleted.");
         location.reload();
+
+    } catch (err) {
+        console.error("Erro ao resetar dados:", err);
+        alert("Failed to reset data. Try again later.");
     }
 });
+
 
 // === Dark Mode Preference ===
 function applyDarkMode(mode) {
