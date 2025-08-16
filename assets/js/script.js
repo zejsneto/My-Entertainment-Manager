@@ -1187,8 +1187,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveBtn = document.getElementById("save-profile");
     const cancelBtn = document.getElementById("cancel-edit");
 
-    const storedUsername = localStorage.getItem("profileUsername");
-    if (storedUsername) loadProfileFromFirebase(storedUsername);
+    // 🔹 Sempre busca o mesmo documento "mainProfile"
+    loadProfileFromFirebase();
 
     profilePic.addEventListener("click", () => {
         nameField.value = nameDisplay.textContent;
@@ -1226,18 +1226,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            // Cria ou atualiza documento na coleção 'profiles'
-            await window._DB.collection("profiles").doc(newUsername).set({
+            // 🔹 Salva SEMPRE no docId fixo "mainProfile" dentro da coleção "profile"
+            await window._DB.collection("profile").doc("mainProfile").set({
                 name: newName,
                 username: newUsername,
                 photo: photoBase64
             });
-
-            nameDisplay.textContent = newName;
-            usernameDisplay.textContent = '@' + newUsername;
-            localStorage.setItem("profileUsername", newUsername);
-            modal.classList.add("hidden");
-            fileInput.value = "";
 
             console.log("Profile salvo no Firebase!");
         } catch (err) {
@@ -1246,13 +1240,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    async function loadProfileFromFirebase(username) {
+    async function loadProfileFromFirebase() {
         try {
-            const doc = await window._DB.collection("profiles").doc(username).get();
+            const doc = await window._DB.collection("profile").doc("mainProfile").get();
             if (doc.exists) {
                 const data = doc.data();
-                nameDisplay.textContent = data.name || username;
-                usernameDisplay.textContent = '@' + data.username;
+                nameDisplay.textContent = data.name || "Sem nome";
+                usernameDisplay.textContent = '@' + (data.username || "user");
                 if (data.photo) profilePic.src = data.photo;
             }
         } catch (err) {
