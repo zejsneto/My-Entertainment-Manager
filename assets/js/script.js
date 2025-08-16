@@ -1171,7 +1171,7 @@ filterCheckboxes.forEach(cb => cb.addEventListener("change", updateOrderByOption
 updateOrderByOptions();
 
 // ============================
-// Profile Modal Handling (Firebase)
+// Profile Modal Handling (Firebase / Base64)
 // ============================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1189,7 +1189,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Load profile from Firebase if username exists in localStorage ---
     const storedUsername = localStorage.getItem("profileUsername");
-    if (storedUsername) loadProfileFromFirebase(storedUsername);
+    if (storedUsername) {
+        loadProfileFromFirebase(storedUsername);
+    }
 
     // Open edit modal
     profilePic.addEventListener("click", () => {
@@ -1204,7 +1206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fileInput.value = "";
     });
 
-    // Close modal when clicking outside
+    // Close profile modal when clicking outside
     modal.addEventListener("click", (e) => {
         if (e.target === modal) {
             modal.classList.add("hidden");
@@ -1226,61 +1228,54 @@ document.addEventListener("DOMContentLoaded", () => {
         nameDisplay.textContent = newName;
         usernameDisplay.textContent = "@" + newUsername;
 
-        const photoURL = await saveProfileToFirebase(newName, newUsername, file);
+        let photoBase64 = profilePic.src; // fallback para caso não tenha arquivo novo
 
-        if (photoURL) profilePic.src = photoURL;
-        else if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => profilePic.src = e.target.result;
-            reader.readAsDataURL(file);
+        if (file && file.type.match(/^image\/(jpeg|png|jpg)$/)) {
+            // Apenas os tipos aceitos como cover_img
+            photoBase64 = await fileToBase64(file);
+            profilePic.src = photoBase64;
         }
 
+        await saveProfileToFirebase(newName, newUsername, photoBase64);
+
+        // Salva username localmente
         localStorage.setItem("profileUsername", newUsername);
+
         modal.classList.add("hidden");
         fileInput.value = "";
     });
 
     // --- Firebase functions ---
-    async function saveProfileToFirebase(name, username, file) {
+    async function saveProfileToFirebase(name, username, photoBase64) {
         try {
-            let photoURL = null;
-
-            if (file) {
-                const storageRef = firebase.storage().ref();
-                const profileRef = storageRef.child(`profile_pictures/${username}_${Date.now()}`);
-                const snapshot = await profileRef.put(file);
-                photoURL = await snapshot.ref.getDownloadURL();
-            }
-
-            await firebase.firestore().collection("profiles").doc(username).set({
+            await window._DB.collection("profiles").doc(username).set({
                 name,
                 username,
-                photo: photoURL
+                photo: photoBase64
             });
-
             console.log("Profile salvo no Firebase!");
-            return photoURL;
         } catch (err) {
             console.error("Erro ao salvar profile:", err);
-            return null;
+            alert("Erro ao salvar profile no Firebase");
         }
     }
 
     async function loadProfileFromFirebase(username) {
         try {
-            const doc = await firebase.firestore().collection("profiles").doc(username).get();
+            const doc = await window._DB.collection("profiles").doc(username).get();
             if (doc.exists) {
                 const data = doc.data();
                 nameDisplay.textContent = data.name || username;
                 usernameDisplay.textContent = '@' + data.username;
-                profilePic.src = data.photo || 'assets/profile/profile.png';
+                if (data.photo) profilePic.src = data.photo;
             }
         } catch (err) {
             console.error("Erro ao carregar profile:", err);
         }
     }
-});
 
+    // --- Reuse existing fileToBase64 function ---
+});
 
 // ============================
 // Rezise Image (For Add and Edit/Delete Media)
