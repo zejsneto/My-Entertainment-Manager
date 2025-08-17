@@ -2267,6 +2267,10 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     const rating = form['edit-rating'].value.trim();
     const consumedDate = form['edit-date'].value.trim();
 
+    // Imagem
+    const imageFileInput = form.querySelector('#edit-cover');
+    const newFile = imageFileInput?.files[0] || null;
+
     let cover_img = media.cover_img; // valor atual, se não trocar
     if (newFile) {
         cover_img = await fileToBase64(newFile);
@@ -2329,10 +2333,6 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
         cover_img,
         ...specificFields
     };
-
-    // Imagem
-    const imageFileInput = form.querySelector('#edit-cover');
-    const newFile = imageFileInput?.files[0] || null;
 
     try {
         await updateMediaFirestore(id, updatedMedia); // Atualiza Firestore
