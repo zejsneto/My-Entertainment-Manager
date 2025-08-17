@@ -2266,7 +2266,11 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     const title = form['edit-title'].value.trim();
     const rating = form['edit-rating'].value.trim();
     const consumedDate = form['edit-date'].value.trim();
-    const coverImgFile = form.querySelector('#edit-cover')?.files?.[0];
+
+    let cover_img = media.cover_img; // valor atual, se não trocar
+    if (newFile) {
+        cover_img = await fileToBase64(newFile);
+    }
 
     const type = media.type; // mantém o tipo original
     let specificFields = {};
@@ -2322,6 +2326,7 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
         rating: parseFloat(rating),
         consumed_date: consumedDate,
         type,
+        cover_img,
         ...specificFields
     };
 
