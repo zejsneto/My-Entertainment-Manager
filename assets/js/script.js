@@ -2704,8 +2704,8 @@ if (shareBtn && navigator.share) {
     shareBtn.addEventListener('click', async () => {
         try {
             await navigator.share({
-                title: translations?.main?.shareTexts?.title || 'My Entertainment Manager - Profile',
-                text: translations?.main?.shareTexts?.subtitle || 'Check out my activity on Entertainment Manager!',
+                title: translations?.shareTexts?.title || 'My Entertainment Manager - Profile',
+                text: translations?.shareTexts?.subtitle || 'Check out my activity on Entertainment Manager!',
                 url: window.location.href,
             });
         } catch (err) {
