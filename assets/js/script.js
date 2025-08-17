@@ -2699,24 +2699,21 @@ document.addEventListener('keydown', (e) => {
 // Share Profile
 // ============================
 
-const shareBtn = document.getElementById('share-btn');
-if (shareBtn && navigator.share) {
-    shareBtn.addEventListener('click', async () => {
-        try {
+document.getElementById("share-btn").addEventListener("click", async () => {
+    try {
+        if (navigator.share) {
             await navigator.share({
                 title: translations?.shareTexts?.title || 'My Entertainment Manager - Profile',
                 text: translations?.shareTexts?.subtitle || 'Check out my activity on Entertainment Manager!',
                 url: window.location.href,
             });
-        } catch (err) {
-            console.error('Share failed:', err);
+        } else {
+            alert(translations?.shareTexts?.unsupported || 'Sharing is not supported in this browser. Try another one.');
         }
-    });
-} else if (shareBtn) {
-    shareBtn.addEventListener('click', () => {
-        alert(translations?.main?.shareTexts?.unsupported || 'Sharing is not supported in this browser. Try using another browser.');
-    });
-}
+    } catch (error) {
+        console.error("Error sharing:", error);
+    }
+});
 
 // ============================
 // Settings Modal Handling
