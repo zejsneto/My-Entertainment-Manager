@@ -3435,8 +3435,9 @@ function populateDashboard(allData) {
 
     filteredData.forEach(m => {
         if (m.type === 'games') {
-            const total = m.trophies_total || 0;
-            const obtained = m.trophies_obtained || 0;
+            const total = Number(m.trophies_total) || 0;
+            const obtained = Number(m.trophies_obtained) || 0;
+
             trophyTotal += obtained;
             if (total > 0 && obtained === total) platinumCount++;
         }
@@ -3523,36 +3524,36 @@ function populateDashboard(allData) {
             case 'movies':
             case 'animated_movies':
                 if (m.duration_only_minutes != null) {
-                    totalHours += m.duration_only_minutes / 60;
-                } else if (m.duration_hours != null || m.duration_minutes != null) {
-                    const hours = m.duration_hours || 0;
-                    const minutes = m.duration_minutes || 0;
+                    totalHours += Number(m.duration_only_minutes) / 60 || 0;
+                } else {
+                    const hours = Number(m.duration_hours) || 0;
+                    const minutes = Number(m.duration_minutes) || 0;
                     totalHours += hours + (minutes / 60);
                 }
                 break;
 
             case 'games':
-                totalHours += m.playtime || m.hours_played || 0;
+                totalHours += Number(m.playtime) || Number(m.hours_played) || 0;
                 break;
 
             case 'books':
-                totalHours += (m.pages_read || 0) / 25; // 1h per 25 pages
+                totalHours += (Number(m.pages_read) || 0) / 25;
                 break;
 
             case 'comics':
             case 'mangas':
-                const mangaAndComicsVolumesRead = m.volume_read || (m.pages_read ? m.pages_read / 180 : 0);
-                totalHours += mangaAndComicsVolumesRead * 0.5; // 0.5h (30 minutos) por volume
+                const vols = Number(m.volume_read) || (Number(m.pages_read) ? Number(m.pages_read) / 180 : 0);
+                totalHours += vols * 0.5;
                 break;
 
             case 'series':
-                const seriesEpisodes = m.episodes_watched || (m.seasons_watched || 0) * 10;
-                totalHours += seriesEpisodes * 0.75;
+                const eps = Number(m.episodes_watched) || (Number(m.seasons_watched) || 0) * 10;
+                totalHours += eps * 0.75;
                 break;
 
             case 'animations':
-                const animEpisodes = m.episodes_watched || (m.seasons_watched || 0) * 12;
-                totalHours += animEpisodes * 0.33;
+                const animEps = Number(m.episodes_watched) || (Number(m.seasons_watched) || 0) * 12;
+                totalHours += animEps * 0.33;
                 break;
         }
     });
@@ -3563,8 +3564,9 @@ function populateDashboard(allData) {
     btnConvert.dataset.mode = 'hours';
 
     function updateTimeDisplay(hours) {
-        const roundedHours = Math.floor(hours);
-        const remainingMinutes = Math.round((hours - roundedHours) * 60);
+        const safeHours = Number(hours) || 0;
+        const roundedHours = Math.floor(safeHours);
+        const remainingMinutes = Math.round((safeHours - roundedHours) * 60);
         timeDisplay.textContent = `${roundedHours}h ${remainingMinutes}min`;
     }
 
