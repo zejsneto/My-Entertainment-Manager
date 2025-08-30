@@ -1516,31 +1516,21 @@ mediaTypeSelect.addEventListener('change', () => {
         // Set default selected options explicitly
         if (onlineSelect && beatenSelect) {
             onlineSelect.value = "true";   // Online = Yes
-            beatenSelect.value = "false";  // Beaten = No
+            beatenSelect.value = "false";  // Completed = No
         }
 
-        function syncOnlineAndBeaten(from) {
+        function syncOnlineAndBeaten(changed) {
             if (!onlineSelect || !beatenSelect) return;
 
             const online = onlineSelect.value === 'true';
             const beaten = beatenSelect.value === 'true';
 
-            // Prevent Yes-Yes
+            // Regra: Yes/Yes não pode → ajusta baseado em quem mudou
             if (online && beaten) {
-                if (from === 'online') {
-                    beatenSelect.value = 'false';
-                } else {
-                    onlineSelect.value = 'false';
-                }
-                return;
-            }
-
-            // Prevent No-No
-            if (!online && !beaten) {
-                if (from === 'online') {
-                    beatenSelect.value = 'true';
-                } else {
-                    onlineSelect.value = 'true';
+                if (changed === 'online') {
+                    beatenSelect.value = 'false'; // força Completed para No
+                } else if (changed === 'beaten') {
+                    onlineSelect.value = 'false'; // força Online para No
                 }
             }
         }
@@ -1956,26 +1946,20 @@ function openEditMediaModal(media) {
         const editOnlineSelect = document.getElementById('edit-online-select');
         const editBeatenSelect = document.getElementById('edit-beaten-select');
 
-        function syncEditOnlineBeaten(from) {
+        function syncEditOnlineBeaten(changed) {
             if (!editOnlineSelect || !editBeatenSelect) return;
 
             const online = editOnlineSelect.value === 'true';
             const beaten = editBeatenSelect.value === 'true';
 
+            // Regra: Yes/Yes não pode → ajusta baseado em quem mudou
             if (online && beaten) {
-                if (from === 'online') {
+                if (changed === 'online') {
+                    // Online foi marcado como Yes → força Completed para No
                     editBeatenSelect.value = 'false';
-                } else {
+                } else if (changed === 'beaten') {
+                    // Completed foi marcado como Yes → força Online para No
                     editOnlineSelect.value = 'false';
-                }
-                return;
-            }
-
-            if (!online && !beaten) {
-                if (from === 'online') {
-                    editBeatenSelect.value = 'true';
-                } else {
-                    editOnlineSelect.value = 'true';
                 }
             }
         }
