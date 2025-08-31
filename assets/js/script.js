@@ -1475,7 +1475,7 @@ mediaTypeSelect.addEventListener('change', () => {
         <div class="form-row">
             <label>
                 ${t('main.modals.addEditMedia.specificFields.game.hoursPlayed')}
-                <input type="number" name="hours_played" placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterHours')}" required />
+                <input type="number" name="hours_played" step="any" placeholder="${t('main.modals.addEditMedia.specificFields.placeholders.enterHours')}" required />
             </label>
         </div>
 
@@ -1720,7 +1720,7 @@ function getSpecificFields(type, form) {
     let specificData = {};
 
     if (type === 'games') {
-        specificData.hours_played = form.hours_played?.value || null;
+        specificData.hours_played = form.hours_played?.value ? parseFloat(form.hours_played.value) : null;
         specificData.online = form.online?.value === 'true' ? true : false;
         specificData.beaten = form.beaten?.value === 'true' ? true : false;
         specificData.trophies_obtained = form.trophies_obtained?.value || null;
@@ -1911,7 +1911,7 @@ function openEditMediaModal(media) {
             <div class="form-row">
                 <label>
                     ${t('main.modals.addEditMedia.specificFields.game.hoursPlayed')}
-                    <input type="number" name="hours_played" value="${media.hours_played ?? ''}" required/>
+                    <input type="number" name="hours_played" step="any" value="${media.hours_played ?? ''}" required/>
                 </label>
             </div>  
             <div class="form-row">  
@@ -2222,7 +2222,7 @@ function validateEditMediaForm() {
     }
 
     // Jogos: horas jogadas não negativas
-    const hoursPlayed = parseInt(form.querySelector('[name="hours_played"]')?.value) || 0;
+    const hoursPlayed = form.querySelector('[name="hours_played"]')?.value || 0;
     if (hoursPlayed < 0) {
         alert("Horas jogadas não podem ser negativas.");
         return false;
@@ -2266,7 +2266,7 @@ document.getElementById('edit-media-form').addEventListener('submit', async (e) 
     switch (type) {
         case 'games':
             specificFields = {
-                hours_played: parseInt(form.querySelector('[name="hours_played"]')?.value) || 0,
+                hours_played: form.querySelector('[name="hours_played"]')?.value || 0,
                 online: form.querySelector('[name="online"]')?.value === 'true',
                 beaten: form.querySelector('[name="beaten"]')?.value === 'true',
                 trophies_obtained: parseInt(form.querySelector('[name="trophies_obtained"]')?.value) || 0,
