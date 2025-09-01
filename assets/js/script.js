@@ -341,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("edit-photo-file");
     const saveBtn = document.getElementById("save-profile");
     const cancelBtn = document.getElementById("cancel-edit");
-    
+
     profilePic.addEventListener("click", () => {
         const nameDisplay = document.querySelector(".profile-text strong");
         const usernameDisplay = document.querySelector(".profile-text span");
@@ -3479,32 +3479,44 @@ function populateDashboard(allData) {
     document.querySelector('[data-id="chart-game-status"]').style.display = gamesExist ? '' : 'none';
     document.querySelector('[data-id="chart-trophies"]').style.display = gamesExist ? '' : 'none';
 
-    // Favorite Media
-    const favKey = 'favoriteMediaId';
-    const favMediaId = localStorage.getItem(favKey);
+    // Favorite Media (Carregar do Firestore)
     const favContainer = document.getElementById('favorite-media-content');
-    favContainer.innerHTML = '';
+    const profileRef = window._DB.collection("profile").doc("mainProfile");
 
-    if (favMediaId) {
-        const media = allData.find(m => String(m.id) === favMediaId);
-        if (media) {
-            favContainer.innerHTML = `
-            <div class="favorite-media-box">
-                <div class="favorite-media-text">
-                <strong>${media.title}</strong><br>
-                <div class="favorite-rating-type">
-                    <span>⭐ ${media.rating ?? 'N/A'}</span>
-                    <small>${formatCategoryName(media.type)}</small>
-                </div>
-                </div>
-            </div>
-            `;
-        } else {
-            favContainer.innerHTML = '<p>Favorite media not found</p>';
+    async function loadFavoriteOnDashboard() {
+        favContainer.innerHTML = '<p>Loading...</p>';
+        try {
+            const doc = await profileRef.get();
+            if (doc.exists && doc.data().favoriteMediaId) {
+                const favMediaId = doc.data().favoriteMediaId;
+                const media = globalMedias.find(m => String(m.id) === favMediaId);
+
+                if (media) {
+                    favContainer.innerHTML = `
+                    <div class="favorite-media-box">
+                        <div class="favorite-media-text">
+                            <strong>${media.title}</strong><br>
+                            <div class="favorite-rating-type">
+                                <span>⭐ ${media.rating ?? 'N/A'}</span>
+                                <small>${formatCategoryName(media.type)}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                } else {
+                    favContainer.innerHTML = '<p>Favorite media not found</p>';
+                }
+            } else {
+                favContainer.innerHTML = '<p>No favorite selected</p>';
+            }
+        } catch (error) {
+            console.error("Erro ao carregar favorito:", error);
+            favContainer.innerHTML = '<p>Error loading favorite</p>';
         }
-    } else {
-        favContainer.innerHTML = '<p>No favorite selected</p>';
     }
+
+    // Executa assim que a página carrega
+    document.addEventListener("DOMContentLoaded", loadFavoriteOnDashboard);
 
     // Time Spent Estimate
     let totalHours = 0;
@@ -4015,7 +4027,6 @@ modal.addEventListener('click', (e) => {
 document.addEventListener("DOMContentLoaded", () => {
     updateFavoriteModule();
 });
-
 
 // ============================
 // Dashboard Header
