@@ -657,7 +657,7 @@ nav button,
 /* ============================
   Modal Profile Picture Edit
 ============================ */
-.login-title {
+.edit-profile-title {
   padding-top: 1.2rem;
 }
 
@@ -3047,4 +3047,12 @@ header {
 .modal-content {
   max-height: calc(70vh - env(safe-area-inset-bottom));
   overflow-y: auto;
+}
+
+.restricted {
+    display: none !important;
+}
+
+body.logged-in .restricted {
+    display: initial !important;
 }

@@ -144,7 +144,13 @@ AUTH.onAuthStateChanged(user => {
 
         // Atualiza profile visível
         loadProfileFromFirebase();
+
+        // Usuário logado → mostra botões/campos restritos
+        document.body.classList.add("logged-in");
     } else {
+        // Usuário não logado → esconde botões/campos restritos
+        document.body.classList.remove("logged-in");
+
         window.canEdit = false;
     }
 });
@@ -335,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("edit-photo-file");
     const saveBtn = document.getElementById("save-profile");
     const cancelBtn = document.getElementById("cancel-edit");
-
+    
     profilePic.addEventListener("click", () => {
         const nameDisplay = document.querySelector(".profile-text strong");
         const usernameDisplay = document.querySelector(".profile-text span");
@@ -880,7 +886,7 @@ function renderMedias(medias) {
 
         // Construct the card HTML
         let html = `
-        <div class="edit-media-trigger edit-icon-card" data-id="${media._docId}" data-i18n-title="main.cards.editTitle"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div class="edit-media-trigger edit-icon-card restricted" data-id="${media._docId}" data-i18n-title="main.cards.editTitle"><i class="fa-solid fa-pen-to-square"></i></div>
         <div class="card-image">
             <img src="${media.cover_img || 'default-cover.png'}" alt="${media.title}">
             <div class="badge badge-${media.type}">${emojiHtml}</div>
