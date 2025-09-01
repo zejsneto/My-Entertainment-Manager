@@ -3846,7 +3846,6 @@ function updateChart(chartId, type, data, options = {}) {
 // ============================
 // Favorite Media Modal Setup
 // ============================
-const favKey = 'favoriteMediaId';
 const btnOpenModal = document.getElementById('select-favorite-btn');
 const modal = document.getElementById('favorite-modal');
 const selectCategory = document.getElementById('favorite-category-select');
@@ -3854,17 +3853,45 @@ const selectMedia = document.getElementById('favorite-media-select');
 const btnSave = document.getElementById('save-favorite-btn');
 const btnCancel = document.getElementById('cancel-favorite-btn');
 
-document.getElementById('save-favorite-btn').addEventListener('click', () => {
-    const mediaId = document.getElementById('favorite-media-select').value;
-    if (!mediaId) return;
+const profileRef = window._DB.collection("profile").doc("mainProfile");
 
-    localStorage.setItem('favoriteMediaId', mediaId);
-    updateFavoriteModule(); // Update the module on the dashboard
+// ===== Salvar favorito no Firestore =====
+async function saveFavoriteMediaToDB(mediaId) {
+    try {
+        await profileRef.update({ favoriteMediaId: mediaId });
+        console.log("Favorito salvo no Firestore:", mediaId);
+        updateFavoriteModule();
+    } catch (error) {
+        console.error("Erro ao salvar favorito:", error);
+        alert("Erro ao salvar favorito. Veja o console.");
+    }
+}
 
-    document.getElementById('favorite-modal').classList.add('hidden'); // Close the modal
+// ===== Carregar favorito do Firestore =====
+async function loadFavoriteMediaFromDB() {
+    try {
+        const doc = await profileRef.get();
+        if (doc.exists && doc.data().favoriteMediaId) {
+            return doc.data().favoriteMediaId;
+        }
+        return null;
+    } catch (error) {
+        console.error("Erro ao carregar favorito:", error);
+        return null;
+    }
+}
+
+// Botão salvar dentro do modal
+btnSave.addEventListener('click', async () => {
+    const selectedId = selectMedia.value;
+    if (selectedId) {
+        await saveFavoriteMediaToDB(selectedId);
+        modal.classList.add('hidden');
+        resetFavoriteModal();
+    }
 });
 
-// Open the modal
+// Botão abrir modal
 btnOpenModal.addEventListener('click', async () => {
     if (Object.keys(translations).length === 0) {
         const lang = localStorage.getItem("language") || "en";
@@ -3873,22 +3900,13 @@ btnOpenModal.addEventListener('click', async () => {
     openFavoriteModal();
 });
 
-
+// Botão cancelar
 btnCancel.addEventListener('click', () => {
     modal.classList.add('hidden');
     resetFavoriteModal();
 });
 
-btnSave.addEventListener('click', () => {
-    const selectedId = selectMedia.value;
-    if (selectedId) {
-        localStorage.setItem(favKey, selectedId);
-        modal.classList.add('hidden');
-        resetFavoriteModal();
-        populateDashboard(globalMedias); // Update the dashboard
-    }
-});
-
+// ===== Utilitários =====
 function resetFavoriteModal() {
     selectCategory.innerHTML = '';
     selectMedia.innerHTML = '';
@@ -3900,7 +3918,6 @@ function openFavoriteModal() {
     modal.classList.remove('hidden');
     resetFavoriteModal();
 
-    // Keep same ordering used on the rest of the project
     const desiredOrder = [
         'movies',
         'series',
@@ -3925,7 +3942,6 @@ function openFavoriteModal() {
         'Select...';
 
     selectCategory.innerHTML = `<option value="" disabled selected>${placeholder}</option>${options}`;
-
 }
 
 selectCategory.addEventListener('change', () => {
@@ -3959,8 +3975,9 @@ selectMedia.addEventListener('change', () => {
     btnSave.disabled = false;
 });
 
-function updateFavoriteModule() {
-    const favMediaId = localStorage.getItem(favKey);
+// ===== Atualizar dashboard com favorito =====
+async function updateFavoriteModule() {
+    const favMediaId = await loadFavoriteMediaFromDB();
     const favContainer = document.getElementById('favorite-media-content');
     favContainer.innerHTML = '';
 
@@ -3986,13 +4003,19 @@ function updateFavoriteModule() {
     }
 }
 
-// Close Favorite Modal when clicking outside the modal content
+// Fechar modal clicando fora
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         modal.classList.add('hidden');
         resetFavoriteModal();
     }
 });
+
+// ===== Inicialização: já carrega favorito do Firestore =====
+document.addEventListener("DOMContentLoaded", () => {
+    updateFavoriteModule();
+});
+
 
 // ============================
 // Dashboard Header
