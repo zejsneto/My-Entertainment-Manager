@@ -473,3 +473,369 @@
   font-size: var(--fs-xs);
   color: var(--text-muted);
 }
+
+/* ==============================================================
+   Busca automática no formulário (combobox)
+   ============================================================== */
+.media-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border-radius: var(--radius-lg);
+  background: var(--primary-soft);
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+.media-search .field__label i {
+  color: var(--primary);
+}
+
+.media-search__box {
+  position: relative;
+}
+
+.media-search__icon {
+  position: absolute;
+  left: 14px;
+  top: 22px;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+.media-search .input {
+  padding-left: 40px;
+  padding-right: 40px;
+  background: var(--surface-1);
+}
+
+/* Spinner que aparece enquanto busca */
+.media-search__spinner,
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--primary);
+  animation: spin 0.7s linear infinite;
+}
+
+.media-search__spinner {
+  position: absolute;
+  right: 14px;
+  top: 13px;
+  display: none;
+}
+
+.media-search__box.is-busy .media-search__spinner {
+  display: block;
+}
+
+/* Lista de resultados flutuando abaixo do campo */
+.media-search__results {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 10;
+  max-height: min(360px, 50dvh);
+  overflow-y: auto;
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+.search-option {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 6px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.search-option:hover,
+.search-option[aria-selected="true"] {
+  background: var(--surface-2);
+}
+
+.search-option[aria-selected="true"] {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.search-option__cover {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  color: var(--text-subtle);
+  background: var(--surface-1);
+}
+
+.search-option__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.search-option__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.search-option__text strong {
+  font-size: var(--fs-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-option__text small {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-option__source {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface-1);
+  white-space: nowrap;
+}
+
+.media-search__status:empty {
+  display: none;
+}
+
+.media-search__status[data-tone="success"] {
+  color: var(--success);
+}
+
+.media-search__status[data-tone="error"] {
+  color: var(--danger);
+}
+
+/* Campo preenchido pela busca: borda na cor primária até ser editado */
+.input.is-autofilled {
+  border-color: var(--primary);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+/* ==============================================================
+   Janela da Steam
+   ============================================================== */
+.steam {
+  gap: var(--sp-3);
+}
+
+.steam__intro {
+  font-size: var(--fs-sm);
+}
+
+.steam__toolbar {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.steam__search {
+  flex: 1 1 220px;
+}
+
+.steam__show {
+  flex: 1 1 280px;
+}
+
+.steam__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.steam__check-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: var(--tap);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.steam__check-all input,
+.steam-game__check {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.steam__hide-unplayed {
+  margin-top: 0;
+}
+
+.steam__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.steam-game__label {
+  display: grid;
+  grid-template-columns: 18px 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 6px var(--sp-2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--dur-2);
+}
+
+.steam-game__label:hover {
+  background: var(--surface-2);
+}
+
+.steam-game__label:has(input:checked) {
+  background: var(--primary-soft);
+}
+
+.steam-game__cover {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  color: var(--text-subtle);
+  background: var(--surface-2);
+}
+
+.steam-game__cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.steam-game__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.steam-game__text strong {
+  font-size: var(--fs-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.steam-game__text small {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.steam-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.steam-badge--new {
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.steam-badge--existing {
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+}
+
+.steam__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  padding: var(--sp-7) 0;
+  color: var(--text-muted);
+}
+
+.steam__empty {
+  padding: var(--sp-5);
+  text-align: center;
+}
+
+.steam__progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 100%;
+}
+
+.steam__progress small {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.steam__selected {
+  font-size: var(--fs-sm);
+}
+
+/* Durante a importação, a lista fica travada */
+#steam-dialog.is-busy .modal__body {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+@media (max-width: 767px) {
+  /* No celular a etiqueta vira só o ícone (o texto fica no title / leitor de tela) */
+  .steam-badge {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .steam-badge__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .steam__intro {
+    display: none;
+  }
+
+  .steam__selected {
+    flex: 1 1 100%;
+  }
+}
+
+/* Tema claro: verde mais escuro para manter contraste AA sobre o fundo esverdeado */
+:root[data-theme="light"] .steam-badge--existing {
+  color: #065F46;
+}

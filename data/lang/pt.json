@@ -297,5 +297,64 @@
   },
   "footer": {
     "createdBy": "Criado por"
+  },
+  "search": {
+    "label": "Buscar dados automaticamente",
+    "searching": "Buscando…",
+    "loadingDetails": "Carregando detalhes…",
+    "pick": "{count} resultado(s). Use as setas ou clique para escolher.",
+    "none": "Nada encontrado. Tente outro título ou preencha à mão.",
+    "filled": "Preenchido com dados do {source}. Confira e ajuste o que precisar: tudo é editável.",
+    "placeholders": {
+      "movies": "Ex.: Interestelar",
+      "animated_movies": "Ex.: Toy Story",
+      "series": "Ex.: Breaking Bad",
+      "animations": "Ex.: Avatar: A Lenda de Aang",
+      "games": "Ex.: Elden Ring (loja Steam)",
+      "books": "Ex.: Duna",
+      "mangas": "Ex.: One Piece",
+      "comics": "Ex.: Batman: Ano Um"
+    }
+  },
+  "api": {
+    "errors": {
+      "login": "Faça login de novo para usar a busca.",
+      "network": "Sem conexão com o servidor da API.",
+      "origin": "Este endereço não está liberado no Worker (ALLOWED_ORIGINS).",
+      "tmdb": "O TMDB não está configurado no Worker.",
+      "steam": "A chave da Steam não está configurada no Worker.",
+      "steamId": "O STEAM_ID não está configurado no Worker.",
+      "steamPrivate": "Não foi possível ler a biblioteca: deixe “Detalhes de jogos” como público no perfil da Steam.",
+      "worker": "O Worker está sem FIREBASE_PROJECT_ID ou OWNER_UID.",
+      "timeout": "A API demorou demais para responder. Tente de novo.",
+      "generic": "A busca falhou. Tente de novo em instantes."
+    }
+  },
+  "steam": {
+    "open": "Sincronizar com a Steam",
+    "title": "Sincronizar com a Steam",
+    "intro": "Escolha os jogos. Os novos entram no acervo; os que já existem têm horas e conquistas atualizadas. A platina é marcada sozinha quando você tem todas as conquistas.",
+    "filter": "Filtrar jogos",
+    "show": "Mostrar",
+    "showAll": "Todos",
+    "showNew": "Novos",
+    "showExisting": "No acervo",
+    "selectVisible": "Selecionar todos os visíveis",
+    "hideUnplayed": "Esconder nunca jogados",
+    "loading": "Carregando sua biblioteca da Steam…",
+    "noneVisible": "Nenhum jogo com esses filtros.",
+    "new": "Novo",
+    "inLibrary": "No acervo",
+    "lastPlayed": "jogado em {date}",
+    "import": "Importar",
+    "importCount": {
+      "one": "Importar {count} jogo",
+      "other": "Importar {count} jogos"
+    },
+    "selectedSummary": "{new} novo(s) · {update} para atualizar",
+    "progressAchievements": "Lendo conquistas… {done}/{total}",
+    "progressSaving": "Salvando… {done}/{total}",
+    "done": "Steam: {created} jogo(s) adicionado(s) e {updated} atualizado(s).",
+    "failed": "{count} não puderam ser salvos."
   }
 }

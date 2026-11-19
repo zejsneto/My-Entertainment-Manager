@@ -83,6 +83,16 @@ export function onOwnerChange(callback) {
   fb.onAuthStateChanged(auth, (user) => callback(!!user && user.uid === OWNER_UID));
 }
 
+/**
+ * Token de login atual (JWT do Firebase), enviado ao Worker da API para
+ * provar que quem está pedindo é a dona. O SDK renova sozinho quando expira.
+ * Devolve null se ninguém estiver logado.
+ */
+export async function getIdToken() {
+  if (demo) return demoUser ? 'demo-token' : null;
+  return auth.currentUser ? auth.currentUser.getIdToken() : null;
+}
+
 /** Faz login com e-mail e senha. Lança erro se falhar. */
 export async function login(email, password) {
   if (demo) {
@@ -142,7 +152,8 @@ function stripInternal(data) {
 export async function createMedia(data, nextNumericId) {
   const payload = withAllFields({ ...stripInternal(data), id: nextNumericId });
   if (demo) {
-    const docId = `demo-local-${Date.now()}`;
+    // ID único mesmo com várias gravações no mesmo milissegundo (importação em lote).
+    const docId = `demo-local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     return normalizeMedia(docId, payload);
   }
   const ref = await fb.addDoc(fb.collection(db, 'media'), payload);

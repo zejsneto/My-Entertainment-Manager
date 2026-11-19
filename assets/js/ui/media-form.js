@@ -24,6 +24,7 @@ import { openDialog, closeDialog, toast, confirmDialog } from './dialogs.js';
 import { typeIconHtml, typeName, initials } from './media-view.js';
 import { PRIMARY_TYPES, ALL_TYPES } from '../config/media-types.js';
 import { movieMinutes } from '../core/stats.js';
+import { initMediaSearch, resetSearch, toggleSearch, updateSearchPlaceholder } from './media-search.js';
 
 /** Limite seguro para a capa em base64 (o documento inteiro aceita 1 MB). */
 const MAX_COVER_CHARS = 900_000;
@@ -92,6 +93,7 @@ function syncFieldGroups() {
   const verbKey = type === 'games' ? 'verbs.played' : ['books', 'mangas', 'comics'].includes(type) ? 'verbs.read' : 'verbs.watched';
   $('#consumed-date-label', form).textContent = t(verbKey);
   updateCoverPreview();
+  updateSearchPlaceholder(type || 'movies');
 }
 
 /** Desenha os botões de tipo de acordo com os tipos ativos nas Configurações. */
@@ -259,6 +261,8 @@ function collectData() {
     consumed_date: form.elements.consumed_date.value,
     cover_img: coverValue || null,
   };
+  // ID da Steam (vem da busca ou da sincronização); só faz sentido para jogos.
+  if (type === 'games') data.steam_appid = num('steam_appid');
 
   switch (type) {
     case 'movies':
@@ -335,8 +339,68 @@ function fillForm(m) {
     .forEach((f) => setValue(f, m[f]));
   form.elements.game_status.value = m.beaten ? 'beaten' : m.online ? 'online' : 'playing';
 
+  setValue('steam_appid', m.steam_appid);
   coverValue = m.cover_img || '';
   form.elements.cover_url.value = /^https?:/i.test(coverValue) ? coverValue : '';
+}
+
+/* ------------------------------------------------------------
+ * Preenchimento pela busca automática
+ * ------------------------------------------------------------ */
+
+/** Campos que a busca pode preencher (dados do "produto", nunca pessoais). */
+const PRODUCT_FIELDS = [
+  'duration_hours', 'duration_minutes', 'seasons_total', 'episodes_total',
+  'pages_total', 'volume_amount', 'trophies_total',
+];
+
+/**
+ * Aplica os dados vindos da API no formulário.
+ * - Título, capa e totais são preenchidos; tudo continua editável
+ *   (ex.: a API diz 6 temporadas, mas você corrige para 5).
+ * - Campos pessoais (nota, data, horas jogadas, troféus obtidos,
+ *   páginas lidas, temporadas assistidas...) ficam como estavam.
+ * - Os campos preenchidos ganham um destaque até serem editados.
+ * - Na EDIÇÃO, título e capa que você já tinha são mantidos (a busca só
+ *   preenche se estiverem vazios), para não trocar uma capa que você
+ *   escolheu só porque buscou para completar os totais.
+ */
+function applyDetails(details) {
+  // Ajusta "filme animado" quando a fonte indica (ex.: Toy Story buscado em Filmes).
+  const primary = selectedPrimaryType();
+  if (primary === 'movies' || primary === 'animations') {
+    if (details.suggestedType === 'animated_movies') form.elements.is_animated_movie.checked = true;
+    if (details.suggestedType === 'animations' || details.suggestedType === 'series') form.elements.is_animated_movie.checked = false;
+  }
+  // Animes do AniList contam por episódios; séries do TMDB, por temporadas.
+  if (details.trackBy === 'episodes') form.elements.use_episodes.value = 'true';
+  syncFieldGroups();
+
+  const filled = [];
+  const keepTitle = editing && form.elements.title.value.trim();
+  if (details.title && !keepTitle) {
+    form.elements.title.value = details.title;
+    filled.push(form.elements.title);
+  }
+  const keepCover = editing && coverValue;
+  if (details.cover && safeImageSrc(details.cover) && !keepCover) {
+    coverValue = details.cover;
+    form.elements.cover_url.value = details.cover;
+  }
+  for (const name of PRODUCT_FIELDS) {
+    const value = details.fields?.[name];
+    const el = form.elements[name];
+    if (el && value != null && value !== '') {
+      el.value = value;
+      filled.push(el);
+    }
+  }
+  // Resultado de outra fonte (ou de outro jogo) não pode deixar um ID da Steam antigo.
+  setValue('steam_appid', details.steam_appid || '');
+
+  $$('.is-autofilled', form).forEach((el) => el.classList.remove('is-autofilled'));
+  filled.forEach((el) => el.classList.add('is-autofilled'));
+  updateCoverPreview();
 }
 
 /* ------------------------------------------------------------
@@ -350,7 +414,12 @@ function fillForm(m) {
 export function openMediaForm(media = null) {
   editing = media;
   form.reset();
-  $$('input', form).forEach((input) => input.setCustomValidity(''));
+  $$('input', form).forEach((input) => {
+    input.setCustomValidity('');
+    input.classList.remove('is-autofilled');
+  });
+  // Campo oculto não é limpo pelo reset() (o valor fica no atributo).
+  setValue('steam_appid', '');
   renderTypePicker(media);
   coverValue = '';
 
@@ -374,6 +443,8 @@ export function openMediaForm(media = null) {
   // O tipo não muda na edição (os campos dependem dele).
   $$('input[name="type"]', form).forEach((input) => (input.disabled = isEdit && !input.checked));
   syncFieldGroups();
+  resetSearch();
+  toggleSearch(getState().isOwner);
   snapshot = serialize();
   openDialog(dialog);
   form.elements.title.focus();
@@ -430,9 +501,13 @@ export function initMediaForm({ onDelete }) {
 
   form.addEventListener('change', (event) => {
     if (['type', 'is_animated_movie', 'use_episodes'].includes(event.target.name)) syncFieldGroups();
+    // Trocou o tipo: resultados antigos não servem mais.
+    if (event.target.name === 'type' || event.target.name === 'is_animated_movie') resetSearch();
   });
   form.addEventListener('input', (event) => {
     if (event.target.type === 'number') event.target.setCustomValidity('');
+    // Editou um campo preenchido pela busca: tira o destaque.
+    event.target.classList.remove('is-autofilled');
   });
   form.addEventListener('submit', handleSubmit);
 
@@ -458,4 +533,7 @@ export function initMediaForm({ onDelete }) {
   });
 
   setupCoverInputs();
+
+  // Busca automática: o tipo pesquisado é o tipo final do formulário.
+  initMediaSearch({ getType: () => finalType() || 'movies', onPick: applyDetails });
 }

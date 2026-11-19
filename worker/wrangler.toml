@@ -1,0 +1,11 @@
+# Configuração para publicar o Worker pela linha de comando (opcional).
+# As chaves (TMDB_TOKEN, STEAM_KEY, STEAM_ID...) NÃO ficam aqui:
+# use `wrangler secret put NOME` para cada uma.
+name = "mem-api"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://zejsneto.github.io"
+FIREBASE_PROJECT_ID = "my-entertainment-manager"
+OWNER_UID = "5z1Csjq7NlNFU1F744kqBkX6WRB3"

@@ -71,6 +71,7 @@ export const NUMERIC_FIELDS = [
   'pages_read', 'pages_total', 'volume_read', 'volume_amount',
   'seasons_watched', 'seasons_total', 'episodes_watched', 'episodes_total',
   'duration_only_minutes', 'duration_hours', 'duration_minutes',
+  'steam_appid', // ID do jogo na Steam (usado pela sincronização)
 ];
 
 /** Campos booleanos conhecidos (o banco antigo pode ter "true"/"false" como texto). */

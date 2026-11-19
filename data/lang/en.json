@@ -297,5 +297,64 @@
   },
   "footer": {
     "createdBy": "Created by"
+  },
+  "search": {
+    "label": "Fill in automatically",
+    "searching": "Searching…",
+    "loadingDetails": "Loading details…",
+    "pick": "{count} result(s). Use the arrows or click to choose.",
+    "none": "Nothing found. Try another title or fill it in by hand.",
+    "filled": "Filled with data from {source}. Check and adjust anything: every field is editable.",
+    "placeholders": {
+      "movies": "E.g. Interstellar",
+      "animated_movies": "E.g. Toy Story",
+      "series": "E.g. Breaking Bad",
+      "animations": "E.g. Avatar: The Last Airbender",
+      "games": "E.g. Elden Ring (Steam store)",
+      "books": "E.g. Dune",
+      "mangas": "E.g. One Piece",
+      "comics": "E.g. Batman: Year One"
+    }
+  },
+  "api": {
+    "errors": {
+      "login": "Sign in again to use search.",
+      "network": "Can't reach the API server.",
+      "origin": "This address isn't allowed in the Worker (ALLOWED_ORIGINS).",
+      "tmdb": "TMDB isn't configured in the Worker.",
+      "steam": "The Steam key isn't configured in the Worker.",
+      "steamId": "STEAM_ID isn't configured in the Worker.",
+      "steamPrivate": "Couldn't read the library: set “Game details” to public in your Steam profile.",
+      "worker": "The Worker is missing FIREBASE_PROJECT_ID or OWNER_UID.",
+      "timeout": "The API took too long. Try again.",
+      "generic": "Search failed. Try again shortly."
+    }
+  },
+  "steam": {
+    "open": "Sync with Steam",
+    "title": "Sync with Steam",
+    "intro": "Pick the games. New ones are added; existing ones get hours and achievements updated. Platinum is set automatically when you have every achievement.",
+    "filter": "Filter games",
+    "show": "Show",
+    "showAll": "All",
+    "showNew": "New",
+    "showExisting": "In library",
+    "selectVisible": "Select all visible",
+    "hideUnplayed": "Hide never played",
+    "loading": "Loading your Steam library…",
+    "noneVisible": "No games match these filters.",
+    "new": "New",
+    "inLibrary": "In library",
+    "lastPlayed": "played {date}",
+    "import": "Import",
+    "importCount": {
+      "one": "Import {count} game",
+      "other": "Import {count} games"
+    },
+    "selectedSummary": "{new} new · {update} to update",
+    "progressAchievements": "Reading achievements… {done}/{total}",
+    "progressSaving": "Saving… {done}/{total}",
+    "done": "Steam: {created} game(s) added and {updated} updated.",
+    "failed": "{count} couldn't be saved."
   }
 }

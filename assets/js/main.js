@@ -29,6 +29,7 @@ import { initProfile, renderProfile } from './ui/profile.js';
 import { initAchievements, renderAchievementsBadge } from './ui/achievements.js';
 import { initSettings, applyTheme } from './ui/settings.js';
 import { initDashboard, renderDashboard } from './ui/dashboard.js';
+import { initSteamSync } from './ui/steam-sync.js';
 
 /* ------------------------------------------------------------
  * Ações compartilhadas entre módulos
@@ -192,6 +193,7 @@ async function start() {
   initAchievements();
   initSettings();
   initDashboard({ onOpen: openDetails });
+  initSteamSync();
   handleBrokenCovers();
   setupShortcuts();
   setupToolbarShadow();

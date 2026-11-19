@@ -113,6 +113,11 @@
           <span><strong id="points-value">0</strong> <small data-i18n="achievements.points">pontos</small></span>
         </button>
 
+        <!-- Sincronizar Steam (só para a dona, e só com o Worker configurado) -->
+        <button type="button" id="steam-button" class="icon-btn owner-only" data-i18n-aria="steam.open" data-i18n-title="steam.open" hidden>
+          <i class="fa-brands fa-steam" aria-hidden="true"></i>
+        </button>
+
         <button type="button" id="share-button" class="icon-btn" data-i18n-aria="actions.share" data-i18n-title="actions.share">
           <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
         </button>
@@ -397,6 +402,25 @@
               <span id="animated-movie-label">É um filme animado</span>
             </label>
           </fieldset>
+
+          <!-- Busca automática (só aparece com o Worker configurado e a dona logada).
+               Preenche título, capa e totais; campos pessoais ficam em branco. -->
+          <div id="media-search" class="media-search" hidden>
+            <label for="media-search-input" class="field__label">
+              <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> <span data-i18n="search.label">Buscar dados automaticamente</span>
+            </label>
+            <div class="media-search__box">
+              <i class="fa-solid fa-magnifying-glass media-search__icon" aria-hidden="true"></i>
+              <input id="media-search-input" class="input" type="search" autocomplete="off" spellcheck="false"
+                role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="media-search-results"
+                aria-describedby="media-search-status">
+              <span class="media-search__spinner" aria-hidden="true"></span>
+              <ul id="media-search-results" class="media-search__results" role="listbox" data-i18n-aria="search.label" hidden></ul>
+            </div>
+            <p id="media-search-status" class="field__hint media-search__status" aria-live="polite"></p>
+          </div>
+          <!-- ID do jogo na Steam (preenchido pela busca/sincronização) -->
+          <input type="hidden" name="steam_appid">
 
           <div class="field">
             <label for="f-title" class="field__label"><span data-i18n="fields.title">Título</span> <span class="req" aria-hidden="true">*</span></label>
@@ -710,6 +734,64 @@
         </ul>
       </section>
     </div>
+  </dialog>
+
+  <!-- Sincronização Steam: escolher quais jogos importar/atualizar -->
+  <dialog id="steam-dialog" class="modal modal--wide modal--sheet" aria-labelledby="steam-title">
+    <header class="modal__header">
+      <h2 id="steam-title" class="modal__title"><i class="fa-brands fa-steam" aria-hidden="true"></i> <span data-i18n="steam.title">Sincronizar com a Steam</span></h2>
+      <button type="button" class="modal__close" data-close data-i18n-aria="actions.close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </header>
+
+    <div class="modal__body steam">
+      <!-- Carregando / erro -->
+      <div id="steam-state" class="steam__state" aria-live="polite"></div>
+
+      <!-- Lista (aparece depois de carregar) -->
+      <div id="steam-content" hidden>
+        <p class="muted steam__intro" data-i18n="steam.intro">Escolha os jogos. Os novos entram no acervo; os que já existem têm horas e conquistas atualizadas. A platina é marcada sozinha quando você tem todas as conquistas.</p>
+
+        <div class="steam__toolbar">
+          <div class="search steam__search">
+            <i class="fa-solid fa-magnifying-glass search__icon" aria-hidden="true"></i>
+            <label for="steam-filter" class="sr-only" data-i18n="steam.filter">Filtrar jogos</label>
+            <input id="steam-filter" type="search" class="input search__input" autocomplete="off" data-i18n-placeholder="steam.filter">
+          </div>
+          <div class="segmented segmented--3 steam__show" role="radiogroup" data-i18n-aria="steam.show">
+            <label><input type="radio" name="steam-show" value="all" checked><span data-i18n="steam.showAll">Todos</span></label>
+            <label><input type="radio" name="steam-show" value="new"><span data-i18n="steam.showNew">Novos</span></label>
+            <label><input type="radio" name="steam-show" value="existing"><span data-i18n="steam.showExisting">No acervo</span></label>
+          </div>
+        </div>
+
+        <div class="steam__bar">
+          <label class="steam__check-all">
+            <input type="checkbox" id="steam-check-all">
+            <span data-i18n="steam.selectVisible">Selecionar todos os visíveis</span>
+          </label>
+          <label class="switch steam__hide-unplayed">
+            <input type="checkbox" id="steam-hide-unplayed" checked>
+            <span class="switch__track" aria-hidden="true"></span>
+            <span data-i18n="steam.hideUnplayed">Esconder nunca jogados</span>
+          </label>
+        </div>
+
+        <ul id="steam-list" class="steam__list" data-i18n-aria="steam.title"></ul>
+      </div>
+    </div>
+
+    <footer class="modal__footer">
+      <div id="steam-progress" class="steam__progress" hidden>
+        <div class="meter"><span style="width:0%"></span></div>
+        <small id="steam-progress-text"></small>
+      </div>
+      <span id="steam-selected" class="muted steam__selected"></span>
+      <span class="spacer"></span>
+      <button type="button" class="btn btn--secondary" data-close data-i18n="actions.close">Fechar</button>
+      <button type="button" id="steam-import" class="btn btn--primary" disabled>
+        <i class="fa-solid fa-download" aria-hidden="true"></i><span id="steam-import-label">Importar</span>
+      </button>
+    </footer>
   </dialog>
 
   <!-- Confirmação genérica (substitui o confirm() do navegador) -->

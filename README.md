@@ -35,6 +35,7 @@ assets/
     config/
       media-types.js        → ícone, cor e campos de cada tipo de mídia (fonte da verdade)
       firebase-config.js    → configuração pública do Firebase + UID da dona
+      api-config.js         → endereço do Worker da API (vazio = busca e Steam desligadas)
     core/
       state.js              → estado central + pipeline de filtros/ordenação
       stats.js              → regras de negócio: progresso, conquistas, tempo estimado
@@ -45,11 +46,14 @@ assets/
       dom.js                → utilitários e proteção contra XSS
     services/
       backend.js            → toda a conversa com o Firebase (e o modo demo)
+      api.js                → conversa com o Worker (busca de mídias e Steam)
     ui/
       library.js            → grade de cards
       media-view.js         → como cada mídia é descrita (stats do card, linhas dos detalhes)
       details.js            → janela de detalhes
       media-form.js         → formulário único de adicionar/editar
+      media-search.js       → busca automática no formulário (TMDB, Steam, AniList, Google Books, Comic Vine)
+      steam-sync.js         → janela de sincronização com a Steam
       toolbar.js            → chips, busca, ordenação, filtros aplicados
       filters.js            → filtros avançados
       dashboard.js          → gráficos e listas do dashboard
@@ -57,6 +61,10 @@ assets/
       profile.js            → perfil, login, compartilhar
       settings.js           → configurações, tema, backup, zona de perigo
       dialogs.js            → janelas, confirmação e toasts
+worker/
+  worker.js                 → servidor da API na Cloudflare (guarda as chaves)
+  LEIA-ME.md                → passo a passo para ligar a busca e a Steam
+  wrangler.toml             → opcional, para publicar pelo terminal
 data/
   lang/pt.json, en.json     → textos da interface
   demo-media.json           → dados do modo demonstração
@@ -65,6 +73,22 @@ data/
 O fluxo é sempre o mesmo: **ação do usuário → `setState()` → `render()` → tela atualizada**.
 A lista exibida sai de uma única função (`getVisibleMedias` em `core/state.js`), que aplica, nesta ordem:
 tipos ativos nas Configurações → chip de tipo → filtros avançados → busca → ordenação.
+
+## Busca automática e Steam
+
+Veja `worker/LEIA-ME.md`. Resumo: publicar `worker/worker.js` na Cloudflare (grátis), cadastrar as chaves lá como Secrets e colar o endereço do Worker em `assets/js/config/api-config.js`.
+
+| Tipo | Fonte | O que preenche |
+|---|---|---|
+| Filmes | TMDB (pt-BR) | título, capa, duração |
+| Séries | TMDB (pt-BR) | título, capa, temporadas e episódios |
+| Animações | TMDB (pt-BR) + AniList | título, capa, temporadas/episódios ou duração |
+| Jogos | Loja da Steam | título, capa vertical, total de conquistas |
+| Livros | Google Books | título, capa, páginas |
+| Mangás | AniList | título, capa, volumes |
+| HQs | Comic Vine (opcional) + Google Books | título, capa, edições |
+
+Campos pessoais (nota, data, horas jogadas, lidos, assistidos, troféus obtidos) nunca são preenchidos pela busca, e tudo o que a busca preenche pode ser editado.
 
 ## Como adicionar um tipo de mídia novo
 
