@@ -12,4 +12,4 @@
  * Deixe vazio ('') para desligar a busca automática e a Steam: o site
  * continua funcionando normalmente, só sem esses recursos.
  */
-export const API_URL = '';
+export const API_URL = 'https://mem-api.zeneto2508.workers.dev/';
