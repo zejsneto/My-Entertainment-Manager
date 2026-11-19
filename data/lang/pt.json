@@ -1,80 +1,177 @@
 {
-  "app": { "title": "My Entertainment Manager" },
-  "a11y": { "skip": "Pular para o conteúdo" },
-  "demo": { "banner": "Modo demonstração: dados de exemplo, as alterações não são salvas." },
-  "nav": { "library": "Biblioteca", "dashboard": "Dashboard" },
-  "profile": { "open": "Abrir conta e perfil", "defaultName": "Meu acervo" },
-
+  "app": {
+    "title": "My Entertainment Manager"
+  },
+  "a11y": {
+    "skip": "Pular para o conteúdo"
+  },
+  "demo": {
+    "banner": "Modo demonstração: dados de exemplo, as alterações não são salvas."
+  },
+  "nav": {
+    "library": "Biblioteca",
+    "dashboard": "Dashboard",
+    "label": "Navegação principal"
+  },
+  "profile": {
+    "open": "Abrir conta e perfil",
+    "defaultName": "Meu acervo"
+  },
   "types": {
-    "movies": "Filme", "animated_movies": "Filme animado", "series": "Série", "animations": "Animação",
-    "games": "Jogo", "books": "Livro", "mangas": "Mangá", "comics": "HQ"
+    "movies": "Filme",
+    "animated_movies": "Filme animado",
+    "series": "Série",
+    "animations": "Animação",
+    "games": "Jogo",
+    "books": "Livro",
+    "mangas": "Mangá",
+    "comics": "HQ"
   },
   "typesPlural": {
-    "movies": "Filmes", "animated_movies": "Filmes animados", "series": "Séries", "animations": "Animações",
-    "games": "Jogos", "books": "Livros", "mangas": "Mangás", "comics": "HQs"
+    "movies": "Filmes",
+    "animated_movies": "Filmes animados",
+    "series": "Séries",
+    "animations": "Animações",
+    "games": "Jogos",
+    "books": "Livros",
+    "mangas": "Mangás",
+    "comics": "HQs"
   },
-  "verbs": { "watched": "Assistido em", "played": "Jogado em", "read": "Lido em" },
-
+  "verbs": {
+    "watched": "Assistido em",
+    "played": "Jogado em",
+    "read": "Lido em"
+  },
   "units": {
-    "hours": "Horas", "minutes": "Minutos", "seasons": "Temporadas", "episodes": "Episódios",
-    "pages": "Páginas", "volumes": "Volumes", "trophies": "Troféus",
-    "seasonsShort": "temp.", "episodesShort": "ep.", "pagesShort": "pág.", "volumesShort": "vol.", "trophiesShort": "troféus"
+    "hours": "Horas",
+    "minutes": "Minutos",
+    "seasons": "Temporadas",
+    "episodes": "Episódios",
+    "pages": "Páginas",
+    "volumes": "Volumes",
+    "trophies": "Troféus",
+    "seasonsShort": "temp.",
+    "episodesShort": "ep.",
+    "pagesShort": "pág.",
+    "volumesShort": "vol.",
+    "trophiesShort": "troféus"
   },
-
   "fields": {
-    "title": "Título", "rating": "Nota", "ratingRange": "Nota (0 a 10)", "duration": "Duração",
-    "seasons": "Temporadas", "episodes": "Episódios", "hoursPlayed": "Horas jogadas", "status": "Status",
-    "trophies": "Troféus", "pages": "Páginas", "volumes": "Volumes", "progress": "Progresso"
+    "title": "Título",
+    "rating": "Nota",
+    "ratingRange": "Nota (0 a 10)",
+    "duration": "Duração",
+    "seasons": "Temporadas",
+    "episodes": "Episódios",
+    "hoursPlayed": "Horas jogadas",
+    "status": "Status",
+    "trophies": "Troféus",
+    "pages": "Páginas",
+    "volumes": "Volumes",
+    "progress": "Progresso"
   },
-
   "game": {
     "platinum": "Platinado",
-    "status": { "beaten": "Zerado", "playing": "Não zerado", "online": "Online / sem campanha" },
-    "statusShort": { "beaten": "Zerado", "playing": "Jogando", "online": "Online" }
+    "status": {
+      "beaten": "Zerado",
+      "playing": "Não zerado",
+      "online": "Online / sem campanha"
+    },
+    "statusShort": {
+      "beaten": "Zerado",
+      "playing": "Jogando",
+      "online": "Online"
+    }
   },
-  "status": { "done": "Concluído", "inProgress": "Em andamento" },
-
+  "status": {
+    "done": "Concluído",
+    "inProgress": "Em andamento"
+  },
   "actions": {
-    "add": "Adicionar", "edit": "Editar", "editItem": "Editar {title}", "save": "Salvar", "cancel": "Cancelar",
-    "close": "Fechar", "delete": "Excluir", "confirm": "Confirmar", "discard": "Descartar", "retry": "Tentar de novo",
+    "add": "Adicionar",
+    "edit": "Editar",
+    "editItem": "Editar {title}",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "delete": "Excluir",
+    "confirm": "Confirmar",
+    "discard": "Descartar",
+    "retry": "Tentar de novo",
     "share": "Compartilhar perfil"
   },
-
   "toolbar": {
-    "searchLabel": "Buscar", "searchPlaceholder": "Buscar pelo título…", "clearSearch": "Limpar busca",
-    "sortLabel": "Ordenar", "typesLabel": "Filtrar por tipo", "all": "Tudo",
-    "results": { "one": "{count} mídia", "other": "{count} mídias" }
+    "searchLabel": "Buscar",
+    "searchPlaceholder": "Buscar pelo título…",
+    "clearSearch": "Limpar busca",
+    "sortLabel": "Ordenar",
+    "typesLabel": "Filtrar por tipo",
+    "all": "Tudo",
+    "results": {
+      "one": "{count} mídia",
+      "other": "{count} mídias"
+    }
   },
   "sort": {
-    "dateDesc": "Mais recentes", "dateAsc": "Mais antigos", "ratingDesc": "Maior nota", "ratingAsc": "Menor nota",
-    "titleAsc": "Título A–Z", "titleDesc": "Título Z–A", "completionDesc": "Maior progresso",
-    "hoursDesc": "Mais horas jogadas", "durationDesc": "Filmes mais longos"
+    "dateDesc": "Mais recentes",
+    "dateAsc": "Mais antigos",
+    "ratingDesc": "Maior nota",
+    "ratingAsc": "Menor nota",
+    "titleAsc": "Título A–Z",
+    "titleDesc": "Título Z–A",
+    "completionDesc": "Maior progresso",
+    "hoursDesc": "Mais horas jogadas",
+    "durationDesc": "Filmes mais longos"
   },
-
   "filters": {
-    "button": "Filtros", "title": "Filtros avançados", "types": "Tipos", "year": "Ano",
-    "yearFrom": "Ano (de)", "yearTo": "Ano (até)", "ratingMin": "Nota mínima", "ratingMax": "Nota máxima",
-    "completionMin": "Progresso mínimo (%)", "completionHint": "Troféus nos jogos; páginas, volumes, temporadas ou episódios nos demais.",
-    "clear": "Limpar", "clearAll": "Limpar tudo", "apply": "Aplicar", "remove": "Remover filtro",
-    "showResults": { "one": "Ver {count} resultado", "other": "Ver {count} resultados" }
+    "button": "Filtros",
+    "title": "Filtros avançados",
+    "types": "Tipos",
+    "year": "Ano",
+    "yearFrom": "Ano (de)",
+    "yearTo": "Ano (até)",
+    "ratingMin": "Nota mínima",
+    "ratingMax": "Nota máxima",
+    "completionMin": "Progresso mínimo (%)",
+    "completionHint": "Troféus nos jogos; páginas, volumes, temporadas ou episódios nos demais.",
+    "clear": "Limpar",
+    "clearAll": "Limpar tudo",
+    "apply": "Aplicar",
+    "remove": "Remover filtro",
+    "showResults": {
+      "one": "Ver {count} resultado",
+      "other": "Ver {count} resultados"
+    }
   },
-
   "empty": {
-    "title": "Nada por aqui ainda", "text": "Quando você adicionar filmes, jogos, livros e afins, eles aparecem aqui.",
-    "filteredTitle": "Nenhuma mídia encontrada", "filteredText": "Tente outro termo de busca ou remova alguns filtros.",
+    "title": "Nada por aqui ainda",
+    "text": "Quando você adicionar filmes, jogos, livros e afins, eles aparecem aqui.",
+    "filteredTitle": "Nenhuma mídia encontrada",
+    "filteredText": "Tente outro termo de busca ou remova alguns filtros.",
     "clear": "Limpar filtros",
-    "errorTitle": "Não foi possível carregar o acervo", "errorText": "Verifique sua conexão e tente de novo."
+    "errorTitle": "Não foi possível carregar o acervo",
+    "errorText": "Verifique sua conexão e tente de novo."
   },
-
   "form": {
-    "addTitle": "Adicionar mídia", "editTitle": "Editar mídia", "type": "Tipo",
-    "isAnimated": "É um filme animado", "isMovie": "É um filme (longa animado)",
-    "chooseImage": "Escolher imagem", "coverUrl": "ou cole o link da imagem", "removeCover": "Remover capa",
+    "addTitle": "Adicionar mídia",
+    "editTitle": "Editar mídia",
+    "type": "Tipo",
+    "isAnimated": "É um filme animado",
+    "isMovie": "É um filme (longa animado)",
+    "chooseImage": "Escolher imagem",
+    "coverUrl": "ou cole o link da imagem",
+    "removeCover": "Remover capa",
     "dropHere": "Solte a imagem aqui",
     "coverHint": "A imagem é recortada no formato vertical (2:3) e comprimida automaticamente.",
-    "trackBy": "Controlar por", "watched": "Assistidas", "watchedEp": "Assistidos", "read": "Lidas", "readVol": "Lidos",
-    "total": "Total", "trophiesEarned": "Troféus obtidos",
-    "discardTitle": "Descartar alterações?", "discardText": "O que você preencheu será perdido.",
+    "trackBy": "Controlar por",
+    "watched": "Assistidas",
+    "watchedEp": "Assistidos",
+    "read": "Lidas",
+    "readVol": "Lidos",
+    "total": "Total",
+    "trophiesEarned": "Troféus obtidos",
+    "discardTitle": "Descartar alterações?",
+    "discardText": "O que você preencheu será perdido.",
     "errors": {
       "type": "Escolha um tipo de mídia.",
       "trophies": "Troféus obtidos não podem passar do total.",
@@ -87,66 +184,106 @@
       "url": "Cole um link que comece com http:// ou https://"
     }
   },
-
   "confirm": {
     "deleteTitle": "Excluir “{title}”?",
     "deleteText": "Essa mídia será removida do acervo. Não dá para desfazer."
   },
   "toasts": {
-    "added": "“{title}” adicionado.", "updated": "“{title}” atualizado.", "deleted": "“{title}” excluído.",
+    "added": "“{title}” adicionado.",
+    "updated": "“{title}” atualizado.",
+    "deleted": "“{title}” excluído.",
     "saveError": "Não foi possível salvar. Verifique a conexão e tente de novo."
   },
-
   "account": {
-    "loginTitle": "Entrar", "editTitle": "Editar perfil",
+    "loginTitle": "Entrar",
+    "editTitle": "Editar perfil",
     "loginHint": "Somente a dona do acervo pode adicionar e editar mídias.",
-    "email": "E-mail", "password": "Senha", "login": "Entrar", "logout": "Sair",
-    "loginError": "E-mail ou senha inválidos.", "welcome": "Login feito. Você já pode editar.",
-    "loggedOut": "Você saiu da conta.", "name": "Nome", "username": "Usuário", "changePhoto": "Trocar foto",
+    "email": "E-mail",
+    "password": "Senha",
+    "login": "Entrar",
+    "logout": "Sair",
+    "loginError": "E-mail ou senha inválidos.",
+    "welcome": "Login feito. Você já pode editar.",
+    "loggedOut": "Você saiu da conta.",
+    "name": "Nome",
+    "username": "Usuário",
+    "changePhoto": "Trocar foto",
     "saved": "Perfil atualizado."
   },
-
   "achievements": {
-    "title": "Conquistas", "points": "pontos",
+    "title": "Conquistas",
+    "points": "pontos",
     "reached": "{count} marco(s) atingido(s)",
     "hint": "Os pontos contam só mídias concluídas. Cada marco atingido vale +1000 pontos.",
     "labels": {
-      "movies": "Filmes assistidos", "series": "Séries assistidas", "animations": "Animações assistidas",
-      "games": "Jogos zerados", "platinum": "Jogos platinados", "books": "Livros lidos",
-      "mangas": "Mangás lidos", "comics": "HQs lidas"
+      "movies": "Filmes assistidos",
+      "series": "Séries assistidas",
+      "animations": "Animações assistidas",
+      "games": "Jogos zerados",
+      "platinum": "Jogos platinados",
+      "books": "Livros lidos",
+      "mangas": "Mangás lidos",
+      "comics": "HQs lidas"
     }
   },
-
   "settings": {
-    "title": "Configurações", "activeTypes": "Tipos de mídia ativos", "selectOne": "Selecione pelo menos um tipo.",
-    "language": "Idioma", "theme": "Tema", "light": "Claro", "dark": "Escuro", "system": "Sistema",
-    "data": "Dados", "backup": "Baixar backup (JSON)", "danger": "Zona de perigo",
+    "title": "Configurações",
+    "activeTypes": "Tipos de mídia ativos",
+    "selectOne": "Selecione pelo menos um tipo.",
+    "language": "Idioma",
+    "theme": "Tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema",
+    "data": "Dados",
+    "backup": "Baixar backup (JSON)",
+    "danger": "Zona de perigo",
     "resetHint": "Apaga o perfil e todas as mídias do banco. Não dá para desfazer.",
-    "resetLabel": "Palavra de confirmação", "resetType": "Digite para liberar:", "resetWord": "APAGAR",
-    "reset": "Apagar tudo", "resetDone": "Todos os dados foram apagados.", "saved": "Configurações salvas."
+    "resetLabel": "Palavra de confirmação",
+    "resetType": "Digite para liberar:",
+    "resetWord": "APAGAR",
+    "reset": "Apagar tudo",
+    "resetDone": "Todos os dados foram apagados.",
+    "saved": "Configurações salvas."
   },
-
   "share": {
     "title": "My Entertainment Manager",
     "text": "Veja tudo o que eu já assisti, joguei e li!",
     "copied": "Link copiado para a área de transferência.",
     "error": "Não foi possível compartilhar."
   },
-
   "dashboard": {
     "subtitle": "Arraste os blocos pela alça para reorganizar.",
-    "resetLayout": "Restaurar layout", "layoutReset": "Layout restaurado.", "typesLegend": "Tipos considerados",
-    "total": "Registros", "time": "Tempo estimado", "avgRating": "Nota média",
-    "showDays": "Ver em dias", "showHours": "Ver em horas", "daysValue": "{value} dias",
-    "ratedCount": { "one": "{count} avaliada", "other": "{count} avaliadas" },
-    "platinumCount": { "one": "{count} platina", "other": "{count} platinas" },
-    "byType": "Mídias por tipo", "chartType": "Tipo de gráfico", "bars": "Barras", "doughnut": "Rosca",
-    "timeline": "Consumo por ano", "ratings": "Distribuição de notas",
+    "resetLayout": "Restaurar layout",
+    "layoutReset": "Layout restaurado.",
+    "typesLegend": "Tipos considerados",
+    "total": "Registros",
+    "time": "Tempo estimado",
+    "avgRating": "Nota média",
+    "showDays": "Ver em dias",
+    "showHours": "Ver em horas",
+    "daysValue": "{value} dias",
+    "ratedCount": {
+      "one": "{count} avaliada",
+      "other": "{count} avaliadas"
+    },
+    "platinumCount": {
+      "one": "{count} platina",
+      "other": "{count} platinas"
+    },
+    "byType": "Mídias por tipo",
+    "chartType": "Tipo de gráfico",
+    "bars": "Barras",
+    "doughnut": "Rosca",
+    "timeline": "Consumo por ano",
+    "ratings": "Distribuição de notas",
     "ratingsHint": "Notas arredondadas para o inteiro mais próximo (8,4 entra no 8; 8,5 entra no 9).",
-    "topRated": "Melhores notas", "unfinished": "Não concluídas", "games": "Status dos jogos", "reading": "Leituras",
-    "favorite": "Favorito", "chooseFavorite": "Escolher favorito", "chooseMedia": "Selecione…", "media": "Mídia",
-    "favoriteSaved": "Favorito salvo.", "noFavorite": "Nenhum favorito escolhido ainda.",
-    "noData": "Sem dados suficientes.", "allDone": "Tudo concluído por aqui!",
+    "topRated": "Melhores notas",
+    "unfinished": "Não concluídas",
+    "games": "Status dos jogos",
+    "reading": "Leituras",
+    "noData": "Sem dados suficientes.",
+    "allDone": "Tudo concluído por aqui!",
     "drag": "Arrastar para reorganizar",
     "timeGuide": "Como o tempo é estimado",
     "guide": {
@@ -158,6 +295,7 @@
       "mangas": "Mangás e HQs: 30 min por volume"
     }
   },
-
-  "footer": { "createdBy": "Criado por" }
+  "footer": {
+    "createdBy": "Criado por"
+  }
 }

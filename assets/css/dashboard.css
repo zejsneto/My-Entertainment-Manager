@@ -155,7 +155,8 @@
 
 .widget__chart {
   position: relative;
-  height: 240px;
+  flex: 1;
+  min-height: 240px;
 }
 
 .widget--wide .widget__chart {
@@ -238,41 +239,31 @@
   width: 56px;
 }
 
-/* ----- Favorito ----- */
-.favorite {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: var(--sp-4);
+/* ----- Guia de estimativa de tempo (dentro da janela de Conquistas) ----- */
+.time-guide-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+}
+
+.time-guide-box__title {
+  display: flex;
   align-items: center;
-  width: 100%;
-  padding: 4px;
-  border-radius: var(--radius-lg);
-  text-align: left;
-  transition: background var(--dur-2);
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: 700;
 }
 
-.favorite:hover {
-  background: var(--surface-2);
+.time-guide-box__title i {
+  color: var(--primary);
 }
 
-.favorite__text {
+.time-guide {
   display: flex;
   flex-direction: column;
   gap: var(--sp-2);
-  min-width: 0;
-}
-
-.favorite__text strong {
-  font-size: var(--fs-lg);
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-}
-
-/* ----- Guia de estimativa de tempo ----- */
-.time-guide {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--sp-2) var(--sp-4);
   font-size: var(--fs-sm);
   color: var(--text-muted);
 }

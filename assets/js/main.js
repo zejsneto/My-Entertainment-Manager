@@ -78,15 +78,17 @@ function syncViewFromHash() {
   setState({ view: location.hash === '#dashboard' ? 'dashboard' : 'library' });
 }
 
+/** Mostra a tela certa e marca a aba ativa (roxa) na navegação do topo. */
 function applyView() {
-  const isDash = getState().view === 'dashboard';
-  $('#library').hidden = isDash;
-  $('#dashboard').hidden = !isDash;
-  const btn = $('#view-toggle');
-  btn.setAttribute('aria-pressed', String(isDash));
-  btn.querySelector('i').className = `fa-solid ${isDash ? 'fa-table-cells-large' : 'fa-chart-pie'}`;
-  btn.querySelector('.btn__label').textContent = t(isDash ? 'nav.library' : 'nav.dashboard');
-  btn.setAttribute('aria-label', t(isDash ? 'nav.library' : 'nav.dashboard'));
+  const { view } = getState();
+  $('#library').hidden = view !== 'library';
+  $('#dashboard').hidden = view !== 'dashboard';
+  $$('.view-tab').forEach((tab) => {
+    const active = tab.dataset.view === view;
+    tab.classList.toggle('is-active', active);
+    if (active) tab.setAttribute('aria-current', 'page');
+    else tab.removeAttribute('aria-current');
+  });
 }
 
 /* ------------------------------------------------------------
@@ -195,9 +197,16 @@ async function start() {
   setupToolbarShadow();
 
   $$('[data-action="add"]').forEach((btn) => btn.addEventListener('click', addMedia));
-  $('#view-toggle').addEventListener('click', () => {
-    location.hash = getState().view === 'dashboard' ? '' : '#dashboard';
-  });
+  // As abas são links (#dashboard / #); o hashchange troca a tela.
+  // Ao voltar para a Biblioteca, limpa o "#" da URL.
+  $$('.view-tab').forEach((tab) => tab.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (tab.dataset.view === 'dashboard') location.hash = '#dashboard';
+    else {
+      history.pushState(null, '', location.pathname + location.search);
+      syncViewFromHash();
+    }
+  }));
   window.addEventListener('hashchange', syncViewFromHash);
 
   // Qualquer mudança de estado redesenha a tela.

@@ -96,16 +96,21 @@
         </div>
       </div>
 
+      <!-- Navegação principal: Biblioteca | Dashboard (sempre visíveis; a ativa fica roxa) -->
+      <nav class="view-tabs" data-i18n-aria="nav.label">
+        <a href="#" class="view-tab" data-view="library">
+          <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i><span data-i18n="nav.library">Biblioteca</span>
+        </a>
+        <a href="#dashboard" class="view-tab" data-view="dashboard">
+          <i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span data-i18n="nav.dashboard">Dashboard</span>
+        </a>
+      </nav>
+
       <!-- Ações do cabeçalho -->
       <div class="header-actions">
         <button type="button" id="points-button" class="points" data-i18n-title="achievements.title">
           <i class="fa-solid fa-medal" aria-hidden="true"></i>
           <span><strong id="points-value">0</strong> <small data-i18n="achievements.points">pontos</small></span>
-        </button>
-
-        <button type="button" id="view-toggle" class="btn btn--ghost" aria-pressed="false">
-          <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
-          <span class="btn__label">Dashboard</span>
         </button>
 
         <button type="button" id="share-button" class="icon-btn" data-i18n-aria="actions.share" data-i18n-title="actions.share">
@@ -248,7 +253,7 @@
 
       <!-- Widgets reordenáveis. data-order = posição padrão (Restaurar layout). -->
       <div id="dash-grid" class="dash-grid">
-
+        <!-- Ordem padrão pensada para encaixar: [largo + pequeno], [largo + pequeno], [3 pequenos] -->
         <article class="widget widget--wide" data-widget="by-type" data-order="1">
           <header class="widget__header">
             <button type="button" class="widget__handle" data-i18n-aria="dashboard.drag"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
@@ -261,7 +266,16 @@
           <div class="widget__chart"><canvas id="chart-by-type"></canvas></div>
         </article>
 
-        <article class="widget widget--wide" data-widget="timeline" data-order="2">
+        <article class="widget" data-widget="ratings" data-order="2">
+          <header class="widget__header">
+            <button type="button" class="widget__handle" data-i18n-aria="dashboard.drag"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+            <h3 data-i18n="dashboard.ratings">Distribuição de notas</h3>
+            <span class="info" role="img" tabindex="0" data-i18n-title="dashboard.ratingsHint" data-i18n-aria="dashboard.ratingsHint"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+          </header>
+          <div class="widget__chart"><canvas id="chart-ratings"></canvas></div>
+        </article>
+
+        <article class="widget widget--wide" data-widget="timeline" data-order="3">
           <header class="widget__header">
             <button type="button" class="widget__handle" data-i18n-aria="dashboard.drag"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
             <h3 data-i18n="dashboard.timeline">Consumo por ano</h3>
@@ -269,24 +283,12 @@
           <div class="widget__chart"><canvas id="chart-timeline"></canvas></div>
         </article>
 
-        <article class="widget" data-widget="favorite" data-order="3">
+        <article class="widget" data-widget="games" data-order="4">
           <header class="widget__header">
             <button type="button" class="widget__handle" data-i18n-aria="dashboard.drag"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-            <h3 data-i18n="dashboard.favorite">Favorito</h3>
-            <button type="button" id="favorite-button" class="icon-btn icon-btn--sm owner-only" data-i18n-aria="dashboard.chooseFavorite" data-i18n-title="dashboard.chooseFavorite">
-              <i class="fa-solid fa-heart" aria-hidden="true"></i>
-            </button>
+            <h3 data-i18n="dashboard.games">Status dos jogos</h3>
           </header>
-          <div id="favorite-content"></div>
-        </article>
-
-        <article class="widget" data-widget="ratings" data-order="4">
-          <header class="widget__header">
-            <button type="button" class="widget__handle" data-i18n-aria="dashboard.drag"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-            <h3 data-i18n="dashboard.ratings">Distribuição de notas</h3>
-            <span class="info" role="img" tabindex="0" data-i18n-title="dashboard.ratingsHint" data-i18n-aria="dashboard.ratingsHint"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
-          </header>
-          <div class="widget__chart"><canvas id="chart-ratings"></canvas></div>
+          <div class="widget__chart"><canvas id="chart-games"></canvas></div>
         </article>
 
         <article class="widget" data-widget="top-rated" data-order="5">
@@ -305,35 +307,12 @@
           <ul id="unfinished-list" class="mini-list"></ul>
         </article>
 
-        <article class="widget" data-widget="games" data-order="7">
-          <header class="widget__header">
-            <button type="button" class="widget__handle" data-i18n-aria="dashboard.drag"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-            <h3 data-i18n="dashboard.games">Status dos jogos</h3>
-          </header>
-          <div class="widget__chart"><canvas id="chart-games"></canvas></div>
-        </article>
-
-        <article class="widget" data-widget="reading" data-order="8">
+        <article class="widget" data-widget="reading" data-order="7">
           <header class="widget__header">
             <button type="button" class="widget__handle" data-i18n-aria="dashboard.drag"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
             <h3 data-i18n="dashboard.reading">Leituras</h3>
           </header>
           <div class="widget__chart"><canvas id="chart-reading"></canvas></div>
-        </article>
-
-        <article class="widget widget--wide" data-widget="time-guide" data-order="9">
-          <header class="widget__header">
-            <button type="button" class="widget__handle" data-i18n-aria="dashboard.drag"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-            <h3 data-i18n="dashboard.timeGuide">Como o tempo é estimado</h3>
-          </header>
-          <ul class="time-guide">
-            <li style="--accent: var(--type-movies)"><i class="fa-solid fa-film" aria-hidden="true"></i><span data-i18n="dashboard.guide.movies">Filmes: duração informada</span></li>
-            <li style="--accent: var(--type-series)"><i class="fa-solid fa-tv" aria-hidden="true"></i><span data-i18n="dashboard.guide.series">Séries: 45 min por episódio (ou 10 ep. por temporada)</span></li>
-            <li style="--accent: var(--type-animations)"><i class="fa-solid fa-dragon" aria-hidden="true"></i><span data-i18n="dashboard.guide.animations">Animações: 20 min por episódio (ou 12 ep. por temporada)</span></li>
-            <li style="--accent: var(--type-games)"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span data-i18n="dashboard.guide.games">Jogos: horas jogadas</span></li>
-            <li style="--accent: var(--type-books)"><i class="fa-solid fa-book" aria-hidden="true"></i><span data-i18n="dashboard.guide.books">Livros: 1h a cada 25 páginas</span></li>
-            <li style="--accent: var(--type-mangas)"><i class="fa-solid fa-book-open" aria-hidden="true"></i><span data-i18n="dashboard.guide.mangas">Mangás e HQs: 30 min por volume</span></li>
-          </ul>
         </article>
       </div>
     </section>
@@ -344,17 +323,13 @@
     <i class="fa-solid fa-plus" aria-hidden="true"></i>
   </button>
 
-  <!-- Rodapé (créditos do autor do projeto) -->
+  <!-- Rodapé: só o GitHub como contato -->
   <footer class="app-footer">
     <div class="container app-footer__inner">
-      <p>© 2025 <strong data-i18n="app.title">My Entertainment Manager</strong> · <span data-i18n="footer.createdBy">Criado por</span>
-        <a href="https://www.linkedin.com/in/josejsneto/" target="_blank" rel="noopener noreferrer">@josejsneto</a></p>
-      <nav class="social" aria-label="Links">
-        <a href="https://github.com/zejsneto" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
-        <a href="https://www.linkedin.com/in/josejsneto/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
-        <a href="https://github.com/zejsneto?tab=repositories" target="_blank" rel="noopener noreferrer" aria-label="Portfolio"><i class="fa-solid fa-user" aria-hidden="true"></i></a>
-        <a href="mailto:contato@josejsneto.com.br" aria-label="E-mail"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
-      </nav>
+      <p>© 2025 <strong data-i18n="app.title">My Entertainment Manager</strong></p>
+      <a class="github-link" href="https://github.com/zejsneto" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-github" aria-hidden="true"></i><span>zejsneto</span>
+      </a>
     </div>
   </footer>
 
@@ -721,26 +696,20 @@
       <p class="achievements-total"><strong id="achievements-total">0</strong> <span data-i18n="achievements.points">pontos</span></p>
       <ul id="achievements-list" class="achievements"></ul>
       <p class="field__hint" data-i18n="achievements.hint">Os pontos contam só mídias concluídas. Cada marco atingido vale +1000 pontos.</p>
-    </div>
-  </dialog>
 
-  <!-- Escolher mídia favorita -->
-  <dialog id="favorite-dialog" class="modal" data-dismissible aria-labelledby="favorite-title">
-    <form id="favorite-form">
-      <header class="modal__header">
-        <h2 id="favorite-title" class="modal__title"><i class="fa-solid fa-heart" aria-hidden="true"></i> <span data-i18n="dashboard.chooseFavorite">Escolher favorito</span></h2>
-        <button type="button" class="modal__close" data-close data-i18n-aria="actions.close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
-      </header>
-      <div class="modal__body">
-        <label for="favorite-select" class="field__label" data-i18n="dashboard.media">Mídia</label>
-        <select id="favorite-select" class="input select"></select>
-      </div>
-      <footer class="modal__footer">
-        <span class="spacer"></span>
-        <button type="button" class="btn btn--secondary" data-close data-i18n="actions.cancel">Cancelar</button>
-        <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check" aria-hidden="true"></i><span data-i18n="actions.save">Salvar</span></button>
-      </footer>
-    </form>
+      <!-- Como o tempo estimado (KPI do dashboard) é calculado -->
+      <section class="time-guide-box" aria-labelledby="time-guide-title">
+        <h3 id="time-guide-title" class="time-guide-box__title"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> <span data-i18n="dashboard.timeGuide">Como o tempo é estimado</span></h3>
+        <ul class="time-guide">
+          <li style="--accent: var(--type-movies)"><i class="fa-solid fa-film" aria-hidden="true"></i><span data-i18n="dashboard.guide.movies">Filmes: duração informada</span></li>
+          <li style="--accent: var(--type-series)"><i class="fa-solid fa-tv" aria-hidden="true"></i><span data-i18n="dashboard.guide.series">Séries: 45 min por episódio (ou 10 ep. por temporada)</span></li>
+          <li style="--accent: var(--type-animations)"><i class="fa-solid fa-dragon" aria-hidden="true"></i><span data-i18n="dashboard.guide.animations">Animações: 20 min por episódio (ou 12 ep. por temporada)</span></li>
+          <li style="--accent: var(--type-games)"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span data-i18n="dashboard.guide.games">Jogos: horas jogadas</span></li>
+          <li style="--accent: var(--type-books)"><i class="fa-solid fa-book" aria-hidden="true"></i><span data-i18n="dashboard.guide.books">Livros: 1h a cada 25 páginas</span></li>
+          <li style="--accent: var(--type-mangas)"><i class="fa-solid fa-book-open" aria-hidden="true"></i><span data-i18n="dashboard.guide.mangas">Mangás e HQs: 30 min por volume</span></li>
+        </ul>
+      </section>
+    </div>
   </dialog>
 
   <!-- Confirmação genérica (substitui o confirm() do navegador) -->

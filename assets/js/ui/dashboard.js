@@ -7,7 +7,8 @@
  * - Linha de indicadores (KPIs): total, tempo estimado, nota média,
  *   pontos e troféus.
  * - Widgets reordenáveis (arrastar e soltar com SortableJS): gráficos
- *   e listas. A ordem é salva no navegador.
+ *   e listas. A ordem é salva no navegador e a grade nunca fica com
+ *   buracos (ver fillRows).
  *
  * Gráficos (Chart.js), escolhidos seguindo a recomendação da Smashing
  * Magazine de usar o gráfico mais simples que responde a pergunta:
@@ -24,15 +25,14 @@
  * - Os botões de tipo de gráfico ganhavam um listener novo a cada
  *   atualização; agora há um listener só.
  */
-import { $, $$, escapeHtml, prefersReducedMotion } from '../core/dom.js';
+import { $, $$, escapeHtml, prefersReducedMotion, debounce } from '../core/dom.js';
 import { t, tp, getLocale } from '../core/i18n.js';
 import { formatHours, formatDays, formatNumber, formatRating, formatDate, yearOf } from '../core/format.js';
 import { ALL_TYPES, MEDIA_TYPES } from '../config/media-types.js';
-import { getState, setState, getEnabledMedias, findMedia } from '../core/state.js';
+import { getState, getEnabledMedias, findMedia } from '../core/state.js';
 import { estimateHours, isUnfinished, gameStatus, isPlatinum, calculateAchievements, getProgress, progressPercent } from '../core/stats.js';
 import * as prefs from '../core/prefs.js';
-import { saveProfile } from '../services/backend.js';
-import { openDialog, closeDialog, toast } from './dialogs.js';
+import { toast } from './dialogs.js';
 import { typeName, typeIconHtml, posterHtml, accentStyle } from './media-view.js';
 
 const charts = {};           // instâncias do Chart.js por id do <canvas>
@@ -320,23 +320,6 @@ function renderUnfinished(list) {
     : `<li class="muted">${escapeHtml(t('dashboard.allDone'))}</li>`;
 }
 
-/** Mídia favorita (com capa). */
-function renderFavorite() {
-  const { profile } = getState();
-  const media = findMedia(profile.favoriteMediaId);
-  $('#favorite-content').innerHTML = media
-    ? `
-      <button type="button" class="favorite" data-open="${escapeHtml(media._docId)}" style="${accentStyle(media.type)}">
-        <span class="favorite__cover">${posterHtml(media)}</span>
-        <span class="favorite__text">
-          <span class="tag tag--accent">${typeIconHtml(media.type)}${escapeHtml(typeName(media.type))}</span>
-          <strong>${escapeHtml(media.title)}</strong>
-          ${media.rating != null ? `<span class="rating-pill"><i class="fa-solid fa-star" aria-hidden="true"></i>${formatRating(media.rating)}</span>` : ''}
-        </span>
-      </button>`
-    : `<p class="muted">${escapeHtml(t('dashboard.noFavorite'))}</p>`;
-}
-
 /* ------------------------------------------------------------
  * Render principal
  * ------------------------------------------------------------ */
@@ -354,7 +337,7 @@ export function renderDashboard() {
   renderReading(list);
   renderTopRated(list);
   renderUnfinished(list);
-  renderFavorite();
+  fillRows();
 }
 
 /* ------------------------------------------------------------
@@ -379,30 +362,51 @@ function setupSortable() {
     handle: '.widget__handle',
     ghostClass: 'is-ghost',
     // Salva a ordem automaticamente ao soltar (antes precisava clicar em "Salvar").
-    onEnd: () => prefs.setDashboardLayout($$('#dash-grid [data-widget]').map((el) => el.dataset.widget)),
+    onEnd: () => {
+      prefs.setDashboardLayout($$('#dash-grid [data-widget]').map((el) => el.dataset.widget));
+      fillRows(); // nova ordem → recalcula para não sobrar espaço
+    },
   });
 }
 
 /* ------------------------------------------------------------
- * Mídia favorita (janela de escolha)
+ * Grade sem buracos
  * ------------------------------------------------------------ */
 
-function openFavoritePicker() {
-  const dialog = $('#favorite-dialog');
-  const select = $('#favorite-select');
-  const enabled = getEnabledMedias();
-  const { profile } = getState();
-  const current = findMedia(profile.favoriteMediaId);
+/**
+ * Ajusta a largura (span) dos widgets para que TODA linha da grade
+ * fique completa, sem espaço sobrando — mesmo depois de reordenar
+ * arrastando ou quando um widget some (ex.: sem jogos, some "Status dos jogos").
+ *
+ * Como funciona: percorre os widgets visíveis na ordem atual, simulando
+ * a montagem das linhas. Se o próximo widget não cabe no que sobrou da
+ * linha, o widget anterior "estica" para ocupar a sobra. No fim, o
+ * último widget estica até o fim da última linha.
+ */
+function fillRows() {
+  const grid = $('#dash-grid');
+  if (!grid || grid.offsetParent === null) return;
+  const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+  const widgets = $$('[data-widget]', grid).filter((el) => !el.hidden);
 
-  // Um <select> com grupos por tipo (mais simples que dois selects encadeados).
-  select.innerHTML = `<option value="">${escapeHtml(t('dashboard.chooseMedia'))}</option>` + ALL_TYPES
-    .filter((type) => enabled.some((m) => m.type === type))
-    .map((type) => `
-      <optgroup label="${escapeHtml(typeName(type, true))}">
-        ${enabled.filter((m) => m.type === type).sort((a, b) => a.title.localeCompare(b.title))
-          .map((m) => `<option value="${escapeHtml(m._docId)}" ${current?._docId === m._docId ? 'selected' : ''}>${escapeHtml(m.title)}</option>`).join('')}
-      </optgroup>`).join('');
-  openDialog(dialog);
+  let used = 0;        // colunas já ocupadas na linha atual
+  let last = null;     // último widget colocado na linha atual
+  let lastSpan = 0;
+  for (const el of widgets) {
+    let span = Math.min(el.classList.contains('widget--wide') ? 2 : 1, cols);
+    if (used + span > cols) {
+      // Não cabe: o anterior estica até o fim da linha e começa outra.
+      if (last) last.style.gridColumn = `span ${lastSpan + (cols - used)}`;
+      used = 0;
+    }
+    el.style.gridColumn = `span ${span}`;
+    used += span;
+    last = el;
+    lastSpan = span;
+    if (used === cols) used = 0;
+  }
+  // Última linha incompleta: o último widget preenche o resto.
+  if (last && used > 0) last.style.gridColumn = `span ${lastSpan + (cols - used)}`;
 }
 
 /* ------------------------------------------------------------
@@ -447,24 +451,12 @@ export function initDashboard(callbacks) {
     $$('[data-widget]', grid)
       .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order))
       .forEach((el) => grid.appendChild(el));
+    fillRows();
     toast(t('dashboard.layoutReset'), 'info');
   });
 
-  // Mídia favorita
-  $('#favorite-button').addEventListener('click', openFavoritePicker);
-  $('#favorite-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const id = $('#favorite-select').value || null;
-    try {
-      await saveProfile({ favoriteMediaId: id });
-      setState({ profile: { ...getState().profile, favoriteMediaId: id } });
-      closeDialog($('#favorite-dialog'));
-      toast(t('dashboard.favoriteSaved'), 'success');
-    } catch (error) {
-      console.error('Erro ao salvar favorito:', error);
-      toast(t('toasts.saveError'), 'error');
-    }
-  });
+  // Recalcula as larguras ao redimensionar a janela (muda o nº de colunas).
+  window.addEventListener('resize', debounce(fillRows, 150));
 
   // Trocar de tema recria os gráficos com as novas cores.
   window.addEventListener('themechange', renderDashboard);

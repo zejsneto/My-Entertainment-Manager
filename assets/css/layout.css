@@ -26,6 +26,7 @@
 
 .app-header__inner {
   display: flex;
+  /* desktop: perfil à esquerda, abas no meio, ações à direita */
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-4);
@@ -107,6 +108,40 @@
 .profile__username {
   font-size: var(--fs-sm);
   color: var(--text-muted);
+}
+
+/* Abas Biblioteca | Dashboard (as duas sempre visíveis; a ativa fica roxa) */
+.view-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+}
+
+.view-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 40px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: background var(--dur-2) var(--ease-standard), color var(--dur-2);
+}
+
+.view-tab:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.view-tab.is-active {
+  color: var(--on-primary);
+  background: var(--primary);
 }
 
 /* Ações do cabeçalho */
@@ -328,23 +363,24 @@
   padding-bottom: calc(var(--sp-5) + env(safe-area-inset-bottom));
 }
 
-.social {
-  display: flex;
-  gap: var(--sp-1);
-}
-
-.social a {
-  display: grid;
-  place-items: center;
-  width: var(--tap);
-  height: var(--tap);
-  border-radius: 50%;
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: var(--tap);
+  padding: 0 var(--sp-3);
+  border-radius: var(--radius-pill);
   color: var(--text-muted);
-  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
   transition: background var(--dur-2), color var(--dur-2);
 }
 
-.social a:hover {
+.github-link i {
+  font-size: 1.2rem;
+}
+
+.github-link:hover {
   background: var(--surface-2);
   color: var(--text);
 }
@@ -403,18 +439,18 @@
     width: 100%;
   }
 
+  .view-tabs {
+    order: 3;
+    width: 100%;
+  }
+
+  .view-tab {
+    flex: 1;
+    justify-content: center;
+  }
+
   .header-actions .points {
     margin-right: auto;
-  }
-
-  /* No celular, o botão do dashboard mostra só o ícone */
-  #view-toggle .btn__label {
-    display: none;
-  }
-
-  #view-toggle {
-    width: var(--tap);
-    padding: 0;
   }
 
   .select-wrap .select {
