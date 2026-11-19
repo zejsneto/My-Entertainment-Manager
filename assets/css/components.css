@@ -1,0 +1,683 @@
+/* ==============================================================
+   components.css — Botões, campos, chips, selos, avisos
+   ============================================================== */
+
+/* ----- Botões ----- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: var(--tap);
+  padding: 0 var(--sp-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background var(--dur-2) var(--ease-standard), border-color var(--dur-2), color var(--dur-2), transform var(--dur-1);
+}
+
+/* Estado de "pressionado" (Apple HIG: sempre dar retorno ao toque) */
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+}
+
+.btn--primary {
+  color: var(--on-primary);
+  background: var(--primary);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--primary-strong);
+}
+
+.btn--secondary {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+}
+
+.btn--ghost {
+  color: var(--text-muted);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.btn--ghost[aria-pressed="true"] {
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.btn--danger {
+  color: #fff;
+  background: #DC2626;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: #B91C1C;
+}
+
+.btn--danger-text {
+  color: var(--danger);
+}
+
+.btn--danger-text:hover:not(:disabled) {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* Botão "salvando...": esconde o conteúdo e mostra um spinner */
+.btn.is-loading {
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn.is-loading::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--on-primary);
+  border-right-color: transparent;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Botão redondo só com ícone (44×44) */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: 50%;
+  color: var(--text-muted);
+  transition: background var(--dur-2), color var(--dur-2);
+}
+
+.icon-btn:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.icon-btn--sm {
+  width: 36px;
+  height: 36px;
+}
+
+.link-button {
+  min-height: 32px;
+  padding: 0 var(--sp-1);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Selo numérico (ex.: quantos filtros estão ativos) */
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--on-primary);
+  background: var(--primary);
+}
+
+.filters-btn .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+}
+
+/* ----- Campos ----- */
+.input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 var(--sp-3);
+  font-size: var(--fs-md);
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  transition: border-color var(--dur-2), box-shadow var(--dur-2), background var(--dur-2);
+}
+
+.input::placeholder {
+  color: var(--text-subtle);
+}
+
+.input:hover {
+  border-color: var(--text-subtle);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+/* Campo inválido (só depois de tentar enviar, para não "brigar" enquanto digita) */
+form.was-validated .input:invalid {
+  border-color: var(--danger);
+}
+
+/* Select com seta própria */
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 36px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238B96A5' d='M6 8.5 1.5 4h9z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+input[type="date"].input {
+  padding-right: var(--sp-2);
+}
+
+/* Esconde as setinhas dos campos numéricos (mais limpo) */
+input[type="number"].input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="number"].input::-webkit-inner-spin-button,
+input[type="number"].input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.field__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.field__label i {
+  color: var(--text-subtle);
+  margin-right: 2px;
+}
+
+.field__hint {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.field__error {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--danger);
+}
+
+.req {
+  color: var(--danger);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-3);
+}
+
+/* Grupo de campos de um tipo (ex.: "Jogo").
+   <fieldset> não se dá bem com display:flex/gap em todos os navegadores,
+   então o espaçamento é feito com margens. */
+.group {
+  display: block;
+  padding: var(--sp-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.group > legend + * {
+  clear: both;
+}
+
+.group > :not(legend) + :not(legend) {
+  margin-top: var(--sp-3);
+}
+
+.group .input {
+  background: var(--surface-1);
+}
+
+/* A legend "flutua" para ficar DENTRO da caixa (e não sobre a borda) */
+.group__title {
+  float: left;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding-bottom: var(--sp-3);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.group__title i {
+  color: var(--accent, var(--primary));
+}
+
+/* ----- Chips de filtro (36px de altura + 8px de espaço ≈ 44px de alvo) ----- */
+.chips {
+  display: flex;
+  gap: var(--sp-2);
+  width: max-content;
+  padding-block: 2px;
+}
+
+.chips--wrap {
+  flex-wrap: wrap;
+  width: auto;
+}
+
+.chip,
+.check-chip > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: 36px;
+  padding: 0 var(--sp-3) 0 var(--sp-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  scroll-snap-align: start;
+  transition: background var(--dur-2), color var(--dur-2), border-color var(--dur-2), transform var(--dur-1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.chip i,
+.check-chip i {
+  color: var(--accent);
+}
+
+.chip:hover,
+.check-chip:hover > span {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+/* Chip ativo: contorno e texto na cor do tipo */
+.chip.is-active,
+.check-chip input:checked + span {
+  color: var(--text);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface-1));
+}
+
+.chip__count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--surface-2);
+}
+
+.chip.is-active .chip__count {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+/* Chip de checkbox (configurações, filtros) */
+.check-chip {
+  position: relative;
+}
+
+.check-chip input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.check-chip input:focus-visible + span {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.check-chip input:checked + span::before {
+  content: '\f00c';
+  font: var(--fa-font-solid);
+  font-size: 11px;
+  color: var(--accent);
+}
+
+/* Pílula de filtro aplicado (removível) */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: 30px;
+  padding: 0 var(--sp-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text);
+  background: var(--primary-soft);
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+.pill i {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.pill:hover i {
+  color: var(--text);
+}
+
+/* Etiqueta com a cor do tipo */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.tag--accent {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+/* Controle segmentado (ex.: Temporadas | Episódios) */
+.segmented {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+}
+
+.segmented label,
+.segmented button {
+  position: relative;
+  display: grid;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.segmented label > span,
+.segmented button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 var(--sp-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+  transition: background var(--dur-2), color var(--dur-2);
+  cursor: pointer;
+}
+
+.segmented input:checked + span,
+.segmented button[aria-pressed="true"] {
+  color: var(--text);
+  background: var(--surface-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.segmented--sm {
+  padding: 2px;
+}
+
+.segmented--sm button {
+  min-height: 30px;
+  width: 34px;
+}
+
+/* Interruptor (checkbox estilizado) */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.switch__track {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  transition: background var(--dur-2);
+}
+
+.switch__track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform var(--dur-3) var(--ease-standard), background var(--dur-2);
+}
+
+.switch input:checked + .switch__track {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.switch input:checked + .switch__track::after {
+  transform: translateX(16px);
+  background: var(--on-primary);
+}
+
+.switch input:focus-visible + .switch__track {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Barra de progresso */
+.meter {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.meter > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent, var(--primary));
+  transition: width var(--dur-5) var(--ease-standard);
+}
+
+.meter--sm {
+  height: 6px;
+}
+
+/* Nota com estrela */
+.rating-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rating-pill i {
+  color: var(--star);
+  font-size: 0.85em;
+}
+
+/* Pequena estatística (ícone + texto) */
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.stat i {
+  font-size: 0.9em;
+  color: var(--text-subtle);
+}
+
+.stat--success,
+.stat--success i {
+  color: var(--success);
+}
+
+.stat--gold,
+.stat--gold i {
+  color: var(--gold);
+}
+
+/* Ícone de informação com dica (title) */
+.info {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--text-subtle);
+  cursor: help;
+}
+
+/* ----- Toasts (avisos rápidos) ----- */
+.toast-region {
+  position: fixed;
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  width: min(440px, calc(100% - 32px));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--dur-4) var(--ease-decel), transform var(--dur-4) var(--ease-decel);
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.toast--success i {
+  color: var(--success);
+}
+
+.toast--error i {
+  color: var(--danger);
+}
+
+.toast--info i {
+  color: var(--primary);
+}
+
+/* No celular com botão flutuante, os avisos sobem um pouco */
+@media (max-width: 767px) {
+  body.is-owner .toast-region {
+    bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+}

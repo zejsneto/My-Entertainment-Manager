@@ -1,0 +1,475 @@
+/* ==============================================================
+   dialogs.css — Janelas (<dialog>) e conteúdo dos formulários
+   ==============================================================
+   - Computador: janela central com animação de entrada.
+   - Celular: .modal--sheet vira "bottom sheet" (sobe de baixo, ocupa
+     até 92% da altura), padrão recomendado pela Nielsen Norman Group,
+     sempre com botão de fechar visível.
+   ============================================================== */
+
+.modal {
+  width: min(560px, calc(100% - 32px));
+  max-height: min(90dvh, 900px);
+  padding: 0;
+  margin: auto;
+  color: var(--text);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+/* O <form> dentro da janela também precisa ser uma coluna flexível,
+   para o rodapé ficar fixo e só o corpo rolar. */
+.modal > form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.modal::backdrop {
+  background: var(--backdrop);
+  backdrop-filter: blur(2px);
+}
+
+.modal--wide {
+  width: min(860px, calc(100% - 32px));
+}
+
+.modal--sm {
+  width: min(420px, calc(100% - 32px));
+}
+
+/* Animação de abrir (com fallback: navegadores antigos só não animam) */
+.modal[open] {
+  animation: modal-in var(--dur-4) var(--ease-decel);
+}
+
+.modal[open]::backdrop {
+  animation: fade-in var(--dur-4) var(--ease-decel);
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.modal__title {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.modal__title i {
+  color: var(--primary);
+}
+
+.modal__header .modal__close {
+  position: static;
+  margin-left: auto;
+}
+
+.modal__close {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: 50%;
+  color: var(--text-muted);
+  transition: background var(--dur-2), color var(--dur-2);
+}
+
+.modal__close:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  min-height: 0;
+  flex: 1;
+}
+
+.modal__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  padding: var(--sp-3) var(--sp-5);
+  padding-bottom: calc(var(--sp-3) + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: var(--surface-1);
+}
+
+.modal__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+
+/* ----- Celular: bottom sheet ----- */
+@media (max-width: 767px) {
+  .modal--sheet,
+  .modal--wide {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92dvh;
+    margin: auto 0 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    border-bottom: 0;
+  }
+
+  .modal--sheet[open],
+  .modal--wide[open] {
+    animation: sheet-in var(--dur-4) var(--ease-decel);
+  }
+
+  /* "Alça" visual no topo do sheet */
+  .modal--sheet::before,
+  .modal--wide::before {
+    content: '';
+    display: block;
+    flex: none;
+    width: 40px;
+    height: 4px;
+    margin: 8px auto 0;
+    border-radius: var(--radius-pill);
+    background: var(--border-strong);
+  }
+
+  .modal__header,
+  .modal__body {
+    padding-inline: var(--sp-4);
+  }
+
+  .modal__footer {
+    padding-inline: var(--sp-4);
+  }
+
+  .modal__footer .btn {
+    flex: 1;
+  }
+
+  .modal__footer .spacer {
+    display: none;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+/* ----- Formulário de mídia: coluna da capa + coluna dos campos ----- */
+.form-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.cover-field {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.cover-preview {
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-strong);
+}
+
+.cover-preview img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Mensagem "solte aqui" ao arrastar um arquivo */
+.cover-preview__drop {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+  background: color-mix(in srgb, var(--primary) 30%, var(--surface-1));
+}
+
+.cover-preview.is-dragging {
+  border-color: var(--primary);
+}
+
+.cover-preview.is-dragging .cover-preview__drop {
+  display: flex;
+}
+
+.file-btn {
+  cursor: pointer;
+}
+
+.file-btn:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Celular: capa pequena à esquerda e botões à direita, numa linha só */
+@media (max-width: 767px) {
+  .form-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-4);
+  }
+
+  .cover-field {
+    position: static;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: var(--sp-3);
+    row-gap: var(--sp-2);
+    align-items: start;
+  }
+
+  .cover-field .cover-preview {
+    grid-row: 1 / span 4;
+  }
+
+  .cover-field .field__hint {
+    display: none;
+  }
+
+  .cover-field .link-button {
+    justify-self: start;
+  }
+}
+
+/* Seletor de tipo (botões com ícone) */
+.type-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: var(--sp-2);
+}
+
+.type-option {
+  position: relative;
+}
+
+.type-option input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.type-option span {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: var(--tap);
+  padding: 0 var(--sp-3);
+  border-radius: var(--radius);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  transition: background var(--dur-2), border-color var(--dur-2), color var(--dur-2);
+}
+
+.type-option i {
+  color: var(--accent);
+  width: 16px;
+  text-align: center;
+}
+
+.type-option input:checked + span {
+  color: var(--text);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface-2));
+}
+
+.type-option input:focus-visible + span {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.type-option input:disabled + span {
+  opacity: 0.4;
+}
+
+.type-option input:disabled {
+  cursor: not-allowed;
+}
+
+/* ----- Conta ----- */
+.avatar-edit {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.avatar-edit img {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+}
+
+/* ----- Configurações ----- */
+.settings-owner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+}
+
+.settings-owner .btn {
+  width: fit-content;
+}
+
+.danger-zone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  background: var(--danger-soft);
+}
+
+.danger-zone__title {
+  font-weight: 700;
+  color: var(--danger);
+}
+
+.danger-zone__row {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.danger-zone__row .input {
+  flex: 1;
+}
+
+/* ----- Conquistas ----- */
+.achievements-total {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  color: var(--text-muted);
+}
+
+.achievements-total strong {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.achievements {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.achievement {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.achievement__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.achievement__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.achievement__head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+}
+
+.achievement__head span {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.achievement small {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}

@@ -1,0 +1,453 @@
+/* ==============================================================
+   layout.css — Cabeçalho, barra de ferramentas, rodapé, botão flutuante
+   ============================================================== */
+
+/* ----- Aviso do modo demonstração ----- */
+.demo-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--on-primary);
+  background: var(--primary);
+  text-align: center;
+}
+
+/* ----- Cabeçalho ----- */
+.app-header {
+  position: relative;
+  background:
+    radial-gradient(1200px 300px at 0% 0%, var(--primary-soft), transparent 70%),
+    var(--bg);
+}
+
+.app-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding-block: var(--sp-5) var(--sp-4);
+}
+
+/* Perfil */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+.profile__avatar {
+  position: relative;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(from 210deg, var(--type-animations), var(--primary), var(--type-series), var(--type-games), var(--type-movies), var(--type-animations));
+  transition: transform var(--dur-2) var(--ease-standard);
+}
+
+.profile__avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--bg);
+  background: var(--surface-2);
+}
+
+.profile__edit {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 11px;
+  color: var(--text);
+  background: var(--surface-3);
+  border: 2px solid var(--bg);
+}
+
+@media (hover: hover) {
+  .profile__avatar:hover {
+    transform: scale(1.04);
+  }
+}
+
+.profile__text {
+  min-width: 0;
+}
+
+.profile__eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.profile__name {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile__username {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+/* Ações do cabeçalho */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+/* Botão de pontos de conquista */
+.points {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: var(--tap);
+  padding: 0 var(--sp-4);
+  border-radius: var(--radius-pill);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  transition: background var(--dur-2) var(--ease-standard), border-color var(--dur-2);
+}
+
+.points i {
+  color: var(--gold);
+}
+
+.points strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.points small {
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+}
+
+@media (hover: hover) {
+  .points:hover {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+  }
+}
+
+/* ----- Barra de ferramentas fixa ----- */
+#toolbar-sentinel {
+  height: 1px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-3), box-shadow var(--dur-3);
+}
+
+/* Ganha borda e sombra quando a página rola (ver setupToolbarShadow) */
+.toolbar.is-stuck {
+  border-bottom-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.toolbar__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding-block: var(--sp-3);
+}
+
+.toolbar__row {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+/* Busca */
+.search {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.search__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+.search .search__input {
+  /* seletor duplo: precisa vencer o padding genérico de .input */
+  padding-left: 40px;
+  padding-right: 44px;
+}
+
+/* Esconde o "x" nativo do input search (usamos o nosso) */
+.search__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search__kbd {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 22px;
+  padding: 1px 6px;
+  font: 600 var(--fs-xs) var(--font);
+  text-align: center;
+  color: var(--text-subtle);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+
+.search__input:focus ~ .search__kbd,
+.search__input:not(:placeholder-shown) ~ .search__kbd {
+  display: none;
+}
+
+.search__clear {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--text-muted);
+}
+
+.search__clear:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+/* Select com ícone */
+.select-wrap {
+  position: relative;
+  flex: none;
+}
+
+.select-wrap > i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+.select-wrap .select {
+  padding-left: 40px;
+  width: auto;
+  max-width: 220px;
+}
+
+/* Chips rolando na horizontal, com "fade" na borda indicando que há mais (Baymard) */
+.chips-scroller {
+  margin-inline: calc(clamp(12px, 3vw, 32px) * -1);
+  padding-inline: clamp(12px, 3vw, 32px);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 32px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 32px), transparent 100%);
+}
+
+.chips-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.toolbar__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  min-height: 24px;
+}
+
+.results-count {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.applied-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+/* ----- Rodapé ----- */
+.app-footer {
+  margin-top: var(--sp-7);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.app-footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding-block: var(--sp-5);
+  /* espaço para o botão flutuante não cobrir o rodapé no celular */
+  padding-bottom: calc(var(--sp-5) + env(safe-area-inset-bottom));
+}
+
+.social {
+  display: flex;
+  gap: var(--sp-1);
+}
+
+.social a {
+  display: grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: 50%;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  transition: background var(--dur-2), color var(--dur-2);
+}
+
+.social a:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+/* ----- Botão flutuante "Adicionar" (celular) — 56px, padrão Material ----- */
+.fab {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 30;
+  display: none;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  font-size: 1.35rem;
+  color: var(--on-primary);
+  background: var(--primary);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--dur-2) var(--ease-standard);
+}
+
+.fab:active {
+  transform: scale(0.94);
+}
+
+/* ----- Responsivo ----- */
+@media (max-width: 767px) {
+  .hide-mobile {
+    display: none !important;
+  }
+
+  body.is-owner .fab {
+    display: grid;
+  }
+
+  /* Espaço no fim da grade para o botão flutuante não cobrir a última linha */
+  body.is-owner .media-grid {
+    padding-bottom: 88px;
+  }
+
+  .app-header__inner {
+    padding-block: var(--sp-4) var(--sp-3);
+  }
+
+  .profile__avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .profile__name {
+    font-size: var(--fs-lg);
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions .points {
+    margin-right: auto;
+  }
+
+  /* No celular, o botão do dashboard mostra só o ícone */
+  #view-toggle .btn__label {
+    display: none;
+  }
+
+  #view-toggle {
+    width: var(--tap);
+    padding: 0;
+  }
+
+  .select-wrap .select {
+    max-width: 52px;
+    padding-left: 0;
+    padding-right: 0;
+    color: transparent;    /* mostra só o ícone; o texto aparece ao abrir */
+    background-image: none;
+  }
+
+  .select-wrap .select option {
+    color: var(--text);
+  }
+
+  .select-wrap > i {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text);
+  }
+
+  .filters-btn .btn__label {
+    display: none;
+  }
+
+  .filters-btn {
+    width: var(--tap);
+    padding: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .toolbar__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

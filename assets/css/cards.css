@@ -1,0 +1,482 @@
+/* ==============================================================
+   cards.css — Grade de cards verticais, pôster, skeleton, estado vazio
+   ==============================================================
+   Medidas da grade seguem o design brief (padrão de apps como
+   Letterboxd e Backloggd): 3 colunas num celular de 360px, 4–5 no
+   tablet e 6–8 no computador.
+   ============================================================== */
+
+.media-grid {
+  --card-min: 104px;
+  --grid-gap: 16px 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr));
+  gap: var(--grid-gap);
+  padding-block: var(--sp-3) var(--sp-6);
+}
+
+@media (min-width: 480px) {
+  .media-grid {
+    --card-min: 132px;
+    --grid-gap: 20px 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .media-grid {
+    --card-min: 158px;
+    --grid-gap: 24px 16px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .media-grid {
+    --card-min: 176px;
+    --grid-gap: 28px 20px;
+  }
+}
+
+/* ----- Pôster (capa 2:3), usado no card, nos detalhes e nas listas ----- */
+.poster {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  isolation: isolate;
+}
+
+.poster__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Fundo gerado quando não há capa: gradiente na cor do tipo + ícone + iniciais */
+.poster__fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  color: var(--accent);
+  background:
+    radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+    linear-gradient(160deg, var(--surface-2), var(--surface-1));
+}
+
+.poster__fallback i {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.poster__fallback span {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.poster--empty .poster__fallback {
+  display: flex;
+}
+
+/* ----- Card ----- */
+.card {
+  position: relative;
+  min-width: 0;
+}
+
+.card__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.card__media {
+  position: relative;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-2) var(--ease-standard), box-shadow var(--dur-2) var(--ease-standard);
+}
+
+/* Sombra interna sutil para a capa não "sumir" em fundos parecidos */
+.card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+  pointer-events: none;
+}
+
+/* Hover: card sobe 4px (translate em vez de scale, para o texto não borrar) */
+@media (hover: hover) {
+  .card:hover .card__media {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* Foco do teclado: o anel aparece em volta da capa */
+.card:has(:focus-visible) .card__media {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.card__open:focus-visible {
+  outline: none;
+}
+
+/* Selo do tipo (canto superior esquerdo) */
+.card__type {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--scrim);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Selo de platina (canto superior direito) */
+.card__badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 12px;
+  background: var(--scrim);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.card__badge--gold {
+  color: #FCD34D;
+}
+
+/* Nota (sempre visível: em celular não existe hover) */
+.card__rating {
+  position: absolute;
+  left: 6px;
+  bottom: 10px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #fff;
+  background: var(--scrim);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.card__rating i {
+  font-size: 10px;
+  color: #FBBF24;
+}
+
+/* Barra de progresso colada no rodapé da capa */
+.card__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: 4px;
+  background: rgb(0 0 0 / 0.45);
+  border-radius: 0 0 var(--radius) var(--radius);
+  overflow: hidden;
+}
+
+.card__progress > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+/* Texto abaixo da capa */
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-inline: 2px;
+  min-width: 0;
+}
+
+.card__title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/*
+  O botão do título é "esticado" sobre o card inteiro (::after com inset 0).
+  Assim o card todo é clicável, mas para o teclado e leitores de tela
+  existe UM único botão por card, com o nome da mídia.
+*/
+.card__open {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: left;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.card__open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: var(--radius);
+}
+
+.card__date,
+.card__stats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  min-width: 0;
+}
+
+.card__date i {
+  font-size: 0.9em;
+  color: var(--text-subtle);
+  margin-right: -4px;  /* compensa o gap da linha: ícone fica colado na data */
+}
+
+.card__stats:empty {
+  display: none;
+}
+
+/* Botão editar: fica por cima do botão esticado (z-index maior) */
+.card__edit {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 13px;
+  color: #fff;
+  background: var(--scrim);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: opacity var(--dur-2), background var(--dur-2), transform var(--dur-1);
+}
+
+.card__edit:hover {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+/* No computador o lápis aparece só ao passar o mouse ou focar;
+   no celular (sem hover) fica sempre visível. */
+@media (hover: hover) {
+  .card__edit {
+    opacity: 0;
+  }
+
+  .card:hover .card__edit,
+  .card:has(:focus-visible) .card__edit {
+    opacity: 1;
+  }
+}
+
+/* Se houver selo de platina, o lápis não cobre o selo */
+.card__badge + .card__rating ~ .card__edit,
+.card:has(.card__badge) .card__edit {
+  top: 40px;
+}
+
+/* ----- Skeleton (carregando) ----- */
+.skeleton {
+  background: var(--surface-2);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton--line {
+  display: block;
+  height: 10px;
+  width: 90%;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+.skeleton--short {
+  width: 60%;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* ----- Estado vazio / erro ----- */
+.empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: 420px;
+  margin: var(--sp-7) auto;
+  text-align: center;
+}
+
+.empty__icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  font-size: 1.75rem;
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.empty__title {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+.empty__text {
+  color: var(--text-muted);
+  margin-bottom: var(--sp-2);
+}
+
+/* ----- Janela de detalhes ----- */
+.details {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+.details__poster .poster {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.details__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-width: 0;
+  padding-top: var(--sp-1);
+}
+
+.details__title {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  padding-right: var(--sp-6);
+}
+
+.details__headline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.details__rating {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: var(--text);
+}
+
+.details__rating i {
+  color: var(--star);
+  font-size: 1.1rem;
+}
+
+.details__rating strong {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.details__rating small {
+  color: var(--text-muted);
+}
+
+.details__date i {
+  margin-right: 6px;
+  color: var(--text-subtle);
+}
+
+.details__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+.details__list > div {
+  padding: var(--sp-3);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.details__list dt {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.details__list dd {
+  margin-top: 2px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Celular: capa menor no topo, informações embaixo */
+@media (max-width: 599px) {
+  .details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-4);
+  }
+
+  .details__poster {
+    width: 140px;
+  }
+}

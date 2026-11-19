@@ -1,0 +1,145 @@
+/* ==============================================================
+   tokens.css — Variáveis de design (cores, fontes, espaços, sombras)
+   ==============================================================
+   Todo o visual do site sai daqui. Para mudar uma cor, mude só a
+   variável. O tema escuro é o padrão; o claro é ativado por
+   <html data-theme="light"> (ver settings.js e o script no <head>).
+
+   Contraste: todas as combinações de texto foram calculadas pela
+   fórmula do WCAG e passam no nível AA (4,5:1 para texto, 3:1 para
+   bordas e ícones). As cores por tipo SEMPRE aparecem junto com um
+   ícone e um nome, porque cor sozinha não basta (WCAG 1.4.1).
+   ============================================================== */
+
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Camadas de fundo (mais claro = mais "alto") */
+  --bg: #0E1116;
+  --surface-1: #161B22;       /* barras, cards, janelas */
+  --surface-2: #1E242D;       /* campos, chips, hover */
+  --surface-3: #272F3A;       /* menus e tooltips */
+  --border: #2C3542;          /* divisórias decorativas */
+  --border-strong: #6B7789;   /* contorno de campos (3,8:1) */
+
+  /* Texto */
+  --text: #E8ECF1;            /* 14,6:1 sobre surface-1 */
+  --text-muted: #A4AFBD;      /* 7,8:1 */
+  --text-subtle: #8B96A5;     /* 5,8:1 */
+
+  /* Marca e estados (roxo da identidade original do projeto) */
+  --primary: #B197FC;         /* 7,2:1 sobre surface-1 */
+  --primary-strong: #C9B6FF;
+  --on-primary: #0E1116;      /* texto sobre botão primário (7,8:1) */
+  --primary-soft: rgb(177 151 252 / 0.14);
+  --danger: #F87171;
+  --danger-soft: rgb(248 113 113 / 0.12);
+  --success: #34D399;
+  --star: #FBBF24;
+  --gold: #FCD34D;
+
+  /* Cores por tipo de mídia (tom claro, legível sobre fundo escuro) */
+  --type-all: var(--primary);
+  --type-games: #34D399;
+  --type-movies: #FBBF24;
+  --type-series: #60A5FA;
+  --type-animations: #F472B6;
+  --type-animated: #A3E635;
+  --type-books: #F87171;
+  --type-mangas: #22D3EE;
+  --type-comics: #FB923C;
+
+  /* Sobre a capa (gradiente para o texto/selos sempre terem contraste) */
+  --scrim: rgb(8 10 14 / 0.72);
+  --backdrop: rgb(0 0 0 / 0.6);
+
+  /* Sombras (no escuro, a "altura" vem mais das cores de fundo) */
+  --shadow-sm: 0 1px 2px hsl(220 40% 2% / 0.4);
+  --shadow-md: 0 10px 15px hsl(220 40% 2% / 0.35), 0 4px 6px hsl(220 40% 2% / 0.2);
+  --shadow-lg: 0 25px 50px hsl(220 40% 2% / 0.5);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #F5F6F8;
+  --surface-1: #FFFFFF;
+  --surface-2: #EDF0F4;
+  --surface-3: #E2E6EC;
+  --border: #DDE2E9;
+  --border-strong: #8A94A3;
+
+  --text: #11151B;
+  --text-muted: #4A5361;
+  --text-subtle: #5F6877;
+
+  --primary: #6D3FE0;         /* 6,1:1 sobre branco */
+  --primary-strong: #5B2FD0;
+  --on-primary: #FFFFFF;
+  --primary-soft: rgb(109 63 224 / 0.1);
+  --danger: #B91C1C;
+  --danger-soft: rgb(185 28 28 / 0.08);
+  --success: #047857;
+  --star: #B45309;
+  --gold: #A16207;
+
+  --type-games: #047857;
+  --type-movies: #A35200;
+  --type-series: #1D4ED8;
+  --type-animations: #BE185D;
+  --type-animated: #4D7C0F;
+  --type-books: #B91C1C;
+  --type-mangas: #0E7490;
+  --type-comics: #B4400A;
+
+  --scrim: rgb(8 10 14 / 0.66);
+  --backdrop: rgb(17 21 27 / 0.45);
+
+  --shadow-sm: 0 1px 2px hsl(220 30% 20% / 0.08);
+  --shadow-md: 0 10px 15px hsl(220 30% 20% / 0.08), 0 4px 6px hsl(220 30% 20% / 0.05);
+  --shadow-lg: 0 25px 50px hsl(220 30% 20% / 0.18);
+}
+
+:root {
+  /* Tipografia: Inter (feita para telas). Escala do Refactoring UI. */
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fs-xs: 0.75rem;     /* 12px — metadados, selos */
+  --fs-sm: 0.875rem;    /* 14px — títulos dos cards, botões */
+  --fs-md: 1rem;        /* 16px — texto e campos (evita zoom no iPhone) */
+  --fs-lg: 1.25rem;     /* 20px — títulos de janela */
+  --fs-xl: 1.5rem;      /* 24px — nome do perfil */
+  --fs-2xl: 2.25rem;    /* 36px — números dos indicadores */
+
+  /* Espaçamento (base 4px) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* Cantos */
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  /* Movimento (tokens do Material Design 3) */
+  --ease-standard: cubic-bezier(.2, 0, 0, 1);
+  --ease-decel: cubic-bezier(.05, .7, .1, 1);
+  --ease-accel: cubic-bezier(.3, 0, .8, .15);
+  --dur-1: 100ms;
+  --dur-2: 150ms;
+  --dur-3: 200ms;
+  --dur-4: 300ms;
+  --dur-5: 400ms;
+
+  /* Medidas de layout */
+  --container: 1440px;
+  --toolbar-h: 150px;   /* usado no scroll-padding (foco não fica escondido) */
+  --tap: 44px;          /* alvo de toque confortável (Apple HIG / WCAG AAA) */
+}

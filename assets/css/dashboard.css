@@ -1,0 +1,307 @@
+/* ==============================================================
+   dashboard.css — Painel de estatísticas
+   ============================================================== */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  padding-block: var(--sp-4) var(--sp-6);
+}
+
+.dashboard__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.section-title {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* ----- Indicadores (KPIs) ----- */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--sp-3);
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+}
+
+.kpi__label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.kpi__label i {
+  color: var(--primary);
+}
+
+.kpi__value {
+  font-size: clamp(1.6rem, 3.5vw, var(--fs-2xl));
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.kpi__note {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.kpi .link-button.kpi__note {
+  align-self: flex-start;
+  min-height: 24px;
+  padding: 0;
+  font-size: var(--fs-xs);
+}
+
+/* ----- Widgets ----- */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--sp-4);
+}
+
+@media (min-width: 1000px) {
+  .dash-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .widget--wide {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 680px) and (max-width: 999px) {
+  .dash-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .widget--wide {
+    grid-column: span 2;
+  }
+}
+
+.widget {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-width: 0;
+  padding: var(--sp-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+}
+
+.widget.is-ghost {
+  opacity: 0.4;
+  border-style: dashed;
+}
+
+.widget__header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 36px;
+}
+
+.widget__header h3 {
+  flex: 1;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+
+/* Alça para arrastar o widget */
+.widget__handle {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 36px;
+  margin-left: -6px;
+  border-radius: var(--radius-sm);
+  color: var(--text-subtle);
+  cursor: grab;
+  touch-action: none;
+}
+
+.widget__handle:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.widget__handle:active {
+  cursor: grabbing;
+}
+
+.widget__chart {
+  position: relative;
+  height: 240px;
+}
+
+.widget--wide .widget__chart {
+  height: 260px;
+}
+
+/* ----- Listas com mini capas ----- */
+.mini-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mini-item {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: 6px;
+  border-radius: var(--radius);
+  text-align: left;
+  transition: background var(--dur-2);
+}
+
+.mini-item:hover {
+  background: var(--surface-2);
+}
+
+.mini-item__cover .poster {
+  border-radius: var(--radius-sm);
+}
+
+.mini-item__cover .poster__fallback i {
+  font-size: 1rem;
+}
+
+.mini-item__cover .poster__fallback span {
+  display: none;
+}
+
+.mini-item__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mini-item__text strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-sm);
+}
+
+.mini-item__text small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.mini-item__text small i {
+  color: var(--accent);
+}
+
+.mini-item__extra small {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.mini-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.mini-progress .meter {
+  width: 56px;
+}
+
+/* ----- Favorito ----- */
+.favorite {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  text-align: left;
+  transition: background var(--dur-2);
+}
+
+.favorite:hover {
+  background: var(--surface-2);
+}
+
+.favorite__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.favorite__text strong {
+  font-size: var(--fs-lg);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* ----- Guia de estimativa de tempo ----- */
+.time-guide {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.time-guide li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.time-guide i {
+  width: 18px;
+  text-align: center;
+  color: var(--accent);
+}
+
+/* ----- Impressão: tema claro, sem barras e botões ----- */
+@media print {
+  .toolbar,
+  .header-actions,
+  .fab,
+  .card__edit,
+  .widget__handle,
+  .app-footer,
+  .demo-banner {
+    display: none !important;
+  }
+
+  .card {
+    break-inside: avoid;
+  }
+}

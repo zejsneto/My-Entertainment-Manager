@@ -1,0 +1,163 @@
+{
+  "app": { "title": "My Entertainment Manager" },
+  "a11y": { "skip": "Skip to content" },
+  "demo": { "banner": "Demo mode: sample data, changes are not saved." },
+  "nav": { "library": "Library", "dashboard": "Dashboard" },
+  "profile": { "open": "Open account and profile", "defaultName": "My collection" },
+
+  "types": {
+    "movies": "Movie", "animated_movies": "Animated movie", "series": "Series", "animations": "Animation",
+    "games": "Game", "books": "Book", "mangas": "Manga", "comics": "Comic"
+  },
+  "typesPlural": {
+    "movies": "Movies", "animated_movies": "Animated movies", "series": "Series", "animations": "Animations",
+    "games": "Games", "books": "Books", "mangas": "Manga", "comics": "Comics"
+  },
+  "verbs": { "watched": "Watched on", "played": "Played on", "read": "Read on" },
+
+  "units": {
+    "hours": "Hours", "minutes": "Minutes", "seasons": "Seasons", "episodes": "Episodes",
+    "pages": "Pages", "volumes": "Volumes", "trophies": "Trophies",
+    "seasonsShort": "seas.", "episodesShort": "ep.", "pagesShort": "p.", "volumesShort": "vol.", "trophiesShort": "trophies"
+  },
+
+  "fields": {
+    "title": "Title", "rating": "Rating", "ratingRange": "Rating (0 to 10)", "duration": "Duration",
+    "seasons": "Seasons", "episodes": "Episodes", "hoursPlayed": "Hours played", "status": "Status",
+    "trophies": "Trophies", "pages": "Pages", "volumes": "Volumes", "progress": "Progress"
+  },
+
+  "game": {
+    "platinum": "Platinum",
+    "status": { "beaten": "Beaten", "playing": "Not beaten", "online": "Online / no campaign" },
+    "statusShort": { "beaten": "Beaten", "playing": "Playing", "online": "Online" }
+  },
+  "status": { "done": "Completed", "inProgress": "In progress" },
+
+  "actions": {
+    "add": "Add", "edit": "Edit", "editItem": "Edit {title}", "save": "Save", "cancel": "Cancel",
+    "close": "Close", "delete": "Delete", "confirm": "Confirm", "discard": "Discard", "retry": "Try again",
+    "share": "Share profile"
+  },
+
+  "toolbar": {
+    "searchLabel": "Search", "searchPlaceholder": "Search by title…", "clearSearch": "Clear search",
+    "sortLabel": "Sort", "typesLabel": "Filter by type", "all": "All",
+    "results": { "one": "{count} item", "other": "{count} items" }
+  },
+  "sort": {
+    "dateDesc": "Most recent", "dateAsc": "Oldest", "ratingDesc": "Highest rated", "ratingAsc": "Lowest rated",
+    "titleAsc": "Title A–Z", "titleDesc": "Title Z–A", "completionDesc": "Most progress",
+    "hoursDesc": "Most hours played", "durationDesc": "Longest movies"
+  },
+
+  "filters": {
+    "button": "Filters", "title": "Advanced filters", "types": "Types", "year": "Year",
+    "yearFrom": "Year (from)", "yearTo": "Year (to)", "ratingMin": "Minimum rating", "ratingMax": "Maximum rating",
+    "completionMin": "Minimum progress (%)", "completionHint": "Trophies for games; pages, volumes, seasons or episodes for the rest.",
+    "clear": "Clear", "clearAll": "Clear all", "apply": "Apply", "remove": "Remove filter",
+    "showResults": { "one": "Show {count} result", "other": "Show {count} results" }
+  },
+
+  "empty": {
+    "title": "Nothing here yet", "text": "Movies, games, books and more you add will show up here.",
+    "filteredTitle": "No items found", "filteredText": "Try another search term or remove some filters.",
+    "clear": "Clear filters",
+    "errorTitle": "Couldn't load the collection", "errorText": "Check your connection and try again."
+  },
+
+  "form": {
+    "addTitle": "Add item", "editTitle": "Edit item", "type": "Type",
+    "isAnimated": "It's an animated movie", "isMovie": "It's a movie (animated feature)",
+    "chooseImage": "Choose image", "coverUrl": "or paste an image link", "removeCover": "Remove cover",
+    "dropHere": "Drop the image here",
+    "coverHint": "The image is cropped to a vertical (2:3) poster and compressed automatically.",
+    "trackBy": "Track by", "watched": "Watched", "watchedEp": "Watched", "read": "Read", "readVol": "Read",
+    "total": "Total", "trophiesEarned": "Trophies earned",
+    "discardTitle": "Discard changes?", "discardText": "What you filled in will be lost.",
+    "errors": {
+      "type": "Choose a media type.",
+      "trophies": "Trophies earned can't exceed the total.",
+      "pages": "Pages read can't exceed the total.",
+      "volumes": "Volumes read can't exceed the total.",
+      "seasons": "Seasons watched can't exceed the total.",
+      "episodes": "Episodes watched can't exceed the total.",
+      "image": "Couldn't use that image. Try another file.",
+      "notImage": "The selected file isn't an image.",
+      "url": "Paste a link starting with http:// or https://"
+    }
+  },
+
+  "confirm": {
+    "deleteTitle": "Delete “{title}”?",
+    "deleteText": "This item will be removed from the collection. This can't be undone."
+  },
+  "toasts": {
+    "added": "“{title}” added.", "updated": "“{title}” updated.", "deleted": "“{title}” deleted.",
+    "saveError": "Couldn't save. Check your connection and try again."
+  },
+
+  "account": {
+    "loginTitle": "Sign in", "editTitle": "Edit profile",
+    "loginHint": "Only the collection owner can add and edit items.",
+    "email": "E-mail", "password": "Password", "login": "Sign in", "logout": "Sign out",
+    "loginError": "Invalid e-mail or password.", "welcome": "Signed in. You can edit now.",
+    "loggedOut": "You signed out.", "name": "Name", "username": "Username", "changePhoto": "Change photo",
+    "saved": "Profile updated."
+  },
+
+  "achievements": {
+    "title": "Achievements", "points": "points",
+    "reached": "{count} milestone(s) reached",
+    "hint": "Points only count completed items. Each milestone reached is worth +1000 points.",
+    "labels": {
+      "movies": "Movies watched", "series": "Series watched", "animations": "Animations watched",
+      "games": "Games beaten", "platinum": "Games platinumed", "books": "Books read",
+      "mangas": "Manga read", "comics": "Comics read"
+    }
+  },
+
+  "settings": {
+    "title": "Settings", "activeTypes": "Active media types", "selectOne": "Select at least one type.",
+    "language": "Language", "theme": "Theme", "light": "Light", "dark": "Dark", "system": "System",
+    "data": "Data", "backup": "Download backup (JSON)", "danger": "Danger zone",
+    "resetHint": "Deletes the profile and every item from the database. This can't be undone.",
+    "resetLabel": "Confirmation word", "resetType": "Type to unlock:", "resetWord": "DELETE",
+    "reset": "Delete everything", "resetDone": "All data was deleted.", "saved": "Settings saved."
+  },
+
+  "share": {
+    "title": "My Entertainment Manager",
+    "text": "See everything I've watched, played and read!",
+    "copied": "Link copied to the clipboard.",
+    "error": "Couldn't share."
+  },
+
+  "dashboard": {
+    "subtitle": "Drag the blocks by their handle to rearrange.",
+    "resetLayout": "Reset layout", "layoutReset": "Layout reset.", "typesLegend": "Types included",
+    "total": "Entries", "time": "Estimated time", "avgRating": "Average rating",
+    "showDays": "Show in days", "showHours": "Show in hours", "daysValue": "{value} days",
+    "ratedCount": { "one": "{count} rated", "other": "{count} rated" },
+    "platinumCount": { "one": "{count} platinum", "other": "{count} platinums" },
+    "byType": "Items by type", "chartType": "Chart type", "bars": "Bars", "doughnut": "Doughnut",
+    "timeline": "Items per year", "ratings": "Rating distribution",
+    "ratingsHint": "Ratings rounded to the nearest whole number (8.4 goes to 8; 8.5 goes to 9).",
+    "topRated": "Top rated", "unfinished": "Not completed", "games": "Game status", "reading": "Reading",
+    "favorite": "Favorite", "chooseFavorite": "Choose favorite", "chooseMedia": "Select…", "media": "Item",
+    "favoriteSaved": "Favorite saved.", "noFavorite": "No favorite chosen yet.",
+    "noData": "Not enough data.", "allDone": "Everything's completed!",
+    "drag": "Drag to rearrange",
+    "timeGuide": "How time is estimated",
+    "guide": {
+      "movies": "Movies: reported duration",
+      "series": "Series: 45 min per episode (or 10 ep. per season)",
+      "animations": "Animations: 20 min per episode (or 12 ep. per season)",
+      "games": "Games: hours played",
+      "books": "Books: 1h per 25 pages",
+      "mangas": "Manga & comics: 30 min per volume"
+    }
+  },
+
+  "footer": { "createdBy": "Created by" }
+}
